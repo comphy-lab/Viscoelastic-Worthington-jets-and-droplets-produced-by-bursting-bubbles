@@ -1,9 +1,26 @@
 /**
  * @file burstingBubbleVE.c
- * @brief This file contains the simulation code for the bursting bubble in viscoelastic media.
+ * @brief Simulation of bursting bubbles in viscoelastic media using the Basilisk framework
  * @author Vatsal Sanjay and Ayush Dixit
  * @version 1.0
  * @date Nov 23, 2024
+ * 
+ * This code simulates the dynamics of bursting bubbles in viscoelastic media,
+ * particularly focusing on the formation of Worthington jets and droplets.
+ * The simulation uses a two-phase flow model with viscoelastic properties,
+ * implemented using the log-conformation approach for numerical stability.
+ * 
+ * Usage:
+ * ./program maxLevel De Ec Oh Bond tmax
+ * where:
+ *   maxLevel: Maximum refinement level for adaptive mesh
+ *   De: Deborah number (ratio of relaxation time to flow time)
+ *   Ec: Elasto-capillary number (ratio of elastic to surface tension forces)
+ *   Oh: Ohnesorge number (ratio of viscous to inertial-capillary forces)
+ *   Bond: Bond number (ratio of gravitational to surface tension forces)
+ *   tmax: Maximum simulation time
+ * 
+ * Reference: V. Sanjay, Zenodo, DOI: 10.5281/zenodo.14210635 (2024)
 */
 
 #include "axi.h"
@@ -12,12 +29,23 @@
 /*
 see: V. Sanjay, Zenodo, DOI: 10.5281/zenodo.14210635 (2024) for details
 */
+// #define _SCALAR // uncomment to use the scalar version of the viscoelastic code
 #if !_SCALAR
 #include "src-local/log-conform-viscoelastic.h" 
 #else 
 #include "src-local/log-conform-viscoelastic-scalar-2D.h"
 #endif
 
+/**
+ * Simulation Parameters:
+ * FILTERED: Enable density and viscosity jump smoothing
+ * tsnap: Time interval between snapshots (default: 1e-2)
+ * fErr: Error tolerance for volume fraction (1e-3)
+ * KErr: Error tolerance for curvature calculation (1e-6)
+ * VelErr: Error tolerance for velocity field (1e-3)
+ * AErr: Error tolerance for conformation tensor (1e-3)
+ * Ldomain: Domain size in characteristic lengths (8)
+*/
 #define FILTERED // Smear density and viscosity jumps
 #include "src-local/two-phaseVE.h"
 #include "navier-stokes/conserving.h"
@@ -78,7 +106,18 @@ int  main(int argc, char const *argv[]) {
   // Name of the restart file. See writingFiles event.
   sprintf (dumpFile, "dump");
 
-
+/**
+ * Physical Properties:
+ * rho1, rho2: Density of liquid and gas phases
+ * mu1, mu2: Dynamic viscosity of liquid and gas phases
+ * lambda1, lambda2: Relaxation times
+ * G1, G2: Elastic moduli
+ * Oh: Ohnesorge number for liquid phase
+ * Oha: Ohnesorge number for gas phase (= 2e-2 * Oh)
+ * De: Deborah number
+ * Ec: Elasto-capillary number
+ * Bond: Bond number
+*/
   rho1 = 1., rho2 = 1e-3;
   Oha = 2e-2 * Oh;
   mu1 = Oh, mu2 = Oha;
