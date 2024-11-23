@@ -49,6 +49,16 @@ srun --mpi=pmi2 -n 32 --gres=cpu:32 --mem-per-cpu=1750mb burstingBubbleVE_v4_Sne
 sbatch run_simulation.sh
 ```
 
+### Additional Running Scripts
+
+The `z_extras/running` directory contains additional shell scripts for various execution environments:
+- `makeDirs.sh`: Script for creating necessary directories
+- `runCodes_cabrales_*.sh`: Scripts for running on Cabrales cluster (single/multiple nodes)
+- `runCodes_snellius_*.sh`: Scripts for running on Snellius cluster (single/multiple nodes)
+- `runpostprocess*.sh`: Scripts for post-processing simulation results
+
+These scripts provide alternative ways to run the simulations and process results based on your specific computing environment.
+
 ## Citation
 
 If you use this code in your research, please cite:

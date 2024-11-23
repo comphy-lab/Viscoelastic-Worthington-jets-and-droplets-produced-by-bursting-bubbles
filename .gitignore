@@ -7,7 +7,7 @@
 **/*.tags*
 **/*.deps
 **/*.tests
-**/*.s*
+**/*.s
 **/Video
 **/*.mp4
 **/*.json
@@ -28,6 +28,7 @@ getview3D
 !*.c
 !*.h
 !*.sbatch
+!*.sh
 
 # Object files
 *.o
