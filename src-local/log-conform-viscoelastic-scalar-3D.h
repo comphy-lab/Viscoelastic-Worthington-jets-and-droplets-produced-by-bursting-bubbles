@@ -427,7 +427,7 @@ event tracer_advection(i++)
     */
     if (Lambda.x <= 0. || Lambda.y <= 0.) {
       fprintf(ferr, "Negative eigenvalue detected: Lambda.x = %g, Lambda.y = %g\n", Lambda.x, Lambda.y);
-      fprintf(ferr, "x = %g, y = %g, f = %g\n", x, y, f[]);
+      fprintf(ferr, "x = %g, y = %g\n", x, y);
       exit(1);
     }
     
@@ -602,7 +602,7 @@ event tracer_advection(i++)
     */
     if (Lambda.x <= 0. || Lambda.y <= 0. || Lambda.z <= 0.) {
       fprintf(ferr, "Negative eigenvalue detected: Lambda.x = %g, Lambda.y = %g, Lambda.z = %g\n", Lambda.x, Lambda.y, Lambda.z);
-      fprintf(ferr, "x = %g, y = %g, z = %g, f = %g\n", x, y, z, f[]);
+      fprintf(ferr, "x = %g, y = %g, z = %g\n", x, y, z);
       exit(1);
     }
     

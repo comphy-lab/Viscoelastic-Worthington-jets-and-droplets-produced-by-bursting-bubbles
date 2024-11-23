@@ -20,7 +20,6 @@
  *   Bond: Bond number (ratio of gravitational to surface tension forces)
  *   tmax: Maximum simulation time
  * 
- * Reference: V. Sanjay, Zenodo, DOI: 10.5281/zenodo.14210635 (2024)
 */
 
 #include "axi.h"
@@ -77,7 +76,6 @@ int MAXlevel;
 
 double Oh, Oha, De, Ec, Bond, tmax;
 char nameOut[80], dumpFile[80];
-scalar Gpd[]; scalar lambdad[];
 
 int  main(int argc, char const *argv[]) {
   dtmax = 1e-5; //  BEWARE of this for stability issues. 
@@ -125,10 +123,6 @@ int  main(int argc, char const *argv[]) {
   G1 = Ec; G2 = 0.;
 
   f.sigma = 1.0;
-
-  // polymers
-  Gp = Gpd;
-  lambda = lambdad;
 
   run();
 }
