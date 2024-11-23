@@ -116,6 +116,10 @@ The simulations reveal:
    - Jet elongation and retraction
    - Droplet formation and size
 
+## Additional Resources
+
+The `z_extras` directory contains supplementary materials and post-processing tools used in the analysis. This includes C-based data extraction utilities, Python visualization scripts, and analysis notebooks. These tools were used to process simulation outputs and generate figures for the study. For detailed documentation of these tools, see the [README](z_extras/README.md) in the `z_extras` directory.
+
 ## Authors
 
 - Ayush K. Dixit (University of Twente)
