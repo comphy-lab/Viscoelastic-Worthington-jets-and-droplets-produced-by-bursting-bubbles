@@ -2,9 +2,42 @@
 
 This repository contains the simulation code and analysis for studying the dynamics of viscoelastic Worthington jets and droplets produced by bursting bubbles. The code uses the ElastoFlow framework to simulate bubble cavity collapse in viscoelastic media, examining how elastic modulus and relaxation time affect jet and droplet formation.
 
+The article can be found at: 
+
+[![](https://img.shields.io/badge/arXiv-4b4b4b?style=flat&logo=arxiv&link=https://arxiv.org/pdf/22408.05089.pdf)](https://arxiv.org/pdf/2408.05089.pdf)
+<!-- [![](https://img.shields.io/badge/Journal%20of%20Fluid%20Mechanics-ADD-DOI-HERE-WHEN-PUBLISHED-blue)](https://doi.org/ADD-DOI-HERE-WHEN-PUBLISHED) -->
+
+
 ## Overview
 
 The project investigates how viscoelasticity influences bubble bursting dynamics by exploring the three-dimensional phase space of solvent Ohnesorge number, elastocapillary number, and Deborah number using volume of fluid-based finite volume simulations. The results demonstrate that polymer addition significantly influences the overall dynamics through the interplay of viscous and elastic effects.
+
+## Installation and Setup
+
+To ensure you have the necessary tools and a fresh Basilisk installation, use the provided script:
+
+```bash
+./reset_install_requirements.sh
+```
+
+### Function
+This script checks for Basilisk installation and compiles it if not present.
+
+### OS Compatibility
+Designed for macOS. If you encounter issues on Linux, consider opening a GitHub issue.
+
+### Dependencies
+- Basilisk C is fetched and built automatically.
+- Xcode Command Line Tools (macOS) or equivalent compiler toolchain (Linux) are required.
+
+### Environment Setup
+After running the script, a `.project_config` file is created, setting `BASILISK` and `PATH` automatically.
+
+If you have previously installed Basilisk or changed dependencies, re-run the script with `--hard`:
+
+```bash
+./reset_install_requirements.sh --hard
+```
 
 ## Running the Code
 
@@ -56,8 +89,27 @@ The `z_extras/running` directory contains additional shell scripts for various e
 - `runCodes_cabrales_*.sh`: Scripts for running on Cabrales cluster (single/multiple nodes)
 - `runCodes_snellius_*.sh`: Scripts for running on Snellius cluster (single/multiple nodes)
 - `runpostprocess*.sh`: Scripts for post-processing simulation results
+- `reset_install_requirements.sh`: Script to reset installation requirements
 
 These scripts provide alternative ways to run the simulations and process results based on your specific computing environment.
+
+## Reset Install Requirements Script
+
+The `reset_install_requirements.sh` script is designed to reset the installation requirements for the project. This can be useful when you want to ensure that all dependencies are fresh and up-to-date.
+
+### Purpose
+
+The script re-installs all required packages as specified in the requirements file, ensuring that the project's dependencies are up-to-date and consistent.
+
+### Usage
+
+To run the script, use the following command in your terminal:
+
+```bash
+bash reset_install_requirements.sh
+```
+
+Make sure to have the necessary permissions to execute the script.
 
 ## Citation
 
@@ -122,21 +174,12 @@ The `z_extras` directory contains supplementary materials and post-processing to
 
 ## Authors
 
-- Ayush K. Dixit (University of Twente)
-- Alexandros Oratis (University of Twente)
-- Konstantinos Zinelis (Imperial College London & MIT)
-- Detlef Lohse (University of Twente & Max Planck Institute)
-- Vatsal Sanjay (University of Twente)
+- Ayush K. Dixit (University of Twente), [a.k.dixit@utwente.nl](mailto:a.k.dixit@utwente.nl)
+- Alexandros Oratis (University of Twente), [a.oratis@utwente.nl](mailto:a.oratis@utwente.nl)
+- Konstantinos Zinelis (Imperial College London & MIT), [k.zinelis17@imperial.ac.uk](mailto:k.zinelis17@imperial.ac.uk)
+- Detlef Lohse (University of Twente & Max Planck Institute), [d.lohse@utwente.nl](mailto:d.lohse@utwente.nl)
+- Vatsal Sanjay (University of Twente), [vatsalsanjay@gmail.com](mailto:vatsalsanjay@gmail.com)
 
 ## License
 
-This project is licensed under standard academic terms. Please cite the paper and software if you use this code in your research.
-
-## Contact
-
-For questions or collaborations, please contact the corresponding authors:
-- Ayush K. Dixit: a.k.dixit@utwente.nl
-- Alexandros Oratis: a.oratis@utwente.nl
-- Konstantinos Zinelis: k.zinelis17@imperial.ac.uk
-- Detlef Lohse: d.lohse@utwente.nl
-- Vatsal Sanjay: vatsalsanjay@gmail.com
+This project is licensed under standard academic terms. Please cite the paper and software if you use this code in your research. 

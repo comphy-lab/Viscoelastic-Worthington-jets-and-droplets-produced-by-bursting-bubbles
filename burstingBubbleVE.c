@@ -83,7 +83,6 @@ int  main(int argc, char const *argv[]) {
   L0 = Ldomain;
   origin (-L0/2., 0.);
   
-  // Values taken from the terminal
   MAXlevel = atoi(argv[1]);
   De = atof(argv[2]); // Use a value of 1e30 to simulate the De \to \infty limit. 
   Ec = atof(argv[3]);
