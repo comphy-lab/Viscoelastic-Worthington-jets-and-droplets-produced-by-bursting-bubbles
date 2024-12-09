@@ -45,8 +45,22 @@ If you have previously installed Basilisk or changed dependencies, re-run the sc
 
 To compile and run the code locally:
 
+MacOS:
+
 ```bash
 # Compile the code
+source .project_config
+qcc -O2 -Wall -disable-dimensions burstingBubbleVE.c -o burstingBubbleVE -lm
+
+# Run the executable, only supports serial execution.
+./burstingBubbleVE
+```
+
+Linux:
+
+```bash
+# Compile the code
+source .project_config
 qcc -O2 -Wall -disable-dimensions -fopenmp burstingBubbleVE_v4.c -o burstingBubbleVE_v4 -lm
 
 # Set the number of OpenMP threads
@@ -60,6 +74,7 @@ export OMP_NUM_THREADS=4
 
 1. Compile the code for MPI:
 ```bash
+source .project_config
 CC99='mpicc -std=c99' qcc -Wall -O2 -D_MPI=1 -disable-dimensions burstingBubbleVE_v4_Snellius.c -o burstingBubbleVE_v4_Snellius -lm
 ```
 

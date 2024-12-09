@@ -15,12 +15,15 @@
 **/*.png
 basililsk/_darcs
 **/.project_config
+*.tst
 
 # Custom executables (add your specific executable names here)
 **/burstingBubbleVE
 **/getFacet
 **/getData-elastic-scalar
 **/getview3D
+**/dump
+**/log
 
 # never exclude these files
 !*.c

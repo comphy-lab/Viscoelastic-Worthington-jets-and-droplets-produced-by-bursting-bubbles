@@ -83,18 +83,21 @@ int  main(int argc, char const *argv[]) {
   L0 = Ldomain;
   origin (-L0/2., 0.);
   
-  MAXlevel = atoi(argv[1]);
-  De = atof(argv[2]); // Use a value of 1e30 to simulate the De \to \infty limit. 
-  Ec = atof(argv[3]);
-  Oh = atof(argv[4]);
-  Bond = atof(argv[5]);
-  tmax = atof(argv[6]);
+  /*
+  Values taken from the terminal. Here we use some representative values. In production run, you can pass it from the command line.
+  */
+  MAXlevel = 10; //atoi(argv[1]);
+  De = 1e-2; //atof(argv[2]); // Use a value of 1e30 to simulate the De \to \infty limit. 
+  Ec = 1e-3; //atof(argv[3]);
+  Oh = 1e-2; //atof(argv[4]);
+  Bond = 1e-3; //atof(argv[5]);
+  tmax = 1e0; //atof(argv[6]);
 
   // Ensure that all the variables were transferred properly from the terminal or job script.
-  if (argc < 7){
-    fprintf(ferr, "Lack of command line arguments. Check! Need %d more arguments\n", 7-argc);
-    return 1;
-  }
+  // if (argc < 7){
+  //   fprintf(ferr, "Lack of command line arguments. Check! Need %d more arguments\n", 7-argc);
+  //   return 1;
+  // }
   init_grid (1 << 5);
   // Create a folder named intermediate where all the simulation snapshots are stored.
   char comm[80];
