@@ -30,9 +30,9 @@ see: V. Sanjay, Zenodo, DOI: 10.5281/zenodo.14210635 (2024) for details
 */
 // #define _SCALAR // uncomment to use the scalar version of the viscoelastic code
 #if !_SCALAR
-#include "src-local/log-conform-viscoelastic.h" 
+#include "log-conform-viscoelastic.h" 
 #else 
-#include "src-local/log-conform-viscoelastic-scalar-2D.h"
+#include "log-conform-viscoelastic-scalar-2D.h"
 #endif
 
 /**
@@ -46,7 +46,7 @@ see: V. Sanjay, Zenodo, DOI: 10.5281/zenodo.14210635 (2024) for details
  * Ldomain: Domain size in characteristic lengths (8)
 */
 #define FILTERED // Smear density and viscosity jumps
-#include "src-local/two-phaseVE.h"
+#include "two-phaseVE.h"
 #include "navier-stokes/conserving.h"
 #include "tension.h"
 
@@ -87,8 +87,8 @@ int  main(int argc, char const *argv[]) {
   Values taken from the terminal. Here we use some representative values. In production run, you can pass it from the command line.
   */
   MAXlevel = 10; //atoi(argv[1]);
-  De = 1e-2; //atof(argv[2]); // Use a value of 1e30 to simulate the De \to \infty limit. 
-  Ec = 1e-3; //atof(argv[3]);
+  De = 0.1; //atof(argv[2]); // Use a value of 1e30 to simulate the De \to \infty limit. 
+  Ec = 0.01; //atof(argv[3]);
   Oh = 1e-2; //atof(argv[4]);
   Bond = 1e-3; //atof(argv[5]);
   tmax = 1e0; //atof(argv[6]);
@@ -104,7 +104,7 @@ int  main(int argc, char const *argv[]) {
   sprintf (comm, "mkdir -p intermediate");
   system(comm);
   // Name of the restart file. See writingFiles event.
-  sprintf (dumpFile, "dump");
+  sprintf (dumpFile, "restart");
 
 /**
  * Physical Properties:
@@ -126,6 +126,9 @@ int  main(int argc, char const *argv[]) {
 
   f.sigma = 1.0;
 
+  TOLERANCE=1e-4;
+  CFL = 1e-1;
+
   run();
 }
 
@@ -139,10 +142,16 @@ event init (t = 0) {
       char filename[60];
       sprintf(filename,"Bo%5.4f.dat",Bond);
       FILE * fp = fopen(filename,"rb");
-      if (fp == NULL){
-        fprintf(ferr, "There is no file named %s\n", filename);
-        return 1;
-      }
+        if (fp == NULL){
+          fprintf(ferr, "There is no file named %s\n", filename);
+          // try in folder one level up
+          sprintf(filename,"../Bo%5.4f.dat",Bond);
+          fp = fopen(filename,"rb");
+          if (fp == NULL){
+            fprintf(ferr, "There is no file named %s\n", filename);
+            return 1;
+          }
+        }
       coord* InitialShape;
       InitialShape = input_xy(fp);
       fclose (fp);
@@ -204,6 +213,10 @@ event end (t = end) {
 ## Log writing
 */
 event logWriting (i++) {
+  // if (i > 5){
+  // FILE * ftest = fopen("test.txt", "w");
+  // output_facets(f, ftest);
+  // return 1;}
 
   double ke = 0.;
   foreach (reduction(+:ke)){
@@ -221,10 +234,10 @@ event logWriting (i++) {
       fclose(fp);
     } else {
       fp = fopen ("log", "a");
-      fprintf (fp, "%g %g %g %d %g %g %g\n", De, Ec, Oh, i, dt, t, ke);
+      fprintf (fp, "%d %g %g %g\n", i, dt, t, ke);
       fclose(fp);
     }
-    fprintf (ferr, "%g %g %g %d %g %g %g\n", De, Ec, Oh, i, dt, t, ke);
+    fprintf (ferr, "%d %g %g %g\n", i, dt, t, ke);
 
   assert(ke > -1e-10);
 

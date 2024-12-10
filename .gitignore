@@ -15,8 +15,8 @@
 **/*.png
 basililsk/_darcs
 **/.project_config
-*.tst
-
+**/*.tst
+**/*.s.d
 # Custom executables (add your specific executable names here)
 **/burstingBubbleVE
 **/getFacet
