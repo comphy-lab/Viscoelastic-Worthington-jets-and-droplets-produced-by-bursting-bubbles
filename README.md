@@ -1,5 +1,7 @@
 # Viscoelastic Worthington Jets & Droplets Produced by Bursting Bubbles
 
+[![DOI](https://zenodo.org/badge/893135483.svg)](https://doi.org/10.5281/zenodo.14349207)
+
 This repository contains the simulation code and analysis for studying the dynamics of viscoelastic Worthington jets and droplets produced by bursting bubbles. The code uses the ElastoFlow framework to simulate bubble cavity collapse in viscoelastic media, examining how elastic modulus and relaxation time affect jet and droplet formation.
 
 The article can be found at: 
