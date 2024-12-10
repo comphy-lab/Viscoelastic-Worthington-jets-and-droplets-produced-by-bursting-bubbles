@@ -13,17 +13,17 @@
 **/*.json
 **/*.bv
 **/*.png
-
+**/_darcs
+**/.project_config
+**/*.tst
+**/*.s.d
 # Custom executables (add your specific executable names here)
-burstingBubbleVE
-filamentsVE
-filamentsNewt
-filament_initialCondition
-filament_initialCondition_3D
-getFacet
-getData-elastic-scalar
-pinchOff
-getview3D
+**/burstingBubbleVE
+**/getFacet
+**/getData-elastic-scalar
+**/getview3D
+**/dump
+**/log
 
 # never exclude these files
 !*.c
