@@ -41,44 +41,87 @@ If you have previously installed Basilisk or changed dependencies, re-run the sc
 
 ## Running the Code
 
-### Local Execution
+### Recommended Method: Using Makefile
 
-To compile and run the code locally:
+The easiest way to compile and run the code is using the Makefile approach:
+
+1. Navigate to the `testCases` directory:
+```bash
+cd testCases
+```
+
+2. Compile and run using make:
+```bash
+CFLAGS=-DDISPLAY=-1 make burstingBubbleVE.tst
+```
+
+### Alternative Method: Direct Compilation
+
+You can compile the code directly using `qcc` in two ways:
+
+1. Using include paths (recommended):
+```bash
+qcc -O2 -Wall -disable-dimensions -I$(PWD)/src-local -I$(PWD)/../src-local burstingBubbleVE.c -o burstingBubbleVE -lm
+```
+
+2. Without include paths:
+```bash
+qcc -O2 -Wall -disable-dimensions burstingBubbleVE.c -o burstingBubbleVE -lm
+```
+**Note**: If using method 2, you must first manually copy the `src-local` folder to your running directory.
+
+### Local Execution
 
 MacOS:
 
 ```bash
-# Compile the code
+# First source the configuration
 source .project_config
+
+# Compile using include paths (recommended)
+qcc -O2 -Wall -disable-dimensions -I$(PWD)/src-local -I$(PWD)/../src-local burstingBubbleVE.c -o burstingBubbleVE -lm
+
+# Or compile without include paths (requires manually copying src-local folder)
 qcc -O2 -Wall -disable-dimensions burstingBubbleVE.c -o burstingBubbleVE -lm
 
-# Run the executable, only supports serial execution.
+# Run the executable, only supports serial execution
 ./burstingBubbleVE
 ```
 
 Linux:
 
 ```bash
-# Compile the code
+# First source the configuration
 source .project_config
-qcc -O2 -Wall -disable-dimensions -fopenmp burstingBubbleVE_v4.c -o burstingBubbleVE_v4 -lm
+
+# Compile using include paths (recommended)
+qcc -O2 -Wall -disable-dimensions -fopenmp -I$(PWD)/src-local -I$(PWD)/../src-local burstingBubbleVE.c -o burstingBubbleVE -lm
+
+# Or compile without include paths (requires manually copying src-local folder)
+qcc -O2 -Wall -disable-dimensions -fopenmp burstingBubbleVE.c -o burstingBubbleVE -lm
 
 # Set the number of OpenMP threads
 export OMP_NUM_THREADS=4
 
 # Run the executable
-./burstingBubbleVE_v4
+./burstingBubbleVE
 ```
 
 ### HPC Cluster Execution (e.g., Snellius)
 
-1. Compile the code for MPI:
+For cluster environments, it is strongly recommended to manually copy the `src-local` folder to your working directory to ensure reliable compilation across different cluster configurations:
+
+1. First, copy the required files:
 ```bash
-source .project_config
-CC99='mpicc -std=c99' qcc -Wall -O2 -D_MPI=1 -disable-dimensions burstingBubbleVE_v4_Snellius.c -o burstingBubbleVE_v4_Snellius -lm
+cp -r /path/to/original/src-local .
 ```
 
-2. Create a SLURM job script (e.g., `run_simulation.sh`):
+2. Compile the code for MPI:
+```bash
+CC99='mpicc -std=c99' qcc -Wall -O2 -D_MPI=1 -disable-dimensions burstingBubbleVE.c -o burstingBubbleVE -lm
+```
+
+3. Create a SLURM job script (e.g., `run_simulation.sh`):
 ```bash
 #!/bin/bash
 
@@ -89,24 +132,17 @@ CC99='mpicc -std=c99' qcc -Wall -O2 -D_MPI=1 -disable-dimensions burstingBubbleV
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=v.sanjay@utwente.nl
 
-srun --mpi=pmi2 -n 32 --gres=cpu:32 --mem-per-cpu=1750mb burstingBubbleVE_v4_Snellius
+srun --mpi=pmi2 -n 32 --gres=cpu:32 --mem-per-cpu=1750mb burstingBubbleVE
 ```
 
-3. Submit the job:
+4. Submit the job:
 ```bash
 sbatch run_simulation.sh
 ```
 
 ### Additional Running Scripts
 
-The `z_extras/running` directory contains additional shell scripts for various execution environments:
-- `makeDirs.sh`: Script for creating necessary directories
-- `runCodes_cabrales_*.sh`: Scripts for running on Cabrales cluster (single/multiple nodes)
-- `runCodes_snellius_*.sh`: Scripts for running on Snellius cluster (single/multiple nodes)
-- `runpostprocess*.sh`: Scripts for post-processing simulation results
-- `reset_install_requirements.sh`: Script to reset installation requirements
-
-These scripts provide alternative ways to run the simulations and process results based on your specific computing environment.
+The `z_extras/running` directory contains supplementary materials and post-processing tools used in the analysis. This includes C-based data extraction utilities, Python visualization scripts, and analysis notebooks. These tools were used to process simulation outputs and generate figures for the study. For detailed documentation of these tools, see the [README](z_extras/README.md) in the `z_extras` directory.
 
 ## Reset Install Requirements Script
 
