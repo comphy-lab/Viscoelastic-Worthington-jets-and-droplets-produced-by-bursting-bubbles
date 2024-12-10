@@ -13,7 +13,7 @@
 **/*.json
 **/*.bv
 **/*.png
-basililsk/_darcs
+**/_darcs
 **/.project_config
 **/*.tst
 **/*.s.d
