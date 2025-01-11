@@ -137,7 +137,7 @@ event init (t = 0) {
   if (!restore (file = dumpFile)){
     fprintf(ferr, "Cannot restored from a dump file!\n");
   }
-#else
+#else  // note that distance.h is incompatible with OpenMPI. So, the below code should not be used with MPI
   if (!restore (file = dumpFile)){
       char filename[60];
       sprintf(filename,"Bo%5.4f.dat",Bond);
