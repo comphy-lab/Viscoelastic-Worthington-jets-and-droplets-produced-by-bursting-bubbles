@@ -1,52 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://test.comphy-lab.org/</loc>
+    <loc>https://comphy-lab.org/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://test.comphy-lab.org/reset_install_requirements.sh.html</loc>
+    <loc>https://comphy-lab.org/reset_install_requirements.sh.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://test.comphy-lab.org/simulationCases/Makefile.html</loc>
+    <loc>https://comphy-lab.org/simulationCases/Makefile.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://test.comphy-lab.org/simulationCases/burstingBubbleVE.c.html</loc>
+    <loc>https://comphy-lab.org/simulationCases/burstingBubbleVE.c.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://test.comphy-lab.org/simulationCases/runCodesInParallel.sh.html</loc>
+    <loc>https://comphy-lab.org/simulationCases/runCodesInParallel.sh.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://test.comphy-lab.org/src-local/eigen_decomposition.h.html</loc>
+    <loc>https://comphy-lab.org/src-local/eigen_decomposition.h.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://test.comphy-lab.org/src-local/log-conform-viscoelastic-scalar-2D.h.html</loc>
+    <loc>https://comphy-lab.org/src-local/log-conform-viscoelastic-scalar-2D.h.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://test.comphy-lab.org/src-local/log-conform-viscoelastic-scalar-3D.h.html</loc>
+    <loc>https://comphy-lab.org/src-local/log-conform-viscoelastic-scalar-3D.h.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://test.comphy-lab.org/src-local/log-conform-viscoelastic.h.html</loc>
+    <loc>https://comphy-lab.org/src-local/log-conform-viscoelastic.h.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://test.comphy-lab.org/src-local/two-phaseVE.h.html</loc>
+    <loc>https://comphy-lab.org/src-local/two-phaseVE.h.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
