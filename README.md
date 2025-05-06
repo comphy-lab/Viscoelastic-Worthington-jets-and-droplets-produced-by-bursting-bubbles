@@ -15,6 +15,24 @@ The article can be found at:
 
 The project investigates how viscoelasticity influences bubble bursting dynamics by exploring the three-dimensional phase space of solvent Ohnesorge number, elastocapillary number, and Deborah number using volume of fluid-based finite volume simulations. The results demonstrate that polymer addition significantly influences the overall dynamics through the interplay of viscous and elastic effects.
 
+## Repository Structure
+
+```
+├── basilisk/src/               # Core Basilisk CFD library (reference only, do not modify)
+├── src-local/                  # Custom viscoelastic solvers and tensor utilities
+│   ├── log-conform-viscoelastic-scalar-3D.h   # 3D log-conformation (scalar)
+│   ├── log-conform-viscoelastic-scalar-2D.h   # 2D/axi log-conformation (scalar)
+│   ├── log-conform-viscoelastic.h             # 2D/axi log-conformation (tensor)
+│   ├── two-phaseVE.h                          # Two-phase viscoelastic extension
+│   └── eigen_decomposition.h                  # 3x3 symmetric eigenvalue solver
+├── simulationCases/            # Example/test cases and post-processing scripts
+│   ├── burstingBubbleVE.c                     # Bursting bubble simulation
+├── postProcess/                # Project-specific post-processing tools and utilities
+    ├── getData-elastic-scalar2D.c            # Data extraction utility
+    ├── getFacet2D.c                          # Facet extraction utility
+    ├── VideoAxi.py                           # Python visualization script
+```
+
 ## Installation and Setup
 
 To ensure you have the necessary tools and a fresh Basilisk installation, use the provided script:
@@ -171,12 +189,14 @@ If you use this code in your research, please cite:
 
 ### Paper
 ```bibtex
-@article{dixit2024viscoelastic,
-  title={Viscoelastic Worthington jets & droplets produced by bursting bubbles},
-  author={Dixit, Ayush K and Oratis, Alexandros and Zinelis, Konstantinos and Lohse, Detlef and Sanjay, Vatsal},
-  journal={arXiv preprint arXiv:2408.05089},
-  year={2024}
-}
+@article{Dixit_Oratis_Zinelis_Lohse_Sanjay_2025, 
+  title={Viscoelastic Worthington jets and droplets produced by bursting bubbles}, 
+  volume={1010}, 
+  journal={J. Fluid Mech.}, 
+  author={Dixit, A. K. and Oratis, A. and Zinelis, K. and Lohse, D. and Sanjay, V.}, 
+  year={2025}, 
+  pages={A2},
+  DOI={10.1017/jfm.2025.237}}
 ```
 
 ### Software
@@ -229,8 +249,8 @@ The `z_extras` directory contains supplementary materials and post-processing to
 ## Authors
 
 - Ayush K. Dixit (University of Twente), [a.k.dixit@utwente.nl](mailto:a.k.dixit@utwente.nl)
-- Alexandros Oratis (University of Twente), [a.oratis@utwente.nl](mailto:a.oratis@utwente.nl)
-- Konstantinos Zinelis (Imperial College London & MIT), [k.zinelis17@imperial.ac.uk](mailto:k.zinelis17@imperial.ac.uk)
+- Alexandros Oratis (University of Twente, now TU Delft), [a.t.oratis@tudelft.nl](mailto:a.t.oratis@tudelft.nl)
+- Konstantinos Zinelis (Imperial College London, now MIT), [zinelis@mit.edu](mailto:zinelis@mit.edu)
 - Detlef Lohse (University of Twente & Max Planck Institute), [d.lohse@utwente.nl](mailto:d.lohse@utwente.nl)
 - Vatsal Sanjay (University of Twente), [vatsalsanjay@gmail.com](mailto:vatsalsanjay@gmail.com)
 

@@ -445,6 +445,54 @@
                 results demonstrate that polymer addition significantly
                 influences the overall dynamics through the interplay of
                 viscous and elastic effects.</p>
+                <h2 id="repository-structure">Repository Structure</h2>
+                <div class="repository-structure">
+                <ul>
+                <li><strong>basilisk/src/</strong> - # Core Basilisk CFD
+                library (reference only, do not modify)</li>
+                <li><strong><a href="src-local">src-local/</a></strong>
+                - # Custom viscoelastic solvers and tensor utilities
+                <ul>
+                <li><strong><a
+                href="src-local/log-conform-viscoelastic-scalar-3D.h.html">log-conform-viscoelastic-scalar-3D.h</a></strong>
+                - # 3D log-conformation (scalar)</li>
+                <li><strong><a
+                href="src-local/log-conform-viscoelastic-scalar-2D.h.html">log-conform-viscoelastic-scalar-2D.h</a></strong>
+                - # 2D/axi log-conformation (scalar)</li>
+                <li><strong><a
+                href="src-local/log-conform-viscoelastic.h.html">log-conform-viscoelastic.h</a></strong>
+                - # 2D/axi log-conformation (tensor)</li>
+                <li><strong><a
+                href="src-local/two-phaseVE.h.html">two-phaseVE.h</a></strong>
+                - # Two-phase viscoelastic extension</li>
+                <li><strong><a
+                href="src-local/eigen_decomposition.h.html">eigen_decomposition.h</a></strong>
+                - # 3x3 symmetric eigenvalue solver</li>
+                </ul></li>
+                <li><strong><a
+                href="simulationCases">simulationCases/</a></strong> - #
+                Example/test cases and post-processing scripts
+                <ul>
+                <li><strong><a
+                href="simulationCases/burstingBubbleVE.c.html">burstingBubbleVE.c</a></strong>
+                - # Bursting bubble simulation</li>
+                </ul></li>
+                <li><strong><a
+                href="postProcess">postProcess/</a></strong> - #
+                Project-specific post-processing tools and utilities
+                <ul>
+                <li><strong><a
+                href="postProcess/getData-elastic-scalar2D.c.html">getData-elastic-scalar2D.c</a></strong>
+                - # Data extraction utility</li>
+                <li><strong><a
+                href="postProcess/getFacet2D.c.html">getFacet2D.c</a></strong>
+                - # Facet extraction utility</li>
+                <li><strong><a
+                href="postProcess/VideoAxi.py.html">VideoAxi.py</a></strong>
+                - # Python visualization script</li>
+                </ul></li>
+                </ul>
+                </div>
                 <h2 id="installation-and-setup">Installation and
                 Setup</h2>
                 <p>To ensure you have the necessary tools and a fresh
@@ -607,12 +655,14 @@
                 cite:</p>
                 <h3 id="paper">Paper</h3>
                 <div class="code-block-container"><div class="code-block-container"><pre
-                class="sourceCode bibtex"><code class="sourceCode bibtex"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="va">@article</span>{<span class="ot">dixit2024viscoelastic</span>,</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">title</span>={Viscoelastic Worthington jets &amp; droplets produced by bursting bubbles},</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">author</span>={Dixit, Ayush K and Oratis, Alexandros and Zinelis, Konstantinos and Lohse, Detlef and Sanjay, Vatsal},</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">journal</span>={arXiv preprint arXiv:2408.05089},</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">year</span>={2024}</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div></div>
+                class="sourceCode bibtex"><code class="sourceCode bibtex"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="va">@article</span>{<span class="ot">Dixit_Oratis_Zinelis_Lohse_Sanjay_2025</span>, </span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">title</span>={Viscoelastic Worthington jets and droplets produced by bursting bubbles}, </span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">volume</span>={1010}, </span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">journal</span>={J. Fluid Mech.}, </span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">author</span>={Dixit, A. K. and Oratis, A. and Zinelis, K. and Lohse, D. and Sanjay, V.}, </span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">year</span>={2025}, </span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">pages</span>={A2},</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">DOI</span>={10.1017/jfm.2025.237}}</span></code></pre></div></div>
                 <h3 id="software">Software</h3>
                 <div class="code-block-container"><div class="code-block-container"><pre
                 class="sourceCode bibtex"><code class="sourceCode bibtex"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">@software{vatsal_sanjay_2024_14210635,</span></span>
@@ -665,11 +715,12 @@
                 <ul>
                 <li>Ayush K. Dixit (University of Twente), <a
                 href="mailto:a.k.dixit@utwente.nl">a.k.dixit@utwente.nl</a></li>
-                <li>Alexandros Oratis (University of Twente), <a
-                href="mailto:a.oratis@utwente.nl">a.oratis@utwente.nl</a></li>
-                <li>Konstantinos Zinelis (Imperial College London &amp;
+                <li>Alexandros Oratis (University of Twente, now TU
+                Delft), <a
+                href="mailto:a.t.oratis@tudelft.nl">a.t.oratis@tudelft.nl</a></li>
+                <li>Konstantinos Zinelis (Imperial College London, now
                 MIT), <a
-                href="mailto:k.zinelis17@imperial.ac.uk">k.zinelis17@imperial.ac.uk</a></li>
+                href="mailto:zinelis@mit.edu">zinelis@mit.edu</a></li>
                 <li>Detlef Lohse (University of Twente &amp; Max Planck
                 Institute), <a
                 href="mailto:d.lohse@utwente.nl">d.lohse@utwente.nl</a></li>
@@ -686,6 +737,15 @@
                 <ul>
                 <li><a
                 href="reset_install_requirements.sh.html">reset_install_requirements.sh</a></li>
+                </ul>
+                <h3 id="postprocess">postProcess</h3>
+                <ul>
+                <li><a
+                href="postProcess/VideoAxi.py.html">postProcess/VideoAxi.py</a></li>
+                <li><a
+                href="postProcess/getData-elastic-scalar2D.c.html">postProcess/getData-elastic-scalar2D.c</a></li>
+                <li><a
+                href="postProcess/getFacet2D.c.html">postProcess/getFacet2D.c</a></li>
                 </ul>
                 <h3 id="simulationcases">simulationCases</h3>
                 <ul>
