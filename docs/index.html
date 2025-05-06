@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+  <!-- Eliminate FOUC (Flash of Unstyled Content) and FOUT (Flash of Incorrect Theme) -->
+  <script>
+    (function() {
+  try {
+    // Apply the theme as quickly as possible to avoid flash
+    let saved;
+    try {
+      saved = localStorage.getItem('theme');
+    } catch (storageError) {
+      // Handle localStorage access errors (private browsing, cookies disabled)
+      console.warn('Unable to access localStorage:', storageError);
+    }
+    
+    let prefersDark = false;
+    try {
+      prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    } catch (mediaError) {
+      // Handle matchMedia access errors (unsupported browsers)
+      console.warn('Unable to check media query:', mediaError);
+    }
+    
+    const theme = saved ? saved : (prefersDark ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', theme);
+    // Add theme class for CSS targeting
+    document.documentElement.classList.add(theme + '-theme');
+    // Mark when theme is set for CSS transitions
+    document.documentElement.classList.add('theme-set');
+  } catch (error) {
+    // Fallback for any other unexpected errors
+    console.warn('Theme initialization failed:', error);
+    // Apply default theme as fallback
+    try {
+      document.documentElement.setAttribute('data-theme', 'light');
+      document.documentElement.classList.add('light-theme');
+      document.documentElement.classList.add('theme-set');
+    } catch (fallbackError) {
+      // Silent catch for extreme cases
+      console.error('Critical theme fallback failed:', fallbackError);
+    }
+  }
+})();
+  </script>
+
+
+  <!-- No-JS fallback for theme and critical theming styles -->
+  <style>
+    /* Default light theme variables */
+    :root {
+      /* Base colors */
+      --color-background: #fff;
+      --color-text: #333;
+      --color-primary: #0066cc;
+      --color-secondary: #036;
+      --color-accent: #0099ff;
+      
+      /* UI elements */
+      --color-header-bg: #f5f5f5;
+      --color-footer-bg: #2d2e33;
+      --color-border: #e0e0e0;
+      --color-input-bg: #f9f9f9;
+      
+      /* Component colors */
+      --color-preloader-bg: #ffffff;
+      --color-loader: #0066cc;
+      --color-card-bg: #ffffff;
+      --color-code-bg: #f5f5f5;
+    }
+    
+    /* Dark theme variables applied via media query when JS is disabled */
+    @media (prefers-color-scheme: dark) {
+      :root:not(.theme-set) {
+        /* Base colors - dark mode */
+        --color-background: #1a1a1a;
+        --color-text: #f5f5f5;
+        --color-primary: #4d9fff;
+        --color-secondary: #88ccff;
+        --color-accent: #00bfff;
+        
+        /* UI elements - dark mode */
+        --color-header-bg: #121212;
+        --color-footer-bg: #121212;
+        --color-border: #333;
+        --color-input-bg: #2d2d2d;
+        
+        /* Component colors - dark mode */
+        --color-preloader-bg: #1a1a1a;
+        --color-loader: #4d9fff;
+        --color-card-bg: #222;
+        --color-code-bg: #2d2d2d;
+      }
+    }
+    
+    /* When JS sets the theme explicitly via data attribute */
+    [data-theme="dark"] {
+      /* Base colors - dark mode */
+      --color-background: #1a1a1a;
+      --color-text: #f5f5f5;
+      --color-primary: #4d9fff;
+      --color-secondary: #88ccff;
+      --color-accent: #00bfff;
+      
+      /* UI elements - dark mode */
+      --color-header-bg: #121212;
+      --color-footer-bg: #121212;
+      --color-border: #333;
+      --color-input-bg: #2d2d2d;
+      
+      /* Component colors - dark mode */
+      --color-preloader-bg: #1a1a1a;
+      --color-loader: #4d9fff;
+      --color-card-bg: #222;
+      --color-code-bg: #2d2d2d;
+    }
+    
+    /* Prevent transition flashes during initial load */
+    html:not(.transitions-enabled) * {
+      transition: none !important;
+    }
+    
+    /* Apply theme to preloader and early elements */
+    #preloader {
+      background-color: var(--color-preloader-bg);
+      color: var(--color-text);
+    }
+    
+    #loader {
+      border-color: var(--color-loader);
+      border-top-color: transparent;
+    }
+    
+    /* Noscript warning */
+    .noscript-warning {
+      background-color: var(--color-primary);
+      color: white;
+      text-align: center;
+      padding: 10px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+    }
+    
+    /* Theme indicator for no-JS */
+    .theme-indicator {
+      padding: 5px 10px;
+      border-radius: 4px;
+      background-color: var(--color-input-bg);
+      color: var(--color-text);
+      text-align: center;
+    }
+    
+    /* Hide JS-only elements when no JS */
+    .no-js .js-only {
+      display: none !important;
+    }
+    
+    /* Show no-JS alternatives */
+    .js .no-js-only {
+      display: none !important;
+    }
+  </style>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="base-url" content="..">
+  <title>Viscoelastic Worthington Jets & Droplets Produced by Bursting Bubbles | Viscoelastic Worthington Jets & Droplets Produced by Bursting Bubbles</title>
+  
+  <!-- Critical CSS for fastest paint -->
+  <style>
+      .s-intro__title {
+          visibility: visible;
+          font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      }
+      .s-header {
+          visibility: visible;
+      }
+      
+      /* Ensure theme toggle properly styled immediately */
+      .theme-toggle {
+          background-color: var(--color-background);
+          color: var(--color-text);
+      }
+      
+      /* Control SVG visibility based on theme */
+      [data-theme="dark"] .theme-toggle-icon.sun,
+      :root:not([data-theme="dark"]) .theme-toggle-icon.moon {
+          display: block;
+      }
+      
+      [data-theme="dark"] .theme-toggle-icon.moon,
+      :root:not([data-theme="dark"]) .theme-toggle-icon.sun {
+          display: none;
+      }
+  </style>
+
+  <!-- Critical Meta Tags -->
+  <meta name="description" content="Computational fluid dynamics simulations using Basilisk C framework.">
+  <meta name="author" content="CoMPhy Lab">
+  <meta name="robots" content="index, follow">
+  <meta name="keywords" content="fluid dynamics, CFD, Basilisk, multiphase flow, computational physics">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="apple-mobile-web-app-title" content="CoMPhy Lab">
+
+  <!-- Preload critical resources -->
+  <link rel="preload" href="./assets/js/main.js" as="script">
+  <link rel="preload" href="./assets/css/fontello/css/fontello.css" as="style">
+  <link rel="preload" href="./assets/css/academicons-1.7.0/css/academicons.min.css" as="style">
+
+  <!-- Base stylesheets -->
+  <link rel="stylesheet" href="./assets/css/styles.css">
+  <link rel="stylesheet" href="./assets/css/custom_styles.css">
+  <link rel="stylesheet" href="./assets/css/command-palette.css">
+  <link rel="stylesheet" href="./assets/css/fontello/css/fontello.css">
+  <link rel="stylesheet" href="./assets/css/academicons-1.7.0/css/academicons.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+
+  <!-- Font optimization -->
+  <style>
+      @font-face {
+          font-display: swap;
+          font-family: 'System Font';
+          src: local('system-ui');
+      }
+  </style>
+
+  <!-- Favicon -->
+  <link rel="apple-touch-icon" sizes="180x180" href="./assets/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="./assets/favicon/favicon-96x96.png">
+  <link rel="icon" type="image/svg+xml" href="./assets/favicon/favicon.svg">
+  <link rel="shortcut icon" href="./assets/favicon/favicon.ico">
+  <link rel="manifest" href="./assets/favicon/site.webmanifest">
+
+  <!-- Scripts with proper loading attributes -->
+  <script src="./assets/js/jquery.min.js"></script>
+  <script src="./assets/js/jquery-ui.packed.js"></script>
+  <script src="./assets/js/plots.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2/dist/fuse.min.js"></script>
+  <script defer src="./assets/js/command-palette.js"></script>
+  <script defer src="./assets/js/command-data.js"></script>
+  <script defer src="./assets/js/main.js"></script>
+  <script defer src="./assets/js/theme-toggle.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script"></script>
+  
+  <!-- Optimize page load performance -->
+  <script>
+    // Preconnect to critical domains
+    const preconnectDomains = [
+      'https://cdnjs.cloudflare.com',
+      'https://cdn.jsdelivr.net'
+    ];
+    
+    preconnectDomains.forEach(domain => {
+      const link = document.createElement('link');
+      link.rel = 'preconnect';
+      link.href = domain;
+      link.crossOrigin = 'anonymous';
+      document.head.appendChild(link);
+      
+      // Also add DNS prefetch as fallback
+      const dnsLink = document.createElement('link');
+      dnsLink.rel = 'dns-prefetch';
+      dnsLink.href = domain;
+      document.head.appendChild(dnsLink);
+    });
+    
+    // Detect when document is fully loaded to remove preloader
+    window.addEventListener('load', function() {
+      const preloader = document.getElementById('preloader');
+      if (preloader) {
+        preloader.style.opacity = '0';
+        setTimeout(() => {
+          preloader.style.display = 'none';
+        }, 300); // Match transition duration
+      }
+    });
+  </script>
+
+  <script>
+      // Load Font Awesome with proper environment detection and fallbacks
+      function loadStylesheet(href) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = href;
+        link.crossOrigin = 'anonymous';
+        link.onerror = (e) => {
+          console.error(`Failed to load stylesheet: `, e);
+          console.log('Trying alternative Font Awesome source...');
+        };
+        document.head.appendChild(link);
+        return link;
+      }
+      
+      // Check if we're on localhost
+      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        // Use hardcoded version numbers for reliable loading
+        
+        // Load Font Awesome using multiple CDNs to maximize reliability for local development
+        loadStylesheet('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css');
+        // Backup CDN if the first one fails
+        loadStylesheet('https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.2/css/all.min.css');
+        // Final local fallback - ensures it will work on any localhost environment
+        loadStylesheet('https://use.fontawesome.com/releases/v6.7.2/css/all.css');
+      } else {
+        // Use Kit for production with defer
+        var script = document.createElement('script');
+        script.src = 'https://kit.fontawesome.com/b1cfd9ca75.js';
+        script.crossOrigin = 'anonymous';
+        script.defer = true;
+        document.head.appendChild(script);
+      }
+    </script>
+
+  <script>
+      // Mark page as JS-enabled and manage transitions
+      document.documentElement.classList.remove('no-js');
+      document.documentElement.classList.add('js');
+      
+      // Allow CSS transitions after initial load to prevent transition flashes
+      window.addEventListener('DOMContentLoaded', () => {
+          setTimeout(() => {
+              document.documentElement.classList.add('transitions-enabled');
+          }, 100); // Short delay to ensure DOM is ready
+      });
+  </script>
+</head>
+<body id="top">
+<script>window.repoName = "Viscoelastic-Worthington-jets-and-droplets-produced-by-bursting-bubbles";</script>
+
+
+    <!-- Preloader with theme variables applied -->
+    <div id="preloader">
+        <div id="loader"></div>
+    </div>
+
+    <noscript>
+        <div class="noscript-warning">
+            <p>This site works best with JavaScript enabled. Some features may be limited.</p>
+        </div>
+    </noscript>
+
+    <div id="page" class="s-pagewrap">
+        <header class="s-header">
+            <div class="s-header__logo">
+                <a class="logo" href="/">
+                    <img src="./assets/logos/CoMPhy-Lab-no-name.png" alt="CoMPhy Lab">
+                </a>
+                <a class="documentation-button" href="/Viscoelastic-Worthington-jets-and-droplets-produced-by-bursting-bubbles">
+                    <i class="fa-solid fa-book-open"></i>
+                    <span>Viscoelastic-Worthington-jets-and-droplets-produced-by-bursting-bubbles</span>
+                </a>
+            </div>
+            <a class="s-header__menu-toggle" href="#0">
+                <span class="s-header__menu-text">Menu</span>
+                <span class="s-header__menu-icon"></span>
+            </a>
+            <nav class="s-header__nav">
+                <a href="#0" class="s-header__nav-close-btn"><span>Close</span></a>
+                <ul class="s-header__nav-list">
+                    <li style="background: none;">
+                        <!-- JS theme toggle -->
+                        <div class="theme-toggle js-only" id="theme-toggle" aria-label="Toggle dark/light theme">
+                            <svg class="theme-toggle-icon moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                            </svg>
+                            <svg class="theme-toggle-icon sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="5"></circle>
+                                <line x1="12" y1="1" x2="12" y2="3"></line>
+                                <line x1="12" y1="21" x2="12" y2="23"></line>
+                                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                                <line x1="1" y1="12" x2="3" y2="12"></line>
+                                <line x1="21" y1="12" x2="23" y2="12"></line>
+                                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                            </svg>
+                        </div>
+                    </li>
+                    <li style="background: none;"><a href="https://scholar.google.com/citations?user=tHb_qZoAAAAJ&hl=en" style="background: none; padding: 0;" aria-label="Google Scholar Profile"><i class="ai ai-google-scholar" style="font-size: 1.75em;"></i></a></li>
+                    <li style="background: none;"><a href="https://github.com/comphy-lab" style="background: none; padding: 0;" aria-label="GitHub Organization"><i class="fa-brands fa-github" style="font-size: 1.75em"></i></a></li>
+                    <li><a href="https://comphy-lab.org/#about" class="smoothscroll">About</a></li>
+                    <li><a href="https://comphy-lab.org/team/">Team</a></li>
+                    <li><a href="https://comphy-lab.org/research">Research</a></li>
+                    <li><a href="https://comphy-lab.org/teaching">Teaching</a></li>
+                    <li><a href="https://comphy-lab.org/join">Join Us</a></li>
+                    <li><a href="https://blogs.comphy-lab.org/">Blog</a></li>
+                    <li style="background: none;"><a href="https://bsky.app/profile/comphy-lab.org" style="background: none; padding: 0;" aria-label="Bluesky Profile"><i class="fa-brands fa-bluesky" style="font-size: 1.75em; color: #0085ff;"></i></a></li>
+                    <!-- Command Palette Button (Styled like search) -->
+                    <li class="command-palette-button">
+                        <div class="command-wrapper">
+                            <button class="command-k-style-btn" id="command-palette-btn" aria-label="Open command palette">
+                                <span class="default-theme-text">ctrl K</span>
+                                <span class="mac-theme-text">⌘ K</span>
+                                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                            </button>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        </header>
+
+        <!-- Main content -->
+        <main class="content">
+            
+            <div class="page-content">
+                
+                                
+                                
+                
+                <h1
+                id="viscoelastic-worthington-jets-droplets-produced-by-bursting-bubbles">Viscoelastic
+                Worthington Jets &amp; Droplets Produced by Bursting
+                Bubbles</h1>
+                <p><a
+                href="https://doi.org/10.5281/zenodo.14349207"><img
+                src="https://zenodo.org/badge/893135483.svg"
+                alt="DOI" /></a></p>
+                <p>This repository contains the simulation code and
+                analysis for studying the dynamics of viscoelastic
+                Worthington jets and droplets produced by bursting
+                bubbles. The code uses the ElastoFlow framework to
+                simulate bubble cavity collapse in viscoelastic media,
+                examining how elastic modulus and relaxation time affect
+                jet and droplet formation.</p>
+                <p>The article can be found at:</p>
+                <p><a href="https://arxiv.org/pdf/2408.05089.pdf"><img
+                src="https://img.shields.io/badge/arXiv-4b4b4b?style=flat&amp;logo=arxiv&amp;link=https://arxiv.org/pdf/22408.05089.pdf" /></a>
+                <!-- [![](https://img.shields.io/badge/Journal%20of%20Fluid%20Mechanics-ADD-DOI-HERE-WHEN-PUBLISHED-blue)](https://doi.org/ADD-DOI-HERE-WHEN-PUBLISHED) --></p>
+                <h2 id="overview">Overview</h2>
+                <p>The project investigates how viscoelasticity
+                influences bubble bursting dynamics by exploring the
+                three-dimensional phase space of solvent Ohnesorge
+                number, elastocapillary number, and Deborah number using
+                volume of fluid-based finite volume simulations. The
+                results demonstrate that polymer addition significantly
+                influences the overall dynamics through the interplay of
+                viscous and elastic effects.</p>
+                <h2 id="installation-and-setup">Installation and
+                Setup</h2>
+                <p>To ensure you have the necessary tools and a fresh
+                Basilisk installation, use the provided script:</p>
+                <div class="code-block-container"><div class="code-block-container"><pre
+                class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">./reset_install_requirements.sh</span></span></code></pre></div></div>
+                <h3 id="function">Function</h3>
+                <p>This script checks for Basilisk installation and
+                compiles it if not present.</p>
+                <h3 id="os-compatibility">OS Compatibility</h3>
+                <p>Designed for macOS. If you encounter issues on Linux,
+                consider opening a GitHub issue.</p>
+                <h3 id="dependencies">Dependencies</h3>
+                <ul>
+                <li>Basilisk C is fetched and built automatically.</li>
+                <li>Xcode Command Line Tools (macOS) or equivalent
+                compiler toolchain (Linux) are required.</li>
+                </ul>
+                <h3 id="environment-setup">Environment Setup</h3>
+                <p>After running the script, a
+                <code>.project_config</code> file is created, setting
+                <code>BASILISK</code> and <code>PATH</code>
+                automatically.</p>
+                <p>If you have previously installed Basilisk or changed
+                dependencies, re-run the script with
+                <code>--hard</code>:</p>
+                <div class="code-block-container"><div class="code-block-container"><pre
+                class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">./reset_install_requirements.sh</span> <span class="at">--hard</span></span></code></pre></div></div>
+                <h2 id="running-the-code">Running the Code</h2>
+                <h3 id="recommended-method-using-makefile">Recommended
+                Method: Using Makefile</h3>
+                <p>The easiest way to compile and run the code is using
+                the Makefile approach:</p>
+                <ol type="1">
+                <li>Navigate to the <code>testCases</code>
+                directory:</li>
+                </ol>
+                <div class="code-block-container"><div class="code-block-container"><pre
+                class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> testCases</span></code></pre></div></div>
+                <ol start="2" type="1">
+                <li>Compile and run using make:</li>
+                </ol>
+                <div class="code-block-container"><div class="code-block-container"><pre
+                class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="va">CFLAGS</span><span class="op">=</span>-DDISPLAY=-1 <span class="fu">make</span> burstingBubbleVE.tst</span></code></pre></div></div>
+                <h3
+                id="alternative-method-direct-compilation">Alternative
+                Method: Direct Compilation</h3>
+                <p>You can compile the code directly using
+                <code>qcc</code> in two ways:</p>
+                <ol type="1">
+                <li>Using include paths (recommended):</li>
+                </ol>
+                <div class="code-block-container"><div class="code-block-container"><pre
+                class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">qcc</span> <span class="at">-O2</span> <span class="at">-Wall</span> <span class="at">-disable-dimensions</span> <span class="at">-I</span><span class="va">$(</span><span class="ex">PWD</span><span class="va">)</span>/src-local <span class="at">-I</span><span class="va">$(</span><span class="ex">PWD</span><span class="va">)</span>/../src-local burstingBubbleVE.c <span class="at">-o</span> burstingBubbleVE <span class="at">-lm</span></span></code></pre></div></div>
+                <ol start="2" type="1">
+                <li>Without include paths:</li>
+                </ol>
+                <div class="code-block-container"><div class="code-block-container"><pre
+                class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">qcc</span> <span class="at">-O2</span> <span class="at">-Wall</span> <span class="at">-disable-dimensions</span> burstingBubbleVE.c <span class="at">-o</span> burstingBubbleVE <span class="at">-lm</span></span></code></pre></div></div>
+                <p><strong>Note</strong>: If using method 2, you must
+                first manually copy the <code>src-local</code> folder to
+                your running directory.</p>
+                <h3 id="local-execution">Local Execution</h3>
+                <p>MacOS:</p>
+                <div class="code-block-container"><div class="code-block-container"><pre
+                class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># First source the configuration</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> .project_config</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Compile using include paths (recommended)</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="ex">qcc</span> <span class="at">-O2</span> <span class="at">-Wall</span> <span class="at">-disable-dimensions</span> <span class="at">-I</span><span class="va">$(</span><span class="ex">PWD</span><span class="va">)</span>/src-local <span class="at">-I</span><span class="va">$(</span><span class="ex">PWD</span><span class="va">)</span>/../src-local burstingBubbleVE.c <span class="at">-o</span> burstingBubbleVE <span class="at">-lm</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Or compile without include paths (requires manually copying src-local folder)</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="ex">qcc</span> <span class="at">-O2</span> <span class="at">-Wall</span> <span class="at">-disable-dimensions</span> burstingBubbleVE.c <span class="at">-o</span> burstingBubbleVE <span class="at">-lm</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Run the executable, only supports serial execution</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="ex">./burstingBubbleVE</span></span></code></pre></div></div>
+                <p>Linux:</p>
+                <div class="code-block-container"><div class="code-block-container"><pre
+                class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># First source the configuration</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> .project_config</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Compile using include paths (recommended)</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="ex">qcc</span> <span class="at">-O2</span> <span class="at">-Wall</span> <span class="at">-disable-dimensions</span> <span class="at">-fopenmp</span> <span class="at">-I</span><span class="va">$(</span><span class="ex">PWD</span><span class="va">)</span>/src-local <span class="at">-I</span><span class="va">$(</span><span class="ex">PWD</span><span class="va">)</span>/../src-local burstingBubbleVE.c <span class="at">-o</span> burstingBubbleVE <span class="at">-lm</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Or compile without include paths (requires manually copying src-local folder)</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="ex">qcc</span> <span class="at">-O2</span> <span class="at">-Wall</span> <span class="at">-disable-dimensions</span> <span class="at">-fopenmp</span> burstingBubbleVE.c <span class="at">-o</span> burstingBubbleVE <span class="at">-lm</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Set the number of OpenMP threads</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">OMP_NUM_THREADS</span><span class="op">=</span>4</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Run the executable</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="ex">./burstingBubbleVE</span></span></code></pre></div></div>
+                <h3 id="hpc-cluster-execution-e.g.-snellius">HPC Cluster
+                Execution (e.g., Snellius)</h3>
+                <p>For cluster environments, it is strongly recommended
+                to manually copy the <code>src-local</code> folder to
+                your working directory to ensure reliable compilation
+                across different cluster configurations:</p>
+                <ol type="1">
+                <li>First, copy the required files:</li>
+                </ol>
+                <div class="code-block-container"><div class="code-block-container"><pre
+                class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> <span class="at">-r</span> /path/to/original/src-local .</span></code></pre></div></div>
+                <ol start="2" type="1">
+                <li>Compile the code for MPI:</li>
+                </ol>
+                <div class="code-block-container"><div class="code-block-container"><pre
+                class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="va">CC99</span><span class="op">=</span><span class="st">&#39;mpicc -std=c99&#39;</span> <span class="ex">qcc</span> <span class="at">-Wall</span> <span class="at">-O2</span> <span class="at">-D_MPI</span><span class="op">=</span>1 <span class="at">-disable-dimensions</span> burstingBubbleVE.c <span class="at">-o</span> burstingBubbleVE <span class="at">-lm</span></span></code></pre></div></div>
+                <ol start="3" type="1">
+                <li>Create a SLURM job script (e.g.,
+                <code>run_simulation.sh</code>):</li>
+                </ol>
+                <div class="code-block-container"><div class="code-block-container"><pre
+                class="sourceCode bash"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --nodes=1</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --ntasks=32</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --time=1:00:00</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --partition=genoa</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --mail-type=ALL</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --mail-user=v.sanjay@utwente.nl</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="ex">srun</span> <span class="at">--mpi</span><span class="op">=</span>pmi2 <span class="at">-n</span> 32 <span class="at">--gres</span><span class="op">=</span>cpu:32 <span class="at">--mem-per-cpu</span><span class="op">=</span>1750mb burstingBubbleVE</span></code></pre></div></div>
+                <ol start="4" type="1">
+                <li>Submit the job:</li>
+                </ol>
+                <div class="code-block-container"><div class="code-block-container"><pre
+                class="sourceCode bash"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">sbatch</span> run_simulation.sh</span></code></pre></div></div>
+                <h3 id="additional-running-scripts">Additional Running
+                Scripts</h3>
+                <p>The <code>z_extras/running</code> directory contains
+                supplementary materials and post-processing tools used
+                in the analysis. This includes C-based data extraction
+                utilities, Python visualization scripts, and analysis
+                notebooks. These tools were used to process simulation
+                outputs and generate figures for the study. For detailed
+                documentation of these tools, see the <a
+                href="z_extras/README.md.html">README</a> in the
+                <code>z_extras</code> directory.</p>
+                <h2 id="reset-install-requirements-script">Reset Install
+                Requirements Script</h2>
+                <p>The <code>reset_install_requirements.sh</code> script
+                is designed to reset the installation requirements for
+                the project. This can be useful when you want to ensure
+                that all dependencies are fresh and up-to-date.</p>
+                <h3 id="purpose">Purpose</h3>
+                <p>The script re-installs all required packages as
+                specified in the requirements file, ensuring that the
+                project’s dependencies are up-to-date and
+                consistent.</p>
+                <h3 id="usage">Usage</h3>
+                <p>To run the script, use the following command in your
+                terminal:</p>
+                <div class="code-block-container"><div class="code-block-container"><pre
+                class="sourceCode bash"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> reset_install_requirements.sh</span></code></pre></div></div>
+                <p>Make sure to have the necessary permissions to
+                execute the script.</p>
+                <h2 id="citation">Citation</h2>
+                <p>If you use this code in your research, please
+                cite:</p>
+                <h3 id="paper">Paper</h3>
+                <div class="code-block-container"><div class="code-block-container"><pre
+                class="sourceCode bibtex"><code class="sourceCode bibtex"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="va">@article</span>{<span class="ot">dixit2024viscoelastic</span>,</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">title</span>={Viscoelastic Worthington jets &amp; droplets produced by bursting bubbles},</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">author</span>={Dixit, Ayush K and Oratis, Alexandros and Zinelis, Konstantinos and Lohse, Detlef and Sanjay, Vatsal},</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">journal</span>={arXiv preprint arXiv:2408.05089},</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">year</span>={2024}</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div></div>
+                <h3 id="software">Software</h3>
+                <div class="code-block-container"><div class="code-block-container"><pre
+                class="sourceCode bibtex"><code class="sourceCode bibtex"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">@software{vatsal_sanjay_2024_14210635,</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co">  author       = {Vatsal Sanjay},</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co">  title        = {{comphy-lab/Viscoelastic3D: 🌊 v2.5: ElastoFlow - </span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co">                   Complete 2D/3D Viscoelastic Framework}},</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="co">  month        = nov,</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="co">  year         = 2024,</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="co">  publisher    = {Zenodo},</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="co">  version      = {v2.5},</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="co">  doi          = {10.5281/zenodo.14210635},</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="co">  url          = {https://doi.org/10.5281/zenodo.14210635}</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="co">}</span></span></code></pre></div></div>
+                <h2 id="features">Features</h2>
+                <ul>
+                <li>Simulation of bubble cavity collapse in viscoelastic
+                media</li>
+                <li>Analysis of Worthington jet formation and droplet
+                ejection</li>
+                <li>Investigation of polymer effects through:
+                <ul>
+                <li>Elastic modulus (elastocapillary number)</li>
+                <li>Relaxation time (Deborah number)</li>
+                <li>Viscous effects (Ohnesorge number)</li>
+                </ul></li>
+                </ul>
+                <h2 id="dependencies-1">Dependencies</h2>
+                <p>The code utilizes: - Basilisk C (<a
+                href="http://basilisk.fr">basilliskpopinet</a>) - Volume
+                of Fluid (VoF) method for interface tracking - Adaptive
+                Mesh Refinement (AMR) with quadtree grids</p>
+                <h2 id="key-results">Key Results</h2>
+                <p>The simulations reveal: 1. Three distinct flow
+                regimes: - Jets forming droplets - Jets without droplet
+                formation - Absence of jet formation 2. Impact of
+                viscoelasticity on: - Capillary wave propagation - Jet
+                elongation and retraction - Droplet formation and
+                size</p>
+                <h2 id="additional-resources">Additional Resources</h2>
+                <p>The <code>z_extras</code> directory contains
+                supplementary materials and post-processing tools used
+                in the analysis. This includes C-based data extraction
+                utilities, Python visualization scripts, and analysis
+                notebooks. These tools were used to process simulation
+                outputs and generate figures for the study. For detailed
+                documentation of these tools, see the <a
+                href="z_extras/README.md.html">README</a> in the
+                <code>z_extras</code> directory.</p>
+                <h2 id="authors">Authors</h2>
+                <ul>
+                <li>Ayush K. Dixit (University of Twente), <a
+                href="mailto:a.k.dixit@utwente.nl">a.k.dixit@utwente.nl</a></li>
+                <li>Alexandros Oratis (University of Twente), <a
+                href="mailto:a.oratis@utwente.nl">a.oratis@utwente.nl</a></li>
+                <li>Konstantinos Zinelis (Imperial College London &amp;
+                MIT), <a
+                href="mailto:k.zinelis17@imperial.ac.uk">k.zinelis17@imperial.ac.uk</a></li>
+                <li>Detlef Lohse (University of Twente &amp; Max Planck
+                Institute), <a
+                href="mailto:d.lohse@utwente.nl">d.lohse@utwente.nl</a></li>
+                <li>Vatsal Sanjay (University of Twente), <a
+                href="mailto:vatsalsanjay@gmail.com">vatsalsanjay@gmail.com</a></li>
+                </ul>
+                <h2 id="license">License</h2>
+                <p>This project is licensed under standard academic
+                terms. Please cite the paper and software if you use
+                this code in your research.</p>
+                <h2 id="generated-documentation">Generated
+                Documentation</h2>
+                <h3 id="root-directory">Root Directory</h3>
+                <ul>
+                <li><a
+                href="reset_install_requirements.sh.html">reset_install_requirements.sh</a></li>
+                </ul>
+                <h3 id="simulationcases">simulationCases</h3>
+                <ul>
+                <li><a
+                href="simulationCases/Makefile.html">simulationCases/Makefile</a></li>
+                <li><a
+                href="simulationCases/burstingBubbleVE.c.html">simulationCases/burstingBubbleVE.c</a></li>
+                <li><a
+                href="simulationCases/runCodesInParallel.sh.html">simulationCases/runCodesInParallel.sh</a></li>
+                </ul>
+                <h3 id="src-local">src-local</h3>
+                <ul>
+                <li><a
+                href="src-local/eigen_decomposition.h.html">src-local/eigen_decomposition.h</a></li>
+                <li><a
+                href="src-local/log-conform-viscoelastic-scalar-2D.h.html">src-local/log-conform-viscoelastic-scalar-2D.h</a></li>
+                <li><a
+                href="src-local/log-conform-viscoelastic-scalar-3D.h.html">src-local/log-conform-viscoelastic-scalar-3D.h</a></li>
+                <li><a
+                href="src-local/log-conform-viscoelastic.h.html">src-local/log-conform-viscoelastic.h</a></li>
+                <li><a
+                href="src-local/two-phaseVE.h.html">src-local/two-phaseVE.h</a></li>
+                </ul>
+            </div>
+        </main>
+
+        <footer class="site-footer">
+            <div class="footer-left">
+              <a href="http://basilisk.fr/sandbox/vatsal/" target="_blank">
+                <img src="./assets/logos/logoBasilisk_TransparentBackground.png" alt="Basilisk C" class="footer-logo">
+              </a>
+              <a href="https://pof.tnw.utwente.nl/" target="_blank">
+                <img src="./assets/logos/LogoPof_transparent_white.png" alt="Physics of Fluids" class="footer-logo pof-logo">
+              </a>
+              <a href="https://www.utwente.nl/" target="_blank">
+                <img src="./assets/logos/UT_Logo_2400_Sta_White_EN.png" alt="University of Twente" class="footer-logo">
+              </a>
+              <a href="https://www.vatsalsanjay.com/" target="_blank">
+                <img src="./assets/logos/Logo_Vatsal_v3_OutLine.png" alt="Vatsal Sanjay" class="footer-logo">
+              </a>
+            </div>
+            <div class="footer-center">
+              <p class="copyright-text">
+                &copy; Copyright<br>
+                CoMPhy Lab 2025
+              </p>
+            </div>
+            <div class="footer-right">
+              <a href="https://scholar.google.com/citations?user=tHb_qZoAAAAJ&hl=en" target="_blank" aria-label="Google Scholar Profile">
+                <i class="ai ai-google-scholar" style="font-size: 2.5em; color: white;"></i>
+              </a>
+              <a href="https://github.com/comphy-lab" target="_blank" aria-label="GitHub Organization">
+                <i class="fa-brands fa-github" style="font-size: 2.5em; color: white;"></i>
+              </a>
+              <a href="https://www.youtube.com/@CoMPhyLab" target="_blank" aria-label="YouTube Channel">
+                <i class="fa-brands fa-youtube" style="font-size: 2.5em; color: white;"></i>
+              </a>
+              <a href="https://x.com/VatsalSanjay" target="_blank" aria-label="X (Twitter) Profile">
+                <i class="fa-brands fa-x-twitter" style="font-size: 2.5em; color: white;"></i>
+              </a>
+              <a href="https://bsky.app/profile/comphy-lab.org" target="_blank" aria-label="Bluesky Profile">
+                <i class="fa-brands fa-bluesky" style="font-size: 2.5em; color: white;"></i>
+              </a>
+              <a href="https://github.com/comphy-lab/comphy-lab.github.io" class="edit-link" aria-label="Edit this page on GitHub">
+                <i class="fa-brands fa-github"></i> Edit this page
+              </a>
+            </div>
+          </footer>
+    </div>  
+
+    <!-- Command Palette -->
+    <div id="simple-command-palette" class="simple-command-palette" style="display: none;">
+        <div class="simple-command-palette-backdrop"></div>
+        <div class="simple-command-palette-modal">
+            <input type="text" id="command-palette-input" placeholder="Type a command..." autocomplete="off">
+            <div id="command-palette-results" class="command-palette-results"></div>
+            <div class="command-palette-footer">
+                <span class="command-palette-footer-item"><kbd>↑</kbd> <kbd>↓</kbd> to navigate</span>
+                <span class="command-palette-footer-item"><kbd>enter</kbd> to select</span>
+                <span class="command-palette-footer-item"><kbd>esc</kbd> to close</span>
+            </div>
+        </div>
+    </div>
+
+
+<script type="text/javascript">
+document.addEventListener('DOMContentLoaded', function() {
+    // Add copy button to each code block container
+    const codeBlocks = document.querySelectorAll('.code-block-container pre');
+    codeBlocks.forEach(function(codeBlock, index) {
+        // Create button element
+        const button = document.createElement('button');
+        button.className = 'copy-button';
+        button.textContent = 'Copy';
+        button.setAttribute('aria-label', 'Copy code to clipboard');
+        button.setAttribute('data-copy-state', 'copy');
+        
+        // Get the code block container (parent of the pre)
+        const container = codeBlock.parentNode;
+        
+        // Add the button to the container
+        container.appendChild(button);
+        
+        // Set up click event
+        button.addEventListener('click', async function() {
+            const codeText = codeBlock.textContent;
+            
+            try {
+                // Try to use the modern clipboard API first
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    await navigator.clipboard.writeText(codeText);
+                    updateButtonState(button, 'success');
+                } else {
+                    // Fall back to the deprecated execCommand method
+                    const textarea = document.createElement('textarea');
+                    textarea.value = codeText;
+                    textarea.style.position = 'fixed';  // Prevent scrolling to the bottom
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    
+                    const successful = document.execCommand('copy');
+                    document.body.removeChild(textarea);
+                    
+                    if (successful) {
+                        updateButtonState(button, 'success');
+                    } else {
+                        updateButtonState(button, 'error');
+                    }
+                }
+            } catch (err) {
+                console.error('Copy failed:', err);
+                updateButtonState(button, 'error');
+            }
+        });
+    });
+    
+    // Function to update button state
+    function updateButtonState(button, state) {
+        if (state === 'success') {
+            button.textContent = 'Copied!';
+            button.classList.add('copied');
+        } else if (state === 'error') {
+            button.textContent = 'Error!';
+            button.classList.add('error');
+        }
+        
+        // Reset button state after 2 seconds
+        setTimeout(function() {
+            button.textContent = 'Copy';
+            button.classList.remove('copied', 'error');
+        }, 2000);
+    }
+});
+</script>
+        </body>
+</html>
