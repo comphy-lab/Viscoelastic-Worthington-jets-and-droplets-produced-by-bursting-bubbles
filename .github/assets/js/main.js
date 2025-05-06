@@ -19,18 +19,24 @@
     
     // No need for a resize event handler as the CSS will handle everything
 
-    // Load about content when page loads
-    window.addEventListener('load', loadAboutContent);
-    // Load news content when page loads
-    window.addEventListener('load', loadNewsContent);
+    // Load about content when page loads - only if function exists
+    if (typeof loadAboutContent === 'function') {
+        window.addEventListener('load', loadAboutContent);
+    }
+    // Load news content when page loads - only if function exists
+    if (typeof loadNewsContent === 'function') {
+        window.addEventListener('load', loadNewsContent);
+    }
 
     /* Load Featured Papers - Only on main page
     * -------------------------------------------------- */
     const loadFeaturedPapers = async () => {
-        // Only load featured papers if we're on the main page
-        if (window.location.pathname === '/' || window.location.pathname === '/index.html') {
+        // Only load featured papers if we're on the main page (accounting for sub-paths in GitHub Pages)
+        if (window.location.pathname.endsWith('/') || window.location.pathname.endsWith('/index.html')) {
             try {
-                const response = await fetch('/research/');
+                // Use relative path to work with GitHub Pages sub-paths
+                const basePath = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
+                const response = await fetch(basePath + 'research/');
                 if (!response.ok) {
                     throw new Error(`Failed to fetch research content: ${response.status} ${response.statusText}`);
                 }
@@ -90,7 +96,8 @@
                                     span.style.cursor = 'pointer';
                                     span.addEventListener('click', (e) => {
                                         e.stopPropagation(); // Prevent container click
-                                        window.location.href = `/research/?tag=${span.textContent.trim()}`;
+                                        const basePath = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
+                                        window.location.href = `${basePath}research/?tag=${span.textContent.trim()}`;
                                     });
                                 });
                             }
@@ -117,9 +124,11 @@
                             const paperNumber = originalTitle.match(/^\[(\d+)\]/)?.[1];
                             if (paperNumber) {
                                 // Navigate to research page with the paper ID
-                                window.location.href = `/research/#${paperNumber}`;
+                                const basePath = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
+                                window.location.href = `${basePath}research/#${paperNumber}`;
                             } else {
-                                window.location.href = '/research/';
+                                const basePath = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
+                                window.location.href = `${basePath}research/`;
                             }
                         });
                         

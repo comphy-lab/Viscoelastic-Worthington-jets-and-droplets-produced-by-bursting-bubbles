@@ -33,18 +33,21 @@ function renderCommandResults(query) {
   // Filter commands based on query
   const filteredCommands = query ? 
     commands.filter(cmd => 
-      cmd.title.toLowerCase().includes(query.toLowerCase()) ||
-      (cmd.section && cmd.section.toLowerCase().includes(query.toLowerCase()))
+      (cmd.title?.toLowerCase() || '').includes(query.toLowerCase()) ||
+      (cmd.section?.toLowerCase() || '').includes(query.toLowerCase())
     ) : 
     commands;
   
   // Group by section
   const sections = {};
   filteredCommands.forEach(cmd => {
-    if (!sections[cmd.section]) {
-      sections[cmd.section] = [];
+    // Use 'Other' as default section name if section is undefined
+    const sectionName = cmd.section || 'Other';
+    
+    if (!sections[sectionName]) {
+      sections[sectionName] = [];
     }
-    sections[cmd.section].push(cmd);
+    sections[sectionName].push(cmd);
   });
   
   // If query is at least 3 characters, search the database as well
@@ -85,6 +88,11 @@ function renderSections(sections, container) {
     const sectionEl = document.createElement('div');
     sectionEl.className = 'command-palette-section';
     
+    // Add special class for search results section for styling
+    if (section === 'Search Results') {
+      sectionEl.classList.add('search-results-section');
+    }
+    
     const sectionTitle = document.createElement('div');
     sectionTitle.className = 'command-palette-section-title';
     sectionTitle.textContent = section;
@@ -97,17 +105,37 @@ function renderSections(sections, container) {
       const cmdEl = document.createElement('div');
       cmdEl.className = 'command-palette-command';
       
-      let cmdContent = `
-        <div class="command-palette-icon">${cmd.icon || ''}</div>
-        <div class="command-palette-title">${cmd.title}</div>
-      `;
+      // Create icon container and safely add icon
+      const iconContainer = document.createElement('div');
+      iconContainer.className = 'command-palette-icon';
+      // This still uses innerHTML for icons because they're expected to be HTML
+      // To be fully secure, icons should be sanitized before being added to commandData
+      // Use DOMParser to whitelist SVG, otherwise fall back to text
+      if (cmd.icon?.trim().startsWith('<svg')) {
+        const svgDoc = new DOMParser().parseFromString(cmd.icon, 'image/svg+xml');
+        iconContainer.appendChild(svgDoc.documentElement);
+      } else {
+        iconContainer.textContent = cmd.icon ?? '';
+      }
+      cmdEl.appendChild(iconContainer);
+      
+      // Create title element with safe text content
+      const titleEl = document.createElement('div');
+      titleEl.className = 'command-palette-title';
+      titleEl.textContent = cmd.title;
+      cmdEl.appendChild(titleEl);
       
       // Add excerpt for search results if available
       if (cmd.excerpt) {
-        cmdContent += `<div class="command-palette-excerpt">${cmd.excerpt.substring(0, 120)}${cmd.excerpt.length > 120 ? '...' : ''}</div>`;
+        const excerptEl = document.createElement('div');
+        excerptEl.className = 'command-palette-excerpt';
+        
+        // Truncate excerpt text safely
+        const excerptText = cmd.excerpt.substring(0, 120) + (cmd.excerpt.length > 120 ? '...' : '');
+        excerptEl.textContent = excerptText;
+        
+        cmdEl.appendChild(excerptEl);
       }
-      
-      cmdEl.innerHTML = cmdContent;
       
       cmdEl.addEventListener('click', function(e) {
         if (typeof cmd.handler === 'function') {
@@ -128,7 +156,23 @@ function renderSections(sections, container) {
 function initCommandPalette() {
   // Ensure search database is preloaded for command palette search functionality
   // Try to prefetch the search database if it exists
-  fetch('/assets/js/search_db.json').then(response => {
+  
+  // 1. Prefer an explicit <meta name="base-url"> if present
+  let basePath =
+    document.querySelector('meta[name="base-url"]')?.content ?? '';
+
+  // 2. Fallback: infer from location like before
+  if (!basePath) {
+    const parts = window.location.pathname.split('/');
+    parts.pop();
+    basePath = parts.join('/');
+  }
+
+  // Build the proper URL to the search database
+  const searchDbUrl = `${basePath}/assets/js/search_db.json`;
+  console.log('Attempting to load search database from:', searchDbUrl);
+  
+  fetch(searchDbUrl).then(response => {
     if (response.ok) {
       return response.json();
     }

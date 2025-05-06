@@ -351,7 +351,7 @@
             content.setAttribute('tabindex', '-1'); // Make the content focusable for keyboard events
             
             // Media query for dark mode
-            if (window?.matchMedia?.('prefers-color-scheme: dark)')?.matches) {
+            if (window?.matchMedia?.('(prefers-color-scheme: dark)')?.matches) {
               content.style.backgroundColor = '#333';
               content.style.color = '#fff';
             }

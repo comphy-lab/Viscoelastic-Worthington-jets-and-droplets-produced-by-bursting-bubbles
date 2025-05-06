@@ -138,7 +138,7 @@
 }
 
 /* Style for search results section */
-.command-palette-section:has(.command-palette-section-title:contains("Search Results")) {
+.command-palette-section.search-results-section {
   border-top: 1px solid rgba(104, 35, 109, 0.2);
   margin-top: 10px;
   padding-top: 10px;
