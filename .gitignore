@@ -9,7 +9,6 @@
 **/*.s
 **/Video
 **/*.mp4
-**/*.json
 **/*.bv
 **/_darcs
 **/.project_config
