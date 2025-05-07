@@ -26,7 +26,7 @@
   --notebook-bg: #f8fafc;
   --notebook-border: #e3e8ee;
   --notebook-fg: #1e293b;
-  --accent: #2563eb;
+  --color-accent: #2563eb;
 }
 
 /* Dark theme variables */
@@ -48,7 +48,7 @@
   --notebook-bg: #181f2a;
   --notebook-border: #22304a;
   --notebook-fg: #e3eafe;
-  --accent: #60a5fa;
+  --color-accent: #60a5fa;
 }
 
 /* Core body styles */
@@ -509,7 +509,7 @@ code, pre {
 
 .jupyter-notebook-embed h2,
 .notebook-preview h3 {
-  color: var(--accent);
+  color: var(--color-accent);
   font-weight: 700;
   letter-spacing: 0.01em;
   margin-top: 0.5em !important;

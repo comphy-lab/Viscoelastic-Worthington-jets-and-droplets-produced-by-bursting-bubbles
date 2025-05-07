@@ -13,7 +13,7 @@
       // Handle localStorage access errors (private browsing, cookies disabled)
       console.warn('Unable to access localStorage:', storageError);
     }
-    
+<a id="" href="#"></a>
     let prefersDark = false;
     try {
       prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -21,7 +21,7 @@
       // Handle matchMedia access errors (unsupported browsers)
       console.warn('Unable to check media query:', mediaError);
     }
-    
+<a id="" href="#"></a>
     const theme = saved ? saved : (prefersDark ? 'dark' : 'light');
     document.documentElement.setAttribute('data-theme', theme);
     // Add theme class for CSS targeting
@@ -43,8 +43,8 @@
   }
 })();
   </script>
-
-
+<a id="" href="#"></a>
+<a id="" href="#"></a>
   <!-- No-JS fallback for theme and critical theming styles -->
   <style>
     /* Default light theme variables */
@@ -55,20 +55,20 @@
       --color-primary: #0066cc;
       --color-secondary: #036;
       --color-accent: #0099ff;
-      
+<a id="" href="#"></a>
       /* UI elements */
       --color-header-bg: #f5f5f5;
       --color-footer-bg: #2d2e33;
       --color-border: #e0e0e0;
       --color-input-bg: #f9f9f9;
-      
+<a id="" href="#"></a>
       /* Component colors */
       --color-preloader-bg: #ffffff;
       --color-loader: #0066cc;
       --color-card-bg: #ffffff;
       --color-code-bg: #f5f5f5;
     }
-    
+<a id="" href="#"></a>
     /* Dark theme variables applied via media query when JS is disabled */
     @media (prefers-color-scheme: dark) {
       :root:not(.theme-set) {
@@ -78,13 +78,13 @@
         --color-primary: #4d9fff;
         --color-secondary: #88ccff;
         --color-accent: #00bfff;
-        
+<a id="" href="#"></a>
         /* UI elements - dark mode */
         --color-header-bg: #121212;
         --color-footer-bg: #121212;
         --color-border: #333;
         --color-input-bg: #2d2d2d;
-        
+<a id="" href="#"></a>
         /* Component colors - dark mode */
         --color-preloader-bg: #1a1a1a;
         --color-loader: #4d9fff;
@@ -92,7 +92,7 @@
         --color-code-bg: #2d2d2d;
       }
     }
-    
+<a id="" href="#"></a>
     /* When JS sets the theme explicitly via data attribute */
     [data-theme="dark"] {
       /* Base colors - dark mode */
@@ -101,36 +101,36 @@
       --color-primary: #4d9fff;
       --color-secondary: #88ccff;
       --color-accent: #00bfff;
-      
+<a id="" href="#"></a>
       /* UI elements - dark mode */
       --color-header-bg: #121212;
       --color-footer-bg: #121212;
       --color-border: #333;
       --color-input-bg: #2d2d2d;
-      
+<a id="" href="#"></a>
       /* Component colors - dark mode */
       --color-preloader-bg: #1a1a1a;
       --color-loader: #4d9fff;
       --color-card-bg: #222;
       --color-code-bg: #2d2d2d;
     }
-    
+<a id="" href="#"></a>
     /* Prevent transition flashes during initial load */
     html:not(.transitions-enabled) * {
       transition: none !important;
     }
-    
+<a id="" href="#"></a>
     /* Apply theme to preloader and early elements */
     #preloader {
       background-color: var(--color-preloader-bg);
       color: var(--color-text);
     }
-    
+<a id="" href="#"></a>
     #loader {
       border-color: var(--color-loader);
       border-top-color: transparent;
     }
-    
+<a id="" href="#"></a>
     /* Noscript warning */
     .noscript-warning {
       background-color: var(--color-primary);
@@ -143,7 +143,7 @@
       right: 0;
       z-index: 1000;
     }
-    
+<a id="" href="#"></a>
     /* Theme indicator for no-JS */
     .theme-indicator {
       padding: 5px 10px;
@@ -152,23 +152,23 @@
       color: var(--color-text);
       text-align: center;
     }
-    
+<a id="" href="#"></a>
     /* Hide JS-only elements when no JS */
     .no-js .js-only {
       display: none !important;
     }
-    
+<a id="" href="#"></a>
     /* Show no-JS alternatives */
     .js .no-js-only {
       display: none !important;
     }
   </style>
-
+<a id="" href="#"></a>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="base-url" content="..">
-  <title>simulationCases/runCodesInParallel.sh | Viscoelastic Worthington Jets & Droplets Produced by Bursting Bubbles</title>
-  
+  <title>simulationCases/Makefile | Viscoelastic Worthington Jets & Droplets Produced by Bursting Bubbles</title>
+<a id="" href="#"></a>
   <!-- Critical CSS for fastest paint -->
   <style>
       .s-intro__title {
@@ -178,39 +178,39 @@
       .s-header {
           visibility: visible;
       }
-      
+<a id="" href="#"></a>
       /* Ensure theme toggle properly styled immediately */
       .theme-toggle {
           background-color: var(--color-background);
           color: var(--color-text);
       }
-      
+<a id="" href="#"></a>
       /* Control SVG visibility based on theme */
       [data-theme="dark"] .theme-toggle-icon.sun,
       :root:not([data-theme="dark"]) .theme-toggle-icon.moon {
           display: block;
       }
-      
+<a id="" href="#"></a>
       [data-theme="dark"] .theme-toggle-icon.moon,
       :root:not([data-theme="dark"]) .theme-toggle-icon.sun {
           display: none;
       }
   </style>
-
+<a id="" href="#"></a>
   <!-- Critical Meta Tags -->
-  <meta name="description" content="if [ \$ -lt 1 ]; then echo 'Usage: \$0  [numberofprocesses]' exit 1 fi file=\$1 NP=\${2:-4} use 4 as default if not provided mkdir -p \$file CC99='...">
+  <meta name="description" content="ifeq (\$(wildcard ../.projectconfig),) \$(error '../.projectconfig not found') endif BASILISK := \$(shell . ../.projectconfig && echo \$\$BASILISK) CFLAGS +=...">
   <meta name="author" content="CoMPhy Lab">
   <meta name="robots" content="index, follow">
-  <meta name="keywords" content="runcodesinparallel">
+  <meta name="keywords" content="makefile">
   <meta name="msapplication-TileColor" content="#da532c">
   <meta name="theme-color" content="#ffffff">
   <meta name="apple-mobile-web-app-title" content="CoMPhy Lab">
-
+<a id="" href="#"></a>
   <!-- Preload critical resources -->
   <link rel="preload" href="../assets/js/main.js" as="script">
   <link rel="preload" href="../assets/css/fontello/css/fontello.css" as="style">
   <link rel="preload" href="../assets/css/academicons-1.7.0/css/academicons.min.css" as="style">
-
+<a id="" href="#"></a>
   <!-- Base stylesheets -->
   <link rel="stylesheet" href="../assets/css/styles.css">
   <link rel="stylesheet" href="../assets/css/custom_styles.css">
@@ -218,7 +218,7 @@
   <link rel="stylesheet" href="../assets/css/fontello/css/fontello.css">
   <link rel="stylesheet" href="../assets/css/academicons-1.7.0/css/academicons.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
-
+<a id="" href="#"></a>
   <!-- Font optimization -->
   <style>
       @font-face {
@@ -227,14 +227,14 @@
           src: local('system-ui');
       }
   </style>
-
+<a id="" href="#"></a>
   <!-- Favicon -->
   <link rel="apple-touch-icon" sizes="180x180" href="../assets/favicon/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="96x96" href="../assets/favicon/favicon-96x96.png">
   <link rel="icon" type="image/svg+xml" href="../assets/favicon/favicon.svg">
   <link rel="shortcut icon" href="../assets/favicon/favicon.ico">
   <link rel="manifest" href="../assets/favicon/site.webmanifest">
-
+<a id="" href="#"></a>
   <!-- Scripts with proper loading attributes -->
   <script src="../assets/js/jquery.min.js"></script>
   <script src="../assets/js/jquery-ui.packed.js"></script>
@@ -248,7 +248,7 @@
   <script defer src="../assets/js/main.js"></script>
   <script defer src="../assets/js/theme-toggle.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script"></script>
-  
+<a id="" href="#"></a>
   <!-- Optimize page load performance -->
   <script>
     // Preconnect to critical domains
@@ -256,21 +256,21 @@
       'https://cdnjs.cloudflare.com',
       'https://cdn.jsdelivr.net'
     ];
-    
+<a id="" href="#"></a>
     preconnectDomains.forEach(domain => {
       const link = document.createElement('link');
       link.rel = 'preconnect';
       link.href = domain;
       link.crossOrigin = 'anonymous';
       document.head.appendChild(link);
-      
+<a id="" href="#"></a>
       // Also add DNS prefetch as fallback
       const dnsLink = document.createElement('link');
       dnsLink.rel = 'dns-prefetch';
       dnsLink.href = domain;
       document.head.appendChild(dnsLink);
     });
-    
+<a id="" href="#"></a>
     // Detect when document is fully loaded to remove preloader
     window.addEventListener('load', function() {
       const preloader = document.getElementById('preloader');
@@ -282,7 +282,7 @@
       }
     });
   </script>
-
+<a id="" href="#"></a>
   <script>
       // Load Font Awesome with proper environment detection and fallbacks
       function loadStylesheet(href) {
@@ -297,11 +297,11 @@
         document.head.appendChild(link);
         return link;
       }
-      
+<a id="" href="#"></a>
       // Check if we're on localhost
       if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
         // Use hardcoded version numbers for reliable loading
-        
+<a id="" href="#"></a>
         // Load Font Awesome using multiple CDNs to maximize reliability for local development
         loadStylesheet('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css');
         // Backup CDN if the first one fails
@@ -317,12 +317,12 @@
         document.head.appendChild(script);
       }
     </script>
-
+<a id="" href="#"></a>
   <script>
       // Mark page as JS-enabled and manage transitions
       document.documentElement.classList.remove('no-js');
       document.documentElement.classList.add('js');
-      
+<a id="" href="#"></a>
       // Allow CSS transitions after initial load to prevent transition flashes
       window.addEventListener('DOMContentLoaded', () => {
           setTimeout(() => {
@@ -334,18 +334,18 @@
 <body id="top">
 <script>window.repoName = "Viscoelastic-Worthington-jets-and-droplets-produced-by-bursting-bubbles";</script>
 
-
+<a id="" href="#"></a>
     <!-- Preloader with theme variables applied -->
     <div id="preloader">
         <div id="loader"></div>
     </div>
-
+<a id="" href="#"></a>
     <noscript>
         <div class="noscript-warning">
             <p>This site works best with JavaScript enabled. Some features may be limited.</p>
         </div>
     </noscript>
-
+<a id="" href="#"></a>
     <div id="page" class="s-pagewrap">
         <header class="s-header">
             <div class="s-header__logo">
@@ -405,43 +405,37 @@
                 </ul>
             </nav>
         </header>
-
+<a id="" href="#"></a>
         <!-- Main content -->
         <main class="content">
-            
+<a id="" href="#"></a>
             <div class="page-content">
-                
-                                <h1 class="page-title">simulationCases/runCodesInParallel.sh</h1>
-                
-                                
+<a id="" href="#"></a>
+                                <h1 class="page-title">simulationCases/Makefile</h1>
+<a id="" href="#"></a>
+<a id="" href="#"></a>
                                 <div class="raw-file-button-container">
-                    <a href="https://github.com/comphy-lab/Viscoelastic-Worthington-jets-and-droplets-produced-by-bursting-bubbles/raw/main/simulationCases/runCodesInParallel.sh" class="raw-file-button" target="_blank">
+                    <a href="https://github.com/comphy-lab/Viscoelastic-Worthington-jets-and-droplets-produced-by-bursting-bubbles/raw/main/simulationCases/Makefile" class="raw-file-button" target="_blank">
                         <i class="fa-brands fa-github"></i> See raw file
                     </a>
                 </div>
-                
-                <h1
-                id="runcodesinparallel.sh">runCodesInParallel.sh</h1>
+<a id="" href="#"></a>
+                <h1 id="makefile">Makefile</h1>
                 <div class="code-block-container"><div class="code-block-container"><pre
-                class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><span class="co">#!/bin/bash</span></span>
-<span id="cb1-2"></span>
-<span id="cb1-3"><span class="co"># check that CLI inputs are there. 1 is compulsory. if 2 is not there, use 4 (default)</span></span>
-<span id="cb1-4"><span class="cf">if</span> <span class="bu">[</span> <span class="dt">\$</span># <span class="ot">-lt</span> 1 <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
-<span id="cb1-5">    <span class="bu">echo</span> <span class="st">&quot;Usage: </span><span class="dt">\$</span><span class="st">0 &lt;filename&gt; [number_of_processes]&quot;</span></span>
-<span id="cb1-6">    <span class="bu">exit</span> 1</span>
-<span id="cb1-7"><span class="cf">fi</span></span>
-<span id="cb1-8"></span>
-<span id="cb1-9"><span class="va">file</span><span class="op">=</span><span class="dt">\$</span>1</span>
-<span id="cb1-10"><span class="va">NP</span><span class="op">=</span><span class="dt">\$</span>{2:-4}  <span class="co"># use 4 as default if not provided</span></span>
-<span id="cb1-11"></span>
-<span id="cb1-12"><span class="fu">mkdir</span> <span class="at">-p</span> <span class="dt">\$</span>file</span>
-<span id="cb1-13"><span class="va">CC99</span><span class="op">=</span><span class="st">&#39;mpicc -std=c99&#39;</span> <span class="ex">qcc</span> <span class="at">-Wall</span> <span class="at">-O2</span> <span class="at">-D_MPI</span><span class="op">=</span>1 <span class="at">-I\$PWD</span>/src-local <span class="at">-I\$PWD</span>/../src-local <span class="at">-disable-dimensions</span> <span class="dt">\$</span>file.c <span class="at">-o</span> <span class="dt">\$</span>file/\$file <span class="at">-lm</span></span>
-<span id="cb1-14"><span class="fu">chmod</span> +x <span class="dt">\$</span>file/\$file  <span class="co"># Ensure executable has proper permissions</span></span>
-<span id="cb1-15"><span class="bu">cd</span> <span class="dt">\$</span>file</span>
-<span id="cb1-16"><span class="ex">mpirun</span> <span class="at">--allow-run-as-root</span> <span class="at">-np</span> <span class="dt">\$</span>NP ./\$file</span></code></pre></div></div>
+                class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><span class="co"># Check if .project_config exists</span></span>
+<span id="cb1-2"><span class="ex">ifeq</span> <span class="er">(</span><span class="ex">\$</span><span class="er">(</span><span class="ex">wildcard</span> ../.project_config<span class="kw">)</span><span class="ex">,</span><span class="kw">)</span></span>
+<span id="cb1-3">  <span class="ex">\$</span><span class="er">(</span><span class="ex">error</span> <span class="st">&quot;../.project_config not found&quot;</span><span class="kw">)</span></span>
+<span id="cb1-4"><span class="ex">endif</span></span>
+<span id="cb1-5"></span>
+<span id="cb1-6"><span class="ex">BASILISK</span> := <span class="dt">\$</span><span class="er">(</span><span class="ex">shell</span> . ../.project_config <span class="kw">&amp;&amp;</span> <span class="bu">echo</span> <span class="dt">\$\$</span>BASILISK<span class="kw">)</span></span>
+<span id="cb1-7"></span>
+<span id="cb1-8"><span class="ex">CFLAGS</span> += <span class="at">-O2</span> <span class="at">-disable-dimensions</span></span>
+<span id="cb1-9"><span class="ex">CFLAGS</span> += <span class="at">-I\$</span><span class="er">(</span><span class="ex">PWD</span><span class="kw">)</span><span class="ex">/src-local</span> <span class="at">-I\$</span><span class="er">(</span><span class="ex">PWD</span><span class="kw">)</span><span class="ex">/../src-local</span></span>
+<span id="cb1-10"></span>
+<span id="cb1-11"><span class="ex">include</span> <span class="dt">\$</span><span class="er">(</span><span class="ex">BASILISK</span><span class="kw">)</span><span class="ex">/Makefile.defs</span></span></code></pre></div></div>
             </div>
         </main>
-
+<a id="" href="#"></a>
         <footer class="site-footer">
             <div class="footer-left">
               <a href="http://basilisk.fr/sandbox/vatsal/" target="_blank">
@@ -485,7 +479,7 @@
             </div>
           </footer>
     </div>  
-
+<a id="" href="#"></a>
     <!-- Command Palette -->
     <div id="simple-command-palette" class="simple-command-palette" style="display: none;">
         <div class="simple-command-palette-backdrop"></div>
@@ -499,7 +493,7 @@
             </div>
         </div>
     </div>
-
+<a id="" href="#"></a>
 
 <script type="text/javascript">
 document.addEventListener('DOMContentLoaded', function() {
