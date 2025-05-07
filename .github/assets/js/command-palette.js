@@ -365,7 +365,16 @@ document.addEventListener('DOMContentLoaded', function() {
   initCommandPalette();
   
   // Show appropriate shortcut text based on platform
-  const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+  // Use modern platform detection methods
+  let isMac = false;
+  if (navigator.userAgentData && navigator.userAgentData.platform) {
+    // Use the newer userAgentData API if available
+    isMac = navigator.userAgentData.platform.includes('macOS');
+  } else {
+    // Fall back to userAgent string for older browsers
+    isMac = /(Mac|iPhone|iPod|iPad)/i.test(navigator.userAgent);
+  }
+  
   document.querySelectorAll('.mac-theme-text').forEach(el => {
     el.style.display = isMac ? 'inline' : 'none';
   });
