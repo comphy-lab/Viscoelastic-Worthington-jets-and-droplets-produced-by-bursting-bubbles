@@ -3,6 +3,8 @@
 [![Website Status](https://img.shields.io/website?url=https%3A%2F%2Fcomphy-lab.github.io%2FViscoelastic-Worthington-jets-and-droplets-produced-by-bursting-bubbles%2F&style=flat-square&logo=github&label=Website)](https://comphy-lab.github.io/Viscoelastic-Worthington-jets-and-droplets-produced-by-bursting-bubbles/)
 [![DOI](https://zenodo.org/badge/893135483.svg)](https://doi.org/10.5281/zenodo.14349207)
 [![Blog](https://img.shields.io/badge/Blog-Coming%20Soon-yellow?style=flat-square&logo=obsidian&logoColor=white)](https://blogs.comphy-lab.org/0_ToDo-Blog-public)
+[![GitHub](https://img.shields.io/badge/GitHub-Repository-blue?style=flat-square&logo=github)](https://github.com/comphy-lab/Viscoelastic-Worthington-jets-and-droplets-produced-by-bursting-bubbles)
+
 
 This repository contains the simulation code and analysis for studying the dynamics of viscoelastic Worthington jets and droplets produced by bursting bubbles. The code uses the ElastoFlow framework to simulate bubble cavity collapse in viscoelastic media, examining how elastic modulus and relaxation time affect jet and droplet formation.
 
