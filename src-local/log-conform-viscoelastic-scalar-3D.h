@@ -1,58 +1,86 @@
-/** Title: log-conform-viscoelastic-3D.h
-# Version: 2.5
-# Main feature 1: A exists in across the domain and relaxes according to \lambda. The stress only acts according to G.
-# Main feature 2: This is the 3D implementation of [log-conform-viscoelastic-scalar-2D.h](log-conform-viscoelastic-scalar-2D.h).
+/** 
+# Log-Conformation Method for 3D Viscoelastic Fluids
 
-# Author: Vatsal Sanjay
-# vatsalsanjay@gmail.com
-# Physics of Fluids
-# Updated: Nov 23, 2024
+## Overview
+- **Title**: log-conform-viscoelastic-3D.h
+- **Version**: 2.6
+- **Description**: Implementation of the log-conformation method for viscoelastic fluids in 3D
 
-# change log: Oct 19, 2024 (v1.0)
-- 3D implementation
-- scalar implementation
+### Key Features
+1. Conformation tensor A exists across the domain and relaxes according to λ
+2. Stress acts according to elastic modulus G
+3. 3D implementation extending log-conform-viscoelastic-scalar-2D.h
+4. Eigenvalue clamping for numerical stability
 
-# The code is same as http://basilisk.fr/src/log-conform.h but 
-- written with G-\lambda formulation. 
-- It also fixes the bug where [\sigma_p] = 0 & [\sigma_s] = \gamma\kappa instead of [\sigma_s+\sigma_p] = \gamma\kappa.
+### Author Information
+- **Name**: Vatsal Sanjay
+- **Email**: vatsalsanjay@gmail.com
+- **Institution**: Physics of Fluids
+- **Last Updated**: Mar 16, 2025
 
-# change log: Oct 20, 2024 (v1.1)
-- Added a check for negative eigenvalues. If any are found, print the location and value of the offending eigenvalue.
-- Please report this bug by opening an issue on the GitHub repository. 
-- The code works!!! :) 
+### Dependencies
+- bcg.h: Bell-Collela-Glaz scheme for advection
+- eigen_decomposition.h: For 3D eigenvalue computation
+- navier-stokes/centered.h: For base flow solver
 
-# change log: Oct 29, 2024 (v2.0)
-- Rechecked and corrected the entire matrix algebra implementation, particularly in 3D calculations
-- Optimized Omega tensor calculations with improved intermediate variable handling
-- Simplified acceleration term calculations
-- Added verification notes and TODOs for future testing
-- Improved code documentation and maintainability
+### References
+- Fattal & Kupferman (2004, 2005): Original log-conformation method
+- Comminal et al. (2015): Constitutive model functions
+- Hao & Pan (2007): Split scheme implementation
 
-- Rechecked the entire matrix algebra and found some major mistakes. Fixed them.
-- Please report any bugs by opening an issue on the GitHub repository.
-- The code works (hopefully, no more bugs)!!! :) 
+## Version History
 
-# change log: Oct 29, 2024 (v2.1)
-- Added some initialization functions for pseudo_v and pseudo_t and their 3D counterparts.
+### v1.0 (Oct 19, 2024)
+- Initial 3D implementation
+- Scalar implementation approach
 
-# change log: Nov 3, 2024 (v2.2)
-- Refactored tensor operations to use intermediate tensor structure A for improved clarity and maintainability
-- Unified A-tensor-based approach throughout the code for consistent tensor manipulation
-- Added explicit symmetry enforcement in tensor operations
-- Improved readability by separating tensor transformation steps
-- Enhanced extensibility for future tensor-only implementations
+### v1.1 (Oct 20, 2024)
+- Added negative eigenvalue detection
+- Added error reporting system
 
-# change log: Nov 14, 2024 (v2.3)
-- added a way to do infinite De
+### v2.0 (Oct 29, 2024)
+- Major matrix algebra corrections for 3D
+- Optimized tensor calculations
+- Improved code structure and documentation
 
-# change log: Nov 23, 2024 (v2.5)
-- improved documentation.
+### v2.1 (Oct 29, 2024)
+- Added initialization functions for tensor structures
 
-# TODO: (non-critical, non-urgent)
- * axi compatibility is not there. This will not be fixed. To use axi, please use: [log-conform-viscoelastic-scalar-2D.h](log-conform-viscoelastic-scalar-2D.h) for a scalar formulation, or better yet, use [log-conform-viscoelastic.h](log-conform-viscoelastic.h) which is more efficient.
- * I have (wherever I could) used the metric terms: cm and fm. Of course, that alone does not guarentee axi compatibility. Proposed steps to do: 
- * - [ ] enfore all tensors and make the code generally compatible using foreach_dimensions
- * - [ ] use metric terms: cm and fm.
+### v2.2 (Nov 3, 2024)
+- Refactored tensor operations
+- Improved code maintainability
+- Enhanced tensor manipulation consistency
+
+### v2.3 (Nov 14, 2024)
+- Added infinite Deborah number support
+
+### v2.5 (Nov 23, 2024)
+- Documentation improvements
+- Added mathematical explanations
+
+### v2.6 (Mar 16, 2025)
+- Implemented eigenvalue clamping system
+- Added minimum eigenvalue threshold (EIGENVALUE_MIN = 1e-8)
+- Improved numerical stability handling
+- Added diagnostic capabilities
+- Fixed 3D velocity gradient calculation
+
+## Implementation Notes
+1. The code extends the standard Basilisk log-conformation implementation
+2. Uses G-λ formulation for better physical interpretation
+3. Fixes surface tension coupling with polymeric stress
+4. Includes both 2D and 3D implementations
+5. Uses atomic operations for thread-safe diagnostics
+
+## Future Work
+### Axisymmetric Compatibility
+- Currently not implemented
+- Use log-conform-viscoelastic-scalar-2D.h for axi cases
+- Or use log-conform-viscoelastic.h for better efficiency
+
+### Metric Terms Improvements
+- [ ] Enforce tensor compatibility using foreach_dimension
+- [ ] Complete metric terms (cm, fm) implementation
 */
 
 #if AXI
@@ -97,7 +125,7 @@ where $D_t$ denotes the material derivative and
 $\mathbf{f_r}(\cdot)$ is the relaxation function. Here, $\lambda$ is the relaxation time.
 
 In the case of an Oldroyd-B viscoelastic fluid, $\mathbf{f}_s
-(\mathbf{A}) = \mathbf{f}_r (\mathbf{A}) = \mathbf{A} -\mathbf{I}$,
+ (\mathbf{A}) = \mathbf{f}_r (\mathbf{A}) = \mathbf{A} -\mathbf{I}$,
 and the above equations can be combined to avoid the use of
 $\mathbf{A}$
 $$
@@ -188,6 +216,12 @@ tensor $\Psi$. */
 TODO: 
 - Perhaps, instead of the Bell--Collela--Glaz scheme, we can use the conservative form of the advection equation and transport the log-conformation tensor with the VoF color function, similar to [http://basilisk.fr/src/navier-stokes/conserving.h](http://basilisk.fr/src/navier-stokes/conserving.h)
 */
+
+#define EIGENVALUE_MIN 1e-8
+
+#ifdef DEBUG_EIGENVALUES
+static int eigenvalue_corrections = 0;
+#endif
 
 #include "bcg.h"
 
@@ -389,6 +423,16 @@ $$
 */
 
 #if dimension == 2
+/**
+Advances the log-conformation tensor and updates the corresponding conformation and stress tensors.
+
+This event function performs three primary steps within the viscoelastic fluid simulation:
+- Diagonalizes the conformation tensor and computes its logarithm (Ψ) while applying eigenvalue clamping to ensure numerical stability.
+- Advances Ψ in time by incorporating the upper convective term computed from the velocity gradient, which is used to update the log-conformation tensor.
+- Recovers the physical conformation tensor and stress tensor by exponentiating the diagonalized eigenvalues and integrating the relaxation term.
+
+Note: Although the overall simulation targets 3D viscoelastic fluids, this implementation uses a 2D diagonalization routine.
+*/
 event tracer_advection(i++)
 {
   scalar Psi11 = A11;
@@ -422,13 +466,19 @@ event tracer_advection(i++)
     diagonalization_2D (&Lambda, &R, &A);
 
     /*
-    Check for negative eigenvalues -- this should never happen. If it does, print the location and value of the offending eigenvalue.
-    Please report this bug by opening an issue on the GitHub repository. 
+    Check for negative eigenvalues and clamp them to EIGENVALUE_MIN.
+    This prevents numerical instabilities while maintaining physical meaning.
     */
     if (Lambda.x <= 0. || Lambda.y <= 0.) {
-      fprintf(ferr, "Negative eigenvalue detected: Lambda.x = %g, Lambda.y = %g\n", Lambda.x, Lambda.y);
-      fprintf(ferr, "x = %g, y = %g\n", x, y);
-      exit(1);
+      fprintf(ferr, "WARNING: Negative eigenvalue detected at (%g,%g): [%g,%g]\n", 
+              x, y, Lambda.x, Lambda.y);
+      
+      #ifdef DEBUG_EIGENVALUES
+      atomic_increment(&eigenvalue_corrections);
+      #endif
+      
+      Lambda.x = max(Lambda.x, EIGENVALUE_MIN);
+      Lambda.y = max(Lambda.y, EIGENVALUE_MIN);
     }
     
     /**
@@ -574,6 +624,20 @@ event tracer_advection(i++)
 
 #elif dimension == 3
 
+/**
+Advances the log-conformation tensor and computes the corresponding conformation and stress tensors for 3D viscoelastic fluid simulations.
+
+This event function performs a two-step update for the viscoelastic fluid model using the log-conformation method. In the first part, it computes the logarithm of the conformation tensor $\Psi$ from A by:
+- Diagonalizing A to obtain eigenvalues ($\Lambda$) and eigenvectors (R).
+- Clamping any negative eigenvalues to prevent numerical instabilities (using EIGENVALUE_MIN).
+- Evaluating $\Psi = \log(A)$ and incorporating the upper convective contribution via the symmetric tensor B and the skew-symmetric tensor $\Omega$.
+
+$\Psi$ is then advanced in time using central difference approximations for the velocity gradients, where degenerate eigenvalue cases are handled with simplified calculations.
+
+In the second part, the function converts the updated log-conformation tensor back to the conformation tensor A by exponentiating the eigenvalues and applies the relaxation factor derived from the relaxation time. Finally, it computes the polymeric stress tensor T from A.
+
+Warnings are printed if negative eigenvalues are detected, and a debug counter is incremented when debugging is enabled.
+*/
 event tracer_advection(i++)
 {
   /**
@@ -597,13 +661,20 @@ event tracer_advection(i++)
     diagonalization_3D (&Lambda, &R, &A);
 
     /*
-    Check for negative eigenvalues -- this should never happen. If it does, print the location and value of the offending eigenvalue.
-    Please report this bug by opening an issue on the GitHub repository. 
+    Check for negative eigenvalues and clamp them to EIGENVALUE_MIN.
+    This prevents numerical instabilities while maintaining physical meaning.
     */
     if (Lambda.x <= 0. || Lambda.y <= 0. || Lambda.z <= 0.) {
-      fprintf(ferr, "Negative eigenvalue detected: Lambda.x = %g, Lambda.y = %g, Lambda.z = %g\n", Lambda.x, Lambda.y, Lambda.z);
-      fprintf(ferr, "x = %g, y = %g, z = %g\n", x, y, z);
-      exit(1);
+      fprintf(ferr, "WARNING: Negative eigenvalue detected at (%g,%g,%g): [%g,%g,%g]\n", 
+              x, y, z, Lambda.x, Lambda.y, Lambda.z);
+      
+      #ifdef DEBUG_EIGENVALUES
+      atomic_increment(&eigenvalue_corrections);
+      #endif
+      
+      Lambda.x = max(Lambda.x, EIGENVALUE_MIN);
+      Lambda.y = max(Lambda.y, EIGENVALUE_MIN);
+      Lambda.z = max(Lambda.z, EIGENVALUE_MIN);
     }
     
     // Compute Psi = log(A) = R * log(Lambda) * R^T
@@ -729,23 +800,24 @@ event tracer_advection(i++)
       double rot_z_xy_xz = (R.z.y*omega_xy + R.z.z*omega_xz);  // xy rotation plus xz rotation, z components
       double rot_z_xz_yz = (R.z.x*omega_xz + R.z.y*omega_yz);  // xz rotation plus yz rotation, z components
 
-      /* Calculate the components of the Omega tensor in the physical coordinate system
-       * 
-       * The Omega tensor represents the rotational part of the velocity gradient tensor
-       * and is computed through the following steps:
-       * 
-       * 1. We already have:
-       *    - R: eigenvector matrix of the conformation tensor
-       *    - rot_*_*_*: pre-computed rotation combinations for each direction
-       * 
-       * 2. Mathematical background:
-       *    Omega = R * Omega_eigen * R^T
-       *    where Omega_eigen is the rotation tensor in eigenvector space
-       * 
-       * 3. The components are calculated using the rotation combinations:
-       *    - rot_i_jk_lm represents combined rotations in the i-direction
-       *    - Each component Omega_ij is a linear combination of these rotations
-       */
+      /** 
+      Calculate the components of the Omega tensor in the physical coordinate system
+      
+      The Omega tensor represents the rotational part of the velocity gradient tensor
+      and is computed through the following steps:
+      
+      1. We already have:
+         - R: eigenvector matrix of the conformation tensor
+         - rot_*_*_*: pre-computed rotation combinations for each direction
+      
+      2. Mathematical background:
+         Omega = R * Omega_eigen * R^T
+         where Omega_eigen is the rotation tensor in eigenvector space
+      
+      3. The components are calculated using the rotation combinations:
+         - rot_i_jk_lm represents combined rotations in the i-direction
+         - Each component Omega_ij is a linear combination of these rotations
+      */
 
       // Compute x-row components of Omega
       Omega.x.x = R.x.y*rot_x_xy_yz  // xy-yz rotation contribution
@@ -770,16 +842,17 @@ event tracer_advection(i++)
       Omega.z.y = R.y.y*rot_z_xy_yz - R.y.x*rot_z_xy_xz + R.y.z*rot_z_xz_yz;
       Omega.z.z = R.z.y*rot_z_xy_yz - R.z.x*rot_z_xy_xz + R.z.z*rot_z_xz_yz;
 
-      /* Note: The resulting Omega tensor is skew-symmetric, meaning:
-       * Omega_ij = -Omega_ji
-       * This property is automatically satisfied by the construction above
-       * and is essential for preserving the physical meaning of rotation
-       */
+      /**  
+      Note: The resulting Omega tensor is skew-symmetric, meaning:
+      - Omega_ij = -Omega_ji
+      This property is automatically satisfied by the construction above
+      and is essential for preserving the physical meaning of rotation
+      */
 
       // Extract diagonal components of M (velocity gradient tensor in eigenvector basis)
       double M_diag_x = M.x.x, M_diag_y = M.y.y, M_diag_z = M.z.z;
 
-      /*
+      /**
       Compute B tensor: B = R * diag(M) * R^T
       - This transforms the diagonal velocity gradient tensor back to the original coordinate system
       - B is symmetric, so we only need to compute the upper triangle
@@ -788,7 +861,7 @@ event tracer_advection(i++)
       // Compute diagonal elements of B
       B.x.x = M_diag_x*sq(R.x.x) + M_diag_y*sq(R.x.y) + M_diag_z*sq(R.x.z);
       B.y.y = M_diag_x*sq(R.y.x) + M_diag_y*sq(R.y.y) + M_diag_z*sq(R.y.z);
-      B.z.z = M_diag_x*sq(R.z.x) + M_diag_y*sq(R.x.y) + M_diag_z*sq(R.z.z);
+      B.z.z = M_diag_x*sq(R.z.x) + M_diag_y*sq(R.z.y) + M_diag_z*sq(R.z.z);
 
       // Compute off-diagonal elements of B (upper triangle)
       B.x.y = M_diag_x*R.x.x*R.y.x + M_diag_y*R.x.y*R.y.y + M_diag_z*R.x.z*R.y.z;
@@ -883,7 +956,7 @@ event tracer_advection(i++)
     foreach_dimension()
       A.x.x = 1. + (A.x.x - 1.)*intFactor;
 
-    /*
+    /**
     Get Aij from A. These commands might look repetitive. But, I do this so that in the future, generalization to tensor only form is easier.
     */
 

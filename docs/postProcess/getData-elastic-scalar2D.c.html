@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+  <!-- Eliminate FOUC (Flash of Unstyled Content) and FOUT (Flash of Incorrect Theme) -->
+  <script>
+    (function() {
+  try {
+    // Apply the theme as quickly as possible to avoid flash
+    let saved;
+    try {
+      saved = localStorage.getItem('theme');
+    } catch (storageError) {
+      // Handle localStorage access errors (private browsing, cookies disabled)
+      console.warn('Unable to access localStorage:', storageError);
+    }
+
+    let prefersDark = false;
+    try {
+      prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    } catch (mediaError) {
+      // Handle matchMedia access errors (unsupported browsers)
+      console.warn('Unable to check media query:', mediaError);
+    }
+
+    const theme = saved ? saved : (prefersDark ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', theme);
+    // Add theme class for CSS targeting
+    document.documentElement.classList.add(theme + '-theme');
+    // Mark when theme is set for CSS transitions
+    document.documentElement.classList.add('theme-set');
+  } catch (error) {
+    // Fallback for any other unexpected errors
+    console.warn('Theme initialization failed:', error);
+    // Apply default theme as fallback
+    try {
+      document.documentElement.setAttribute('data-theme', 'light');
+      document.documentElement.classList.add('light-theme');
+      document.documentElement.classList.add('theme-set');
+    } catch (fallbackError) {
+      // Silent catch for extreme cases
+      console.error('Critical theme fallback failed:', fallbackError);
+    }
+  }
+})();
+  </script>
+
+
+  <!-- No-JS fallback for theme and critical theming styles -->
+  <style>
+    /* Default light theme variables */
+    :root {
+      /* Base colors */
+      --color-background: #fff;
+      --color-text: #333;
+      --color-primary: #0066cc;
+      --color-secondary: #036;
+      --color-accent: #0099ff;
+
+      /* UI elements */
+      --color-header-bg: #f5f5f5;
+      --color-footer-bg: #2d2e33;
+      --color-border: #e0e0e0;
+      --color-input-bg: #f9f9f9;
+
+      /* Component colors */
+      --color-preloader-bg: #ffffff;
+      --color-loader: #0066cc;
+      --color-card-bg: #ffffff;
+      --color-code-bg: #f5f5f5;
+    }
+
+    /* Dark theme variables applied via media query when JS is disabled */
+    @media (prefers-color-scheme: dark) {
+      :root:not(.theme-set) {
+        /* Base colors - dark mode */
+        --color-background: #1a1a1a;
+        --color-text: #f5f5f5;
+        --color-primary: #4d9fff;
+        --color-secondary: #88ccff;
+        --color-accent: #00bfff;
+
+        /* UI elements - dark mode */
+        --color-header-bg: #121212;
+        --color-footer-bg: #121212;
+        --color-border: #333;
+        --color-input-bg: #2d2d2d;
+
+        /* Component colors - dark mode */
+        --color-preloader-bg: #1a1a1a;
+        --color-loader: #4d9fff;
+        --color-card-bg: #222;
+        --color-code-bg: #2d2d2d;
+      }
+    }
+
+    /* When JS sets the theme explicitly via data attribute */
+    [data-theme="dark"] {
+      /* Base colors - dark mode */
+      --color-background: #1a1a1a;
+      --color-text: #f5f5f5;
+      --color-primary: #4d9fff;
+      --color-secondary: #88ccff;
+      --color-accent: #00bfff;
+
+      /* UI elements - dark mode */
+      --color-header-bg: #121212;
+      --color-footer-bg: #121212;
+      --color-border: #333;
+      --color-input-bg: #2d2d2d;
+
+      /* Component colors - dark mode */
+      --color-preloader-bg: #1a1a1a;
+      --color-loader: #4d9fff;
+      --color-card-bg: #222;
+      --color-code-bg: #2d2d2d;
+    }
+
+    /* Prevent transition flashes during initial load */
+    html:not(.transitions-enabled) * {
+      transition: none !important;
+    }
+
+    /* Apply theme to preloader and early elements */
+    #preloader {
+      background-color: var(--color-preloader-bg);
+      color: var(--color-text);
+    }
+
+    #loader {
+      border-color: var(--color-loader);
+      border-top-color: transparent;
+    }
+
+    /* Noscript warning */
+    .noscript-warning {
+      background-color: var(--color-primary);
+      color: white;
+      text-align: center;
+      padding: 10px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+    }
+
+    /* Theme indicator for no-JS */
+    .theme-indicator {
+      padding: 5px 10px;
+      border-radius: 4px;
+      background-color: var(--color-input-bg);
+      color: var(--color-text);
+      text-align: center;
+    }
+
+    /* Hide JS-only elements when no JS */
+    .no-js .js-only {
+      display: none !important;
+    }
+
+    /* Show no-JS alternatives */
+    .js .no-js-only {
+      display: none !important;
+    }
+  </style>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="base-url" content="..">
+  <title>postProcess/getData-elastic-scalar2D.c | Viscoelastic Worthington Jets & Droplets Produced by Bursting Bubbles</title>
+
+  <!-- Critical CSS for fastest paint -->
+  <style>
+      .s-intro__title {
+          visibility: visible;
+          font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      }
+      .s-header {
+          visibility: visible;
+      }
+
+      /* Ensure theme toggle properly styled immediately */
+      .theme-toggle {
+          background-color: var(--color-background);
+          color: var(--color-text);
+      }
+
+      /* Control SVG visibility based on theme */
+      [data-theme="dark"] .theme-toggle-icon.sun,
+      :root:not([data-theme="dark"]) .theme-toggle-icon.moon {
+          display: block;
+      }
+
+      [data-theme="dark"] .theme-toggle-icon.moon,
+      :root:not([data-theme="dark"]) .theme-toggle-icon.sun {
+          display: none;
+      }
+  </style>
+
+  <!-- Critical Meta Tags -->
+  <meta name="description" content="This program extracts and processes data from fluid dynamics simulation snapshots, specifically designed for viscoelastic fluid simulations with conformation...">
+  <meta name="author" content="CoMPhy Lab">
+  <meta name="robots" content="index, follow">
+  <meta name="keywords" content="elastic, getdata, output.h, scalar2d, utils.h">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="apple-mobile-web-app-title" content="CoMPhy Lab">
+
+  <!-- Preload critical resources -->
+  <link rel="preload" href="../assets/js/main.js" as="script">
+  <link rel="preload" href="../assets/css/fontello/css/fontello.css" as="style">
+  <link rel="preload" href="../assets/css/academicons-1.7.0/css/academicons.min.css" as="style">
+
+  <!-- Base stylesheets -->
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="stylesheet" href="../assets/css/custom_styles.css">
+  <link rel="stylesheet" href="../assets/css/command-palette.css">
+  <link rel="stylesheet" href="../assets/css/fontello/css/fontello.css">
+  <link rel="stylesheet" href="../assets/css/academicons-1.7.0/css/academicons.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+
+  <!-- Font optimization -->
+  <style>
+      @font-face {
+          font-display: swap;
+          font-family: 'System Font';
+          src: local('system-ui');
+      }
+  </style>
+
+  <!-- Favicon -->
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="../assets/favicon/favicon-96x96.png">
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon/favicon.svg">
+  <link rel="shortcut icon" href="../assets/favicon/favicon.ico">
+  <link rel="manifest" href="../assets/favicon/site.webmanifest">
+
+  <!-- Scripts with proper loading attributes -->
+  <script src="../assets/js/jquery.min.js"></script>
+  <script src="../assets/js/jquery-ui.packed.js"></script>
+  <script src="../assets/js/plots.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2/dist/fuse.min.js"></script>
+  <!-- Config script must load before other scripts -->
+  <script src="../assets/js/config.js"></script>
+  <script defer src="../assets/js/search-helper.js"></script>
+  <script defer src="../assets/js/command-palette.js"></script>
+  <script defer src="../assets/js/command-data.js"></script>
+  <script defer src="../assets/js/main.js"></script>
+  <script defer src="../assets/js/theme-toggle.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script"></script>
+
+  <!-- Optimize page load performance -->
+  <script>
+    // Preconnect to critical domains
+    const preconnectDomains = [
+      'https://cdnjs.cloudflare.com',
+      'https://cdn.jsdelivr.net'
+    ];
+
+    preconnectDomains.forEach(domain => {
+      const link = document.createElement('link');
+      link.rel = 'preconnect';
+      link.href = domain;
+      link.crossOrigin = 'anonymous';
+      document.head.appendChild(link);
+
+      // Also add DNS prefetch as fallback
+      const dnsLink = document.createElement('link');
+      dnsLink.rel = 'dns-prefetch';
+      dnsLink.href = domain;
+      document.head.appendChild(dnsLink);
+    });
+
+    // Detect when document is fully loaded to remove preloader
+    window.addEventListener('load', function() {
+      const preloader = document.getElementById('preloader');
+      if (preloader) {
+        preloader.style.opacity = '0';
+        setTimeout(() => {
+          preloader.style.display = 'none';
+        }, 300); // Match transition duration
+      }
+    });
+  </script>
+
+  <script>
+      // Load Font Awesome with proper environment detection and fallbacks
+      function loadStylesheet(href) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = href;
+        link.crossOrigin = 'anonymous';
+        link.onerror = (e) => {
+          console.error(`Failed to load stylesheet: `, e);
+          console.log('Trying alternative Font Awesome source...');
+        };
+        document.head.appendChild(link);
+        return link;
+      }
+
+      // Check if we're on localhost
+      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        // Use hardcoded version numbers for reliable loading
+
+        // Load Font Awesome using multiple CDNs to maximize reliability for local development
+        loadStylesheet('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css');
+        // Backup CDN if the first one fails
+        loadStylesheet('https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.2/css/all.min.css');
+        // Final local fallback - ensures it will work on any localhost environment
+        loadStylesheet('https://use.fontawesome.com/releases/v6.7.2/css/all.css');
+      } else {
+        // Use Kit for production with defer
+        var script = document.createElement('script');
+        script.src = 'https://kit.fontawesome.com/b1cfd9ca75.js';
+        script.crossOrigin = 'anonymous';
+        script.defer = true;
+        document.head.appendChild(script);
+      }
+    </script>
+
+  <script>
+      // Mark page as JS-enabled and manage transitions
+      document.documentElement.classList.remove('no-js');
+      document.documentElement.classList.add('js');
+
+      // Allow CSS transitions after initial load to prevent transition flashes
+      window.addEventListener('DOMContentLoaded', () => {
+          setTimeout(() => {
+              document.documentElement.classList.add('transitions-enabled');
+          }, 100); // Short delay to ensure DOM is ready
+      });
+  </script>
+</head>
+<body id="top">
+<script>window.repoName = "Viscoelastic-Worthington-jets-and-droplets-produced-by-bursting-bubbles";</script>
+
+
+    <!-- Preloader with theme variables applied -->
+    <div id="preloader">
+        <div id="loader"></div>
+    </div>
+
+    <noscript>
+        <div class="noscript-warning">
+            <p>This site works best with JavaScript enabled. Some features may be limited.</p>
+        </div>
+    </noscript>
+
+    <div id="page" class="s-pagewrap">
+        <header class="s-header">
+            <div class="s-header__logo">
+                <a class="logo" href="/">
+                    <img src="../assets/logos/CoMPhy-Lab-no-name.png" alt="CoMPhy Lab">
+                </a>
+                <a class="documentation-button" href="/Viscoelastic-Worthington-jets-and-droplets-produced-by-bursting-bubbles">
+                    <i class="fa-solid fa-book-open"></i>
+                    <span>Viscoelastic-Worthington-jets-and-droplets-produced-by-bursting-bubbles</span>
+                </a>
+            </div>
+            <a class="s-header__menu-toggle" href="#0">
+                <span class="s-header__menu-text">Menu</span>
+                <span class="s-header__menu-icon"></span>
+            </a>
+            <nav class="s-header__nav">
+                <a href="#0" class="s-header__nav-close-btn"><span>Close</span></a>
+                <ul class="s-header__nav-list">
+                    <li style="background: none;">
+                        <!-- JS theme toggle -->
+                        <div class="theme-toggle js-only" id="theme-toggle" aria-label="Toggle dark/light theme">
+                            <svg class="theme-toggle-icon moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                            </svg>
+                            <svg class="theme-toggle-icon sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="5"></circle>
+                                <line x1="12" y1="1" x2="12" y2="3"></line>
+                                <line x1="12" y1="21" x2="12" y2="23"></line>
+                                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                                <line x1="1" y1="12" x2="3" y2="12"></line>
+                                <line x1="21" y1="12" x2="23" y2="12"></line>
+                                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                            </svg>
+                        </div>
+                    </li>
+                    <li style="background: none;"><a href="https://scholar.google.com/citations?user=tHb_qZoAAAAJ&hl=en" style="background: none; padding: 0;" aria-label="Google Scholar Profile"><i class="ai ai-google-scholar" style="font-size: 1.75em;"></i></a></li>
+                    <li style="background: none;"><a href="https://github.com/comphy-lab" style="background: none; padding: 0;" aria-label="GitHub Organization"><i class="fa-brands fa-github" style="font-size: 1.75em"></i></a></li>
+                    <li><a href="https://comphy-lab.org/#about" class="smoothscroll">About</a></li>
+                    <li><a href="https://comphy-lab.org/team/">Team</a></li>
+                    <li><a href="https://comphy-lab.org/research">Research</a></li>
+                    <li><a href="https://comphy-lab.org/teaching">Teaching</a></li>
+                    <li><a href="https://comphy-lab.org/join">Join Us</a></li>
+                    <li><a href="https://blogs.comphy-lab.org/">Blog</a></li>
+                    <li style="background: none;"><a href="https://bsky.app/profile/comphy-lab.org" style="background: none; padding: 0;" aria-label="Bluesky Profile"><i class="fa-brands fa-bluesky" style="font-size: 1.75em; color: #0085ff;"></i></a></li>
+                    <!-- Command Palette Button (Styled like search) -->
+                    <li class="command-palette-button">
+                        <div class="command-wrapper">
+                            <button class="command-k-style-btn" id="command-palette-btn" aria-label="Open command palette">
+                                <span class="default-theme-text">ctrl K</span>
+                                <span class="mac-theme-text">⌘ K</span>
+                                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                            </button>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        </header>
+
+        <!-- Main content -->
+        <main class="content">
+
+            <div class="page-content">
+
+                                <h1 class="page-title">postProcess/getData-elastic-scalar2D.c</h1>
+
+
+                                <div class="raw-file-button-container">
+                    <a href="https://github.com/comphy-lab/Viscoelastic-Worthington-jets-and-droplets-produced-by-bursting-bubbles/raw/main/postProcess/getData-elastic-scalar2D.c" class="raw-file-button" target="_blank">
+                        <i class="fa-brands fa-github"></i> See raw file
+                    </a>
+                </div>
+
+                <h1
+                id="simulation-data-extraction-and-processing">Simulation
+                Data Extraction and Processing</h1>
+                <p>This program extracts and processes data from fluid
+                dynamics simulation snapshots, specifically designed for
+                viscoelastic fluid simulations with conformation tensor
+                analysis. It computes important derived quantities
+                including deformation rate tensor components, velocity
+                magnitude, and conformation tensor trace.</p>
+                <p>The program interpolates these quantities onto a
+                regular grid and outputs the results for further
+                analysis or visualization.</p>
+                <h2 id="physics-background">Physics Background</h2>
+                <p>This code handles viscoelastic fluid simulation data
+                where the fluid stress tensor includes both a viscous
+                component (proportional to the deformation rate) and an
+                elastic component (represented by the conformation
+                tensor). The trace of the conformation tensor provides a
+                measure of polymer stretching in the fluid.</p>
+                <div class="code-block-container"><div class="code-block-container"><pre
+                class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><span class="pp">#include </span><a href="http://basilisk.fr/src/utils.h" title="Link to Basilisk source for utils.h"><span class="im">"utils.h"</span></a></span>
+<span id="cb1-2"><span class="pp">#include </span><a href="http://basilisk.fr/src/output.h" title="Link to Basilisk source for output.h"><span class="im">"output.h"</span></a></span>
+<span id="cb1-3"></span>
+<span id="cb1-4">scalar f<span class="op">[];</span>            <span class="co">// Volume fraction field</span></span>
+<span id="cb1-5">vector u<span class="op">[];</span>            <span class="co">// Velocity field</span></span>
+<span id="cb1-6">scalar A11<span class="op">[],</span> A12<span class="op">[],</span> A22<span class="op">[];</span> <span class="co">// Conformation tensor components</span></span>
+<span id="cb1-7">scalar conform_qq<span class="op">[];</span>   <span class="co">// Additional conformation tensor component</span></span>
+<span id="cb1-8"></span>
+<span id="cb1-9"><span class="dt">char</span> filename<span class="op">[</span><span class="dv">80</span><span class="op">];</span>     <span class="co">// Input file name</span></span>
+<span id="cb1-10"><span class="dt">int</span> nx<span class="op">,</span> ny<span class="op">,</span> len<span class="op">;</span>       <span class="co">// Grid dimensions and field count</span></span>
+<span id="cb1-11"><span class="dt">double</span> xmin<span class="op">,</span> ymin<span class="op">,</span> xmax<span class="op">,</span> ymax<span class="op">,</span> Deltax<span class="op">,</span> Deltay<span class="op">;</span> <span class="co">// Domain boundaries and grid spacing</span></span></code></pre></div></div>
+                <h3 id="derived-fields">Derived Fields</h3>
+                <ul>
+                <li>D2c: Log10 of squared deformation rate tensor
+                weighted by volume fraction</li>
+                <li>vel: Magnitude of velocity</li>
+                <li>trA: Log10 of excess trace of conformation
+                tensor</li>
+                </ul>
+                <div class="code-block-container"><div class="code-block-container"><pre
+                class="sourceCode c"><code class="sourceCode c"><span id="cb2-1">scalar D2c<span class="op">[],</span> vel<span class="op">[],</span> trA<span class="op">[];</span></span>
+<span id="cb2-2">scalar <span class="op">*</span> list <span class="op">=</span> NULL<span class="op">;</span>  <span class="co">// List to store output fields</span></span></code></pre></div></div>
+                <h3 id="main-function">Main Function</h3>
+                <p>Processes simulation data and computes derived
+                quantities</p>
+                <ul>
+                <li>Arguments:
+                <ul>
+                <li>arguments[1]: Input filename</li>
+                <li>arguments[2-5]: Domain boundaries (xmin, ymin, xmax,
+                ymax)</li>
+                <li>arguments[6]: Number of grid points in y-direction
+                (ny)</li>
+                </ul></li>
+                <li>Returns:
+                <ul>
+                <li>0 on successful execution</li>
+                </ul></li>
+                </ul>
+                <div class="code-block-container"><div class="code-block-container"><pre
+                class="sourceCode c"><code class="sourceCode c"><span id="cb3-1"><span class="dt">int</span> main<span class="op">(</span><span class="dt">int</span> a<span class="op">,</span> <span class="dt">char</span> <span class="dt">const</span> <span class="op">*</span>arguments<span class="op">[])</span></span>
+<span id="cb3-2"><span class="op">{</span></span>
+<span id="cb3-3">  sprintf<span class="op">(</span>filename<span class="op">,</span> <span class="st">&quot;</span><span class="sc">%s</span><span class="st">&quot;</span><span class="op">,</span> arguments<span class="op">[</span><span class="dv">1</span><span class="op">]);</span></span>
+<span id="cb3-4">  xmin <span class="op">=</span> atof<span class="op">(</span>arguments<span class="op">[</span><span class="dv">2</span><span class="op">]);</span> ymin <span class="op">=</span> atof<span class="op">(</span>arguments<span class="op">[</span><span class="dv">3</span><span class="op">]);</span></span>
+<span id="cb3-5">  xmax <span class="op">=</span> atof<span class="op">(</span>arguments<span class="op">[</span><span class="dv">4</span><span class="op">]);</span> ymax <span class="op">=</span> atof<span class="op">(</span>arguments<span class="op">[</span><span class="dv">5</span><span class="op">]);</span></span>
+<span id="cb3-6">  ny <span class="op">=</span> atoi<span class="op">(</span>arguments<span class="op">[</span><span class="dv">6</span><span class="op">]);</span></span>
+<span id="cb3-7"></span>
+<span id="cb3-8">  <span class="co">// Initialize list of fields to output</span></span>
+<span id="cb3-9">  list <span class="op">=</span> list_add<span class="op">(</span>list<span class="op">,</span> D2c<span class="op">);</span></span>
+<span id="cb3-10">  list <span class="op">=</span> list_add<span class="op">(</span>list<span class="op">,</span> vel<span class="op">);</span></span>
+<span id="cb3-11">  list <span class="op">=</span> list_add<span class="op">(</span>list<span class="op">,</span> trA<span class="op">);</span></span></code></pre></div></div>
+                <h2 id="data-processing-workflow">Data Processing
+                Workflow</h2>
+                <ol type="1">
+                <li>Restore simulation state from snapshot file</li>
+                <li>Compute derived quantities at each grid point</li>
+                <li>Interpolate fields onto regular grid</li>
+                <li>Output data to file</li>
+                </ol>
+                <div class="code-block-container"><div class="code-block-container"><pre
+                class="sourceCode c"><code class="sourceCode c"><span id="cb4-1">  restore<span class="op">(</span>file <span class="op">=</span> filename<span class="op">);</span></span></code></pre></div></div>
+                <h3 id="field-computation">Field Computation</h3>
+                <p>For each cell, compute: - Components of the
+                deformation rate tensor D - Squared magnitude of D
+                weighted by volume fraction - Velocity magnitude -
+                Excess trace of the conformation tensor</p>
+                <div class="code-block-container"><div class="code-block-container"><pre
+                class="sourceCode c"><code class="sourceCode c"><span id="cb5-1">  foreach<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb5-2">    <span class="co">// Compute deformation rate tensor components</span></span>
+<span id="cb5-3">    <span class="dt">double</span> D11 <span class="op">=</span> <span class="op">(</span>u<span class="op">.</span>y<span class="op">[</span><span class="dv">0</span><span class="op">,</span> <span class="dv">1</span><span class="op">]</span> <span class="op">-</span> u<span class="op">.</span>y<span class="op">[</span><span class="dv">0</span><span class="op">,</span> <span class="op">-</span><span class="dv">1</span><span class="op">])</span> <span class="op">/</span> <span class="op">(</span><span class="dv">2</span> <span class="op">*</span> Delta<span class="op">);</span></span>
+<span id="cb5-4">    <span class="dt">double</span> D22 <span class="op">=</span> <span class="op">(</span>u<span class="op">.</span>y<span class="op">[]</span> <span class="op">/</span> y<span class="op">);</span></span>
+<span id="cb5-5">    <span class="dt">double</span> D33 <span class="op">=</span> <span class="op">(</span>u<span class="op">.</span>x<span class="op">[</span><span class="dv">1</span><span class="op">,</span> <span class="dv">0</span><span class="op">]</span> <span class="op">-</span> u<span class="op">.</span>x<span class="op">[-</span><span class="dv">1</span><span class="op">,</span> <span class="dv">0</span><span class="op">])</span> <span class="op">/</span> <span class="op">(</span><span class="dv">2</span> <span class="op">*</span> Delta<span class="op">);</span></span>
+<span id="cb5-6">    <span class="dt">double</span> D13 <span class="op">=</span> <span class="fl">0.5</span> <span class="op">*</span> <span class="op">((</span>u<span class="op">.</span>y<span class="op">[</span><span class="dv">1</span><span class="op">,</span> <span class="dv">0</span><span class="op">]</span> <span class="op">-</span> u<span class="op">.</span>y<span class="op">[-</span><span class="dv">1</span><span class="op">,</span> <span class="dv">0</span><span class="op">]</span> <span class="op">+</span> u<span class="op">.</span>x<span class="op">[</span><span class="dv">0</span><span class="op">,</span> <span class="dv">1</span><span class="op">]</span> <span class="op">-</span> u<span class="op">.</span>x<span class="op">[</span><span class="dv">0</span><span class="op">,</span> <span class="op">-</span><span class="dv">1</span><span class="op">])</span> <span class="op">/</span></span>
+<span id="cb5-7">                        <span class="op">(</span><span class="dv">2</span> <span class="op">*</span> Delta<span class="op">));</span></span>
+<span id="cb5-8">    <span class="dt">double</span> D2 <span class="op">=</span> <span class="op">(</span>sq<span class="op">(</span>D11<span class="op">)</span> <span class="op">+</span> sq<span class="op">(</span>D22<span class="op">)</span> <span class="op">+</span> sq<span class="op">(</span>D33<span class="op">)</span> <span class="op">+</span> <span class="fl">2.0</span> <span class="op">*</span> sq<span class="op">(</span>D13<span class="op">));</span></span>
+<span id="cb5-9">    D2c<span class="op">[]</span> <span class="op">=</span> f<span class="op">[]</span> <span class="op">*</span> D2<span class="op">;</span></span>
+<span id="cb5-10"></span>
+<span id="cb5-11">    <span class="co">// Take log10 of D2c for better visualization</span></span>
+<span id="cb5-12">    <span class="cf">if</span> <span class="op">(</span>D2c<span class="op">[]</span> <span class="op">&gt;</span> <span class="fl">0.</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb5-13">      D2c<span class="op">[]</span> <span class="op">=</span> log<span class="op">(</span>D2c<span class="op">[])</span> <span class="op">/</span> log<span class="op">(</span><span class="dv">10</span><span class="op">);</span></span>
+<span id="cb5-14">    <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb5-15">      D2c<span class="op">[]</span> <span class="op">=</span> <span class="op">-</span><span class="dv">10</span><span class="op">;</span></span>
+<span id="cb5-16">    <span class="op">}</span></span>
+<span id="cb5-17"></span>
+<span id="cb5-18">    <span class="co">// Compute velocity magnitude</span></span>
+<span id="cb5-19">    vel<span class="op">[]</span> <span class="op">=</span> sqrt<span class="op">(</span>sq<span class="op">(</span>u<span class="op">.</span>x<span class="op">[])</span> <span class="op">+</span> sq<span class="op">(</span>u<span class="op">.</span>y<span class="op">[]));</span></span>
+<span id="cb5-20"></span>
+<span id="cb5-21">    <span class="co">// Compute excess trace of conformation tensor</span></span>
+<span id="cb5-22">    trA<span class="op">[]</span> <span class="op">=</span> <span class="op">(</span>A11<span class="op">[]</span> <span class="op">+</span> A22<span class="op">[]</span> <span class="op">+</span> conform_qq<span class="op">[])</span> <span class="op">/</span> <span class="fl">3.0</span> <span class="op">-</span> <span class="fl">1.0</span><span class="op">;</span></span>
+<span id="cb5-23"></span>
+<span id="cb5-24">    <span class="co">// Take log10 of trA for better visualization</span></span>
+<span id="cb5-25">    <span class="cf">if</span> <span class="op">(</span>trA<span class="op">[]</span> <span class="op">&gt;</span> <span class="fl">0.</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb5-26">      trA<span class="op">[]</span> <span class="op">=</span> log<span class="op">(</span>trA<span class="op">[])</span> <span class="op">/</span> log<span class="op">(</span><span class="dv">10</span><span class="op">);</span></span>
+<span id="cb5-27">    <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb5-28">      trA<span class="op">[]</span> <span class="op">=</span> <span class="op">-</span><span class="dv">10</span><span class="op">;</span></span>
+<span id="cb5-29">    <span class="op">}</span></span>
+<span id="cb5-30">  <span class="op">}</span></span></code></pre></div></div>
+                <h3 id="grid-interpolation-and-output">Grid
+                Interpolation and Output</h3>
+                <ol type="1">
+                <li>Calculate grid spacing based on domain size and
+                ny</li>
+                <li>Allocate memory for interpolated field values</li>
+                <li>Interpolate field values onto regular grid</li>
+                <li>Output grid coordinates and field values</li>
+                </ol>
+                <div class="code-block-container"><div class="code-block-container"><pre
+                class="sourceCode c"><code class="sourceCode c"><span id="cb6-1">  <span class="dt">FILE</span> <span class="op">*</span> fp <span class="op">=</span> ferr<span class="op">;</span></span>
+<span id="cb6-2">  Deltay <span class="op">=</span> <span class="op">(</span><span class="dt">double</span><span class="op">)((</span>ymax <span class="op">-</span> ymin<span class="op">)</span> <span class="op">/</span> <span class="op">(</span>ny<span class="op">));</span></span>
+<span id="cb6-3">  nx <span class="op">=</span> <span class="op">(</span><span class="dt">int</span><span class="op">)((</span>xmax <span class="op">-</span> xmin<span class="op">)</span> <span class="op">/</span> Deltay<span class="op">);</span></span>
+<span id="cb6-4">  Deltax <span class="op">=</span> <span class="op">(</span><span class="dt">double</span><span class="op">)((</span>xmax <span class="op">-</span> xmin<span class="op">)</span> <span class="op">/</span> <span class="op">(</span>nx<span class="op">));</span></span>
+<span id="cb6-5">  len <span class="op">=</span> list_len<span class="op">(</span>list<span class="op">);</span></span>
+<span id="cb6-6"></span>
+<span id="cb6-7">  <span class="co">// Allocate memory for field values</span></span>
+<span id="cb6-8">  <span class="dt">double</span> <span class="op">**</span> field <span class="op">=</span> <span class="op">(</span><span class="dt">double</span> <span class="op">**)</span> matrix_new<span class="op">(</span>nx<span class="op">,</span> ny <span class="op">+</span> <span class="dv">1</span><span class="op">,</span> len <span class="op">*</span> <span class="kw">sizeof</span><span class="op">(</span><span class="dt">double</span><span class="op">));</span></span>
+<span id="cb6-9"></span>
+<span id="cb6-10">  <span class="co">// Interpolate field values onto regular grid</span></span>
+<span id="cb6-11">  <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> nx<span class="op">;</span> i<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb6-12">    <span class="dt">double</span> x <span class="op">=</span> Deltax <span class="op">*</span> <span class="op">(</span>i <span class="op">+</span> <span class="fl">1.</span><span class="op">/</span><span class="dv">2</span><span class="op">)</span> <span class="op">+</span> xmin<span class="op">;</span></span>
+<span id="cb6-13">    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> j <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> j <span class="op">&lt;</span> ny<span class="op">;</span> j<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb6-14">      <span class="dt">double</span> y <span class="op">=</span> Deltay <span class="op">*</span> <span class="op">(</span>j <span class="op">+</span> <span class="fl">1.</span><span class="op">/</span><span class="dv">2</span><span class="op">)</span> <span class="op">+</span> ymin<span class="op">;</span></span>
+<span id="cb6-15">      <span class="dt">int</span> k <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb6-16">      <span class="cf">for</span> <span class="op">(</span>scalar s in list<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb6-17">        field<span class="op">[</span>i<span class="op">][</span>len <span class="op">*</span> j <span class="op">+</span> k<span class="op">++]</span> <span class="op">=</span> interpolate<span class="op">(</span>s<span class="op">,</span> x<span class="op">,</span> y<span class="op">);</span></span>
+<span id="cb6-18">      <span class="op">}</span></span>
+<span id="cb6-19">    <span class="op">}</span></span>
+<span id="cb6-20">  <span class="op">}</span></span>
+<span id="cb6-21"></span>
+<span id="cb6-22">  <span class="co">// Output grid coordinates and field values</span></span>
+<span id="cb6-23">  <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> nx<span class="op">;</span> i<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb6-24">    <span class="dt">double</span> x <span class="op">=</span> Deltax <span class="op">*</span> <span class="op">(</span>i <span class="op">+</span> <span class="fl">1.</span><span class="op">/</span><span class="dv">2</span><span class="op">)</span> <span class="op">+</span> xmin<span class="op">;</span></span>
+<span id="cb6-25">    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> j <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> j <span class="op">&lt;</span> ny<span class="op">;</span> j<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb6-26">      <span class="dt">double</span> y <span class="op">=</span> Deltay <span class="op">*</span> <span class="op">(</span>j <span class="op">+</span> <span class="fl">1.</span><span class="op">/</span><span class="dv">2</span><span class="op">)</span> <span class="op">+</span> ymin<span class="op">;</span></span>
+<span id="cb6-27">      fprintf<span class="op">(</span>fp<span class="op">,</span> <span class="st">&quot;</span><span class="sc">%g</span><span class="st"> </span><span class="sc">%g</span><span class="st">&quot;</span><span class="op">,</span> x<span class="op">,</span> y<span class="op">);</span></span>
+<span id="cb6-28">      <span class="dt">int</span> k <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb6-29">      <span class="cf">for</span> <span class="op">(</span>scalar s in list<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb6-30">        fprintf<span class="op">(</span>fp<span class="op">,</span> <span class="st">&quot; </span><span class="sc">%g</span><span class="st">&quot;</span><span class="op">,</span> field<span class="op">[</span>i<span class="op">][</span>len <span class="op">*</span> j <span class="op">+</span> k<span class="op">++]);</span></span>
+<span id="cb6-31">      <span class="op">}</span></span>
+<span id="cb6-32">      fputc<span class="op">(</span><span class="ch">&#39;</span><span class="sc">\n</span><span class="ch">&#39;</span><span class="op">,</span> fp<span class="op">);</span></span>
+<span id="cb6-33">    <span class="op">}</span></span>
+<span id="cb6-34">  <span class="op">}</span></span>
+<span id="cb6-35"></span>
+<span id="cb6-36">  <span class="co">// Clean up</span></span>
+<span id="cb6-37">  fflush<span class="op">(</span>fp<span class="op">);</span></span>
+<span id="cb6-38">  fclose<span class="op">(</span>fp<span class="op">);</span></span>
+<span id="cb6-39">  matrix_free<span class="op">(</span>field<span class="op">);</span></span>
+<span id="cb6-40"></span>
+<span id="cb6-41">  <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb6-42"><span class="op">}</span></span></code></pre></div></div>
+            </div>
+        </main>
+
+        <footer class="site-footer">
+            <div class="footer-left">
+              <a href="http://basilisk.fr/sandbox/vatsal/" target="_blank">
+                <img src="../assets/logos/logoBasilisk_TransparentBackground.png" alt="Basilisk C" class="footer-logo">
+              </a>
+              <a href="https://pof.tnw.utwente.nl/" target="_blank">
+                <img src="../assets/logos/LogoPof_transparent_white.png" alt="Physics of Fluids" class="footer-logo pof-logo">
+              </a>
+              <a href="https://www.utwente.nl/" target="_blank">
+                <img src="../assets/logos/UT_Logo_2400_Sta_White_EN.png" alt="University of Twente" class="footer-logo">
+              </a>
+              <a href="https://www.vatsalsanjay.com/" target="_blank">
+                <img src="../assets/logos/Logo_Vatsal_v3_OutLine.png" alt="Vatsal Sanjay" class="footer-logo">
+              </a>
+            </div>
+            <div class="footer-center">
+              <p class="copyright-text">
+                &copy; Copyright<br>
+                CoMPhy Lab 2025
+              </p>
+            </div>
+            <div class="footer-right">
+              <a href="https://scholar.google.com/citations?user=tHb_qZoAAAAJ&hl=en" target="_blank" aria-label="Google Scholar Profile">
+                <i class="ai ai-google-scholar" style="font-size: 2.5em; color: white;"></i>
+              </a>
+              <a href="https://github.com/comphy-lab" target="_blank" aria-label="GitHub Organization">
+                <i class="fa-brands fa-github" style="font-size: 2.5em; color: white;"></i>
+              </a>
+              <a href="https://www.youtube.com/@CoMPhyLab" target="_blank" aria-label="YouTube Channel">
+                <i class="fa-brands fa-youtube" style="font-size: 2.5em; color: white;"></i>
+              </a>
+              <a href="https://x.com/VatsalSanjay" target="_blank" aria-label="X (Twitter) Profile">
+                <i class="fa-brands fa-x-twitter" style="font-size: 2.5em; color: white;"></i>
+              </a>
+              <a href="https://bsky.app/profile/comphy-lab.org" target="_blank" aria-label="Bluesky Profile">
+                <i class="fa-brands fa-bluesky" style="font-size: 2.5em; color: white;"></i>
+              </a>
+              <a href="https://github.com/comphy-lab/comphy-lab.github.io" class="edit-link" aria-label="Edit this page on GitHub">
+                <i class="fa-brands fa-github"></i> Edit this page
+              </a>
+            </div>
+          </footer>
+    </div>  
+
+    <!-- Command Palette -->
+    <div id="simple-command-palette" class="simple-command-palette" style="display: none;">
+        <div class="simple-command-palette-backdrop"></div>
+        <div class="simple-command-palette-modal">
+            <input type="text" id="command-palette-input" placeholder="Type a command..." autocomplete="off">
+            <div id="command-palette-results" class="command-palette-results"></div>
+            <div class="command-palette-footer">
+                <span class="command-palette-footer-item"><kbd>↑</kbd> <kbd>↓</kbd> to navigate</span>
+                <span class="command-palette-footer-item"><kbd>enter</kbd> to select</span>
+                <span class="command-palette-footer-item"><kbd>esc</kbd> to close</span>
+            </div>
+        </div>
+    </div>
+
+
+<script type="text/javascript">
+document.addEventListener('DOMContentLoaded', function() {
+    // Add copy button to each code block container
+    const codeBlocks = document.querySelectorAll('.code-block-container pre');
+    codeBlocks.forEach(function(codeBlock, index) {
+        // Create button element
+        const button = document.createElement('button');
+        button.className = 'copy-button';
+        button.textContent = 'Copy';
+        button.setAttribute('aria-label', 'Copy code to clipboard');
+        button.setAttribute('data-copy-state', 'copy');
+        
+        // Get the code block container (parent of the pre)
+        const container = codeBlock.parentNode;
+        
+        // Add the button to the container
+        container.appendChild(button);
+        
+        // Set up click event
+        button.addEventListener('click', async function() {
+            const codeText = codeBlock.textContent;
+            
+            try {
+                // Try to use the modern clipboard API first
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    await navigator.clipboard.writeText(codeText);
+                    updateButtonState(button, 'success');
+                } else {
+                    // Fall back to the deprecated execCommand method
+                    const textarea = document.createElement('textarea');
+                    textarea.value = codeText;
+                    textarea.style.position = 'fixed';  // Prevent scrolling to the bottom
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    
+                    const successful = document.execCommand('copy');
+                    document.body.removeChild(textarea);
+                    
+                    if (successful) {
+                        updateButtonState(button, 'success');
+                    } else {
+                        updateButtonState(button, 'error');
+                    }
+                }
+            } catch (err) {
+                console.error('Copy failed:', err);
+                updateButtonState(button, 'error');
+            }
+        });
+    });
+    
+    // Function to update button state
+    function updateButtonState(button, state) {
+        if (state === 'success') {
+            button.textContent = 'Copied!';
+            button.classList.add('copied');
+        } else if (state === 'error') {
+            button.textContent = 'Error!';
+            button.classList.add('error');
+        }
+        
+        // Reset button state after 2 seconds
+        setTimeout(function() {
+            button.textContent = 'Copy';
+            button.classList.remove('copied', 'error');
+        }, 2000);
+    }
+});
+</script>
+        </body>
+</html>

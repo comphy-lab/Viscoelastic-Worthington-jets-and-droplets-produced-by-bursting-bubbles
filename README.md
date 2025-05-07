@@ -1,18 +1,38 @@
 # Viscoelastic Worthington Jets & Droplets Produced by Bursting Bubbles
 
+[![Website Status](https://img.shields.io/website?url=https%3A%2F%2Fcomphy-lab.github.io%2FViscoelastic3D%2F&style=flat-square&logo=github&label=Website)](https://comphy-lab.github.io/Viscoelastic3D/)
 [![DOI](https://zenodo.org/badge/893135483.svg)](https://doi.org/10.5281/zenodo.14349207)
+[![Blog](https://img.shields.io/badge/Blog-Coming%20Soon-yellow?style=flat-square&logo=obsidian&logoColor=white)](https://blogs.comphy-lab.org/0_ToDo-Blog-public)
 
 This repository contains the simulation code and analysis for studying the dynamics of viscoelastic Worthington jets and droplets produced by bursting bubbles. The code uses the ElastoFlow framework to simulate bubble cavity collapse in viscoelastic media, examining how elastic modulus and relaxation time affect jet and droplet formation.
 
 The article can be found at: 
 
-[![](https://img.shields.io/badge/arXiv-4b4b4b?style=flat&logo=arxiv&link=https://arxiv.org/pdf/22408.05089.pdf)](https://arxiv.org/pdf/2408.05089.pdf)
-<!-- [![](https://img.shields.io/badge/Journal%20of%20Fluid%20Mechanics-ADD-DOI-HERE-WHEN-PUBLISHED-blue)](https://doi.org/ADD-DOI-HERE-WHEN-PUBLISHED) -->
+[![JFM](https://img.shields.io/static/v1.svg?style=flat-square&label=JFM&message=OA&color=orange)](https://doi.org/10.1017/jfm.2025.237)
+[![arXiv](https://img.shields.io/static/v1.svg?style=flat-square&label=arXiv&message=2408.05089&color=green)](https://arxiv.org/abs/2408.05089)
 
 
 ## Overview
 
 The project investigates how viscoelasticity influences bubble bursting dynamics by exploring the three-dimensional phase space of solvent Ohnesorge number, elastocapillary number, and Deborah number using volume of fluid-based finite volume simulations. The results demonstrate that polymer addition significantly influences the overall dynamics through the interplay of viscous and elastic effects.
+
+## Repository Structure
+
+```
+├── basilisk/src/               # Core Basilisk CFD library (reference only, do not modify)
+├── src-local/                  # Custom viscoelastic solvers and tensor utilities
+│   ├── log-conform-viscoelastic-scalar-3D.h   # 3D log-conformation (scalar)
+│   ├── log-conform-viscoelastic-scalar-2D.h   # 2D/axi log-conformation (scalar)
+│   ├── log-conform-viscoelastic.h             # 2D/axi log-conformation (tensor)
+│   ├── two-phaseVE.h                          # Two-phase viscoelastic extension
+│   └── eigen_decomposition.h                  # 3x3 symmetric eigenvalue solver
+├── simulationCases/            # Example/test cases and post-processing scripts
+│   ├── burstingBubbleVE.c                     # Bursting bubble simulation
+├── postProcess/                # Project-specific post-processing tools and utilities
+    ├── getData-elastic-scalar2D.c            # Data extraction utility
+    ├── getFacet2D.c                          # Facet extraction utility
+    ├── VideoAxi.py                           # Python visualization script
+```
 
 ## Installation and Setup
 
@@ -170,12 +190,14 @@ If you use this code in your research, please cite:
 
 ### Paper
 ```bibtex
-@article{dixit2024viscoelastic,
-  title={Viscoelastic Worthington jets & droplets produced by bursting bubbles},
-  author={Dixit, Ayush K and Oratis, Alexandros and Zinelis, Konstantinos and Lohse, Detlef and Sanjay, Vatsal},
-  journal={arXiv preprint arXiv:2408.05089},
-  year={2024}
-}
+@article{Dixit_Oratis_Zinelis_Lohse_Sanjay_2025, 
+  title={Viscoelastic Worthington jets and droplets produced by bursting bubbles}, 
+  volume={1010}, 
+  journal={J. Fluid Mech.}, 
+  author={Dixit, A. K. and Oratis, A. and Zinelis, K. and Lohse, D. and Sanjay, V.}, 
+  year={2025}, 
+  pages={A2},
+  DOI={10.1017/jfm.2025.237}}
 ```
 
 ### Software
@@ -228,8 +250,8 @@ The `z_extras` directory contains supplementary materials and post-processing to
 ## Authors
 
 - Ayush K. Dixit (University of Twente), [a.k.dixit@utwente.nl](mailto:a.k.dixit@utwente.nl)
-- Alexandros Oratis (University of Twente), [a.oratis@utwente.nl](mailto:a.oratis@utwente.nl)
-- Konstantinos Zinelis (Imperial College London & MIT), [k.zinelis17@imperial.ac.uk](mailto:k.zinelis17@imperial.ac.uk)
+- Alexandros Oratis (University of Twente, now TU Delft), [a.t.oratis@tudelft.nl](mailto:a.t.oratis@tudelft.nl)
+- Konstantinos Zinelis (Imperial College London, now MIT), [zinelis@mit.edu](mailto:zinelis@mit.edu)
 - Detlef Lohse (University of Twente & Max Planck Institute), [d.lohse@utwente.nl](mailto:d.lohse@utwente.nl)
 - Vatsal Sanjay (University of Twente), [vatsalsanjay@gmail.com](mailto:vatsalsanjay@gmail.com)
 

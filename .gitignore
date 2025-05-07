@@ -1,6 +1,5 @@
 # basililsk specific files
 **/*.DS_Store
-**/*.html
 **/intermediate*
 **/log*.dat
 **/restart*
@@ -10,9 +9,7 @@
 **/*.s
 **/Video
 **/*.mp4
-**/*.json
 **/*.bv
-**/*.png
 **/_darcs
 **/.project_config
 **/*.tst
