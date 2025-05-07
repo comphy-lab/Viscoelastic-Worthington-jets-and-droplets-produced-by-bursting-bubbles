@@ -608,9 +608,11 @@ def run_pandoc(pandoc_input: str, output_html_path: Path, template_path: Path,
                asset_path_prefix: str, seo_metadata: Dict[str, str] = None,
                source_path: str = None) -> str:
     """
-               Converts Markdown input to standalone HTML using Pandoc and applies post-processing.
+               Converts Markdown input to standalone HTML using Pandoc.
                
-               Runs Pandoc with a custom template and variables for SEO metadata, repository info, and asset paths to generate an HTML file from Markdown input. After conversion, cleans up the HTML by removing empty anchors, fixing malformed meta description tags, and ensuring valid HTML structure. Returns Pandoc's standard output as a string.
+               Runs Pandoc with a custom template and variables for SEO metadata, repository info, and asset paths to generate an HTML file from Markdown input. Handles SEO metadata and fixes malformed meta description tags. Returns Pandoc's standard output as a string.
+               
+               Note: HTML cleaning (removal of empty anchor tags) is now handled by the separate clean_html.py script.
                
                Args:
                    pandoc_input: Markdown content to convert.
@@ -676,28 +678,6 @@ def run_pandoc(pandoc_input: str, output_html_path: Path, template_path: Path,
     try:
         with open(output_html_path, 'r', encoding='utf-8') as f:
             content = f.read()
-            
-        # COMPREHENSIVE anchor tag removal from the entire document
-        # First pass: Remove the exact problematic anchor pattern seen in the documents
-        content = re.sub(r'<a\s+id=""\s+href="#">\s*</a>', '', content)
-        
-        # Second pass: Remove any empty anchor with any attributes
-        content = re.sub(r'<a\s+[^>]*>\s*</a>', '', content)
-        
-        # Third pass: Special handling for script blocks to ensure no anchors disrupt JavaScript
-        script_pattern = r'(<script[^>]*>.*?</script>)'
-        
-        def clean_script_blocks(match):
-            script_content = match.group(1)
-            # Aggressively remove ALL anchor tags from script blocks to prevent JavaScript syntax errors
-            cleaned_script = re.sub(r'<a[^>]*>.*?</a>', '', script_content)
-            return cleaned_script
-            
-        # Clean script blocks separately with specialized handling
-        content = re.sub(script_pattern, clean_script_blocks, content, flags=re.DOTALL)
-        
-        # Final pass: Look for any remaining anchor tags with empty content and remove them
-        content = re.sub(r'<a[^>]*?>\s*</a>', '', content)
         
         # Fix any malformed meta description tags, especially for Jupyter notebooks
         desc_meta_pattern = r'<meta\s+name="description"\s+content="([^"]*(?:target|href|class|style|onclick)[^"]*)"[^>]*>'
@@ -748,6 +728,8 @@ def post_process_python_shell_html(html_content: str) -> str:
     Enhances HTML generated from Python or shell files for improved display and navigation.
     
     Wraps code blocks in container divs for styling, updates documentation links to use `.html` extensions, removes dynamic path resolution scripts, and injects a JavaScript variable with the repository name into the HTML body.
+    
+    Note: HTML cleaning (removal of empty anchor tags) is now handled by the separate clean_html.py script.
     
     Args:
         html_content: The HTML content to be post-processed.
@@ -892,6 +874,8 @@ def post_process_c_html(html_content: str, file_path: Path,
                       Post-processes HTML generated from C or C++ source files for enhanced documentation.
                       
                       Removes trailing line numbers, wraps code blocks in container divs for styling, and converts `#include` statements into links to local documentation or the Basilisk source if unavailable locally. Cleans out dynamic path resolution scripts and injects a JavaScript variable with the repository name into the HTML body.
+                      
+                      Note: HTML cleaning (removal of empty anchor tags) is now handled by the separate clean_html.py script.
                       
                       Args:
                           html_content: The HTML content to process.
