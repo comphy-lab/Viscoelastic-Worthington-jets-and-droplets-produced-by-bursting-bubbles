@@ -138,7 +138,7 @@
 }
 
 /* Style for search results section */
-.command-palette-section:has(.command-palette-section-title:contains("Search Results")) {
+.command-palette-section.search-results-section {
   border-top: 1px solid rgba(104, 35, 109, 0.2);
   margin-top: 10px;
   padding-top: 10px;
@@ -194,7 +194,7 @@
 
 .command-k-style-btn:focus,
 .command-k-style-btn.focused {
-  outline: 2px solid rgba(212, 165, 219, 0.6);
+  outline: 2px solid rgba(104, 35, 109, 0.5);
   outline-offset: 1px;
 }
 
@@ -247,6 +247,17 @@
 /* Original Dark mode styling has been moved to the base styles above.
    These styles have been applied directly to make the command palette
    consistently use the dark purple theme across all browsers. */
+
+/* Dark mode styles for command-k button that we aren't using in the main palette */
+.command-k-style-btn:focus,
+.command-k-style-btn.focused {
+  outline: 2px solid rgba(212, 165, 219, 0.6);
+}
+
+.command-palette-footer {
+  background-color: rgba(104, 35, 109, 0.1);
+  border-top-color: rgba(104, 35, 109, 0.3);
+}
 
 /* Custom styles for the shortcut help modal */
 .shortcut-help-overlay {
@@ -357,7 +368,6 @@
   }
 }
 
-/* Command palette footer containing keyboard shortcuts help */
 .command-palette-footer {
   display: flex;
   justify-content: center;

@@ -570,8 +570,8 @@ def run_pandoc(pandoc_input: str, output_html_path: Path, template_path: Path,
         with open(output_html_path, 'r', encoding='utf-8') as f:
             content = f.read()
             
-        # Remove empty anchor tags (updated pattern to catch all variations)
-        content = re.sub(r'<a[^>]*?>(?:\s*)</a>', '', content)
+        # Remove empty anchor tags
+        content = re.sub(r'<a[^>]*>\s*</a>', '', content)
         
         # Fix any malformed meta description tags, especially for Jupyter notebooks
         desc_meta_pattern = r'<meta\s+name="description"\s+content="([^"]*(?:target|href|class|style|onclick)[^"]*)"[^>]*>'

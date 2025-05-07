@@ -203,6 +203,8 @@ The repository includes automatic documentation generation for the GitHub Pages 
 2. The generator processes source files in `src-local`, `simulationCases`, and `postProcess`
 3. CSS and JavaScript customization are located in `.github/assets/`
 4. The website deploys to `https://comphy-lab.org/repositoryName` (CNAME file)
+5. Do not edit HTML files directly - they're auto-generated.
+6. Do not edit files in the `docs/` directory - they're auto-generated.
 
 ## Important Notes
 
