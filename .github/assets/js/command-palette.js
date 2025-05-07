@@ -3,6 +3,9 @@
  * This file contains all the functionality for the command palette
  */
 
+// Use centralized DEBUG flag from config
+const DEBUG = window.CONFIG ? window.CONFIG.DEBUG : false;
+
 // Make the command palette opening function globally available
 window.openCommandPalette = function() {
   const palette = document.getElementById('simple-command-palette');
@@ -20,11 +23,11 @@ window.openCommandPalette = function() {
 };
 
 /**
- * Filters and displays command palette results based on the provided search query.
+ * Renders the command palette results filtered by the provided query.
  *
- * Updates the command palette UI by filtering available commands by title or section, grouping them by section, and rendering the results. If the query is at least three characters and a database search function is available, performs an asynchronous search and merges those results under a "Search Results" section. Displays a message if no commands are found.
+ * Filters available commands by title or section, groups them by section, and displays them in the results container. If the query is at least three characters and an asynchronous search function is available, performs an additional database search and updates the results with any matches. Displays a "No commands found" message if no results are available.
  *
- * @param {string} query - The search string used to filter commands.
+ * @param {string} query - The search string used to filter and search commands.
  */
 function renderCommandResults(query) {
   const resultsContainer = document.getElementById('command-palette-results');
@@ -39,28 +42,32 @@ function renderCommandResults(query) {
   // Filter commands based on query
   const filteredCommands = query ? 
     commands.filter(cmd => 
-      (cmd.title?.toLowerCase() || '').includes(query.toLowerCase()) ||
-      (cmd.section?.toLowerCase() || '').includes(query.toLowerCase())
+      cmd.title.toLowerCase().includes(query.toLowerCase()) ||
+      (cmd.section && cmd.section.toLowerCase().includes(query.toLowerCase()))
     ) : 
     commands;
   
   // Group by section
   const sections = {};
   filteredCommands.forEach(cmd => {
-    // Use 'Other' as default section name if section is undefined
-    const sectionName = cmd.section || 'Other';
-    
-    if (!sections[sectionName]) {
-      sections[sectionName] = [];
+    if (!sections[cmd.section]) {
+      sections[cmd.section] = [];
     }
-    sections[sectionName].push(cmd);
+    sections[cmd.section].push(cmd);
   });
   
   // If query is at least 3 characters, search the database as well
   if (query && query.length >= 3 && typeof window.searchDatabaseForCommandPalette === 'function') {
+    // Capture the current query to avoid stale updates
+    const capturedQuery = query;
+    
     // We'll use a promise to handle the async search
-    window.searchDatabaseForCommandPalette(query).then(searchResults => {
-      if (searchResults && searchResults.length > 0) {
+    window.searchDatabaseForCommandPalette(capturedQuery).then(searchResults => {
+      // Get the current input value
+      const currentInputValue = document.getElementById('command-palette-input')?.value || '';
+      
+      // Only update UI if the captured query matches the current input value
+      if (capturedQuery === currentInputValue && searchResults && searchResults.length > 0) {
         // Add search results to sections
         sections['Search Results'] = searchResults;
         
@@ -68,7 +75,9 @@ function renderCommandResults(query) {
         renderSections(sections, resultsContainer);
       }
     }).catch(err => {
-      console.error('Error searching database:', err);
+      if (DEBUG) {
+        console.error('Error searching database:', err);
+      }
     });
   }
   
@@ -85,12 +94,12 @@ function renderCommandResults(query) {
 }
 
 /**
- * Renders grouped command sections and their commands into the specified container element.
+ * Renders grouped command sections into a container element for the command palette UI.
  *
- * Each section is displayed with a title and a list of commands. Commands include an icon, title, and optional excerpt, and are clickable to execute their associated handler. The "Search Results" section receives a special CSS class for styling.
+ * Each section is displayed with its title and a list of commands, including icons, titles, and optional excerpts. Command icons that use inline HTML (such as Font-Awesome) are rendered as raw HTML if their source is constant; otherwise, icons are rendered as plain text. Clicking a command triggers its handler and hides the palette.
  *
- * @param {Object.<string, Array>} sections - An object mapping section names to arrays of command objects.
- * @param {HTMLElement} container - The DOM element where the sections and commands will be rendered.
+ * @param {Object} sections - An object mapping section titles to arrays of command objects.
+ * @param {HTMLElement} container - The DOM element where the sections will be rendered.
  */
 function renderSections(sections, container) {
   // Clear container first
@@ -101,11 +110,6 @@ function renderSections(sections, container) {
     const sectionEl = document.createElement('div');
     sectionEl.className = 'command-palette-section';
     
-    // Add special class for search results section for styling
-    if (section === 'Search Results') {
-      sectionEl.classList.add('search-results-section');
-    }
-    
     const sectionTitle = document.createElement('div');
     sectionTitle.className = 'command-palette-section-title';
     sectionTitle.textContent = section;
@@ -114,39 +118,102 @@ function renderSections(sections, container) {
     const commandsList = document.createElement('div');
     commandsList.className = 'command-palette-commands';
     
+    // Simple HTML sanitizer that only allows specific tags and attributes
+    function sanitizeHTML(html) {
+      // Only allow these tags and attributes
+      const allowedTags = ['i', 'span', 'svg', 'path'];
+      const allowedAttrs = ['class', 'viewBox', 'd', 'fill', 'stroke', 'stroke-width', 'xmlns'];
+      
+      // Create a temporary element to parse the HTML
+      const temp = document.createElement('div');
+      temp.innerHTML = html;
+      
+      // Function to sanitize a node and its children
+      function sanitizeNode(node) {
+        // For element nodes
+        if (node.nodeType === 1) {
+          // If it's not an allowed tag, replace it with its text content
+          if (!allowedTags.includes(node.tagName.toLowerCase())) {
+            return document.createTextNode(node.textContent);
+          }
+          
+          // Remove any attributes that aren't allowed
+          Array.from(node.attributes).forEach(attr => {
+            if (!allowedAttrs.includes(attr.name.toLowerCase())) {
+              node.removeAttribute(attr.name);
+            }
+          });
+          
+          // Sanitize all child nodes
+          Array.from(node.childNodes).forEach(child => {
+            const sanitizedChild = sanitizeNode(child);
+            if (sanitizedChild !== child) {
+              node.replaceChild(sanitizedChild, child);
+            }
+          });
+        }
+        
+        return node;
+      }
+      
+      // Sanitize the temporary element and all its children
+      sanitizeNode(temp);
+      
+      // Return the sanitized HTML
+      return temp.innerHTML;
+    }
+
     sections[section].forEach(cmd => {
       const cmdEl = document.createElement('div');
       cmdEl.className = 'command-palette-command';
       
-      // Create icon container and safely add icon
-      const iconContainer = document.createElement('div');
-      iconContainer.className = 'command-palette-icon';
-      // This still uses innerHTML for icons because they're expected to be HTML
-      // To be fully secure, icons should be sanitized before being added to commandData
-      // Use DOMParser to whitelist SVG, otherwise fall back to text
-      if (cmd.icon?.trim().startsWith('<svg')) {
-        const svgDoc = new DOMParser().parseFromString(cmd.icon, 'image/svg+xml');
-        iconContainer.appendChild(svgDoc.documentElement);
-      } else {
-        iconContainer.textContent = cmd.icon ?? '';
-      }
-      cmdEl.appendChild(iconContainer);
+      // Create icon element separately with sanitized HTML
+      const iconEl = document.createElement('div');
+      iconEl.className = 'command-palette-icon';
       
-      // Create title element with safe text content
+      // Render Font-Awesome & other inline-HTML icons -> sanitize to prevent XSS risks
+      if (cmd.icon && typeof cmd.icon === 'string') {
+        // Strict validation: only allow Font Awesome icons that match the expected pattern
+        const iconStr = cmd.icon.trim();
+        // Only allow Font Awesome icons with specific classes or SVG paths
+        if (iconStr.startsWith('<i') && 
+            (/class=\"(fa-|ai )/.test(iconStr) || iconStr.includes('fa-solid') ||
+             iconStr.includes('fa-brands') || iconStr.includes('fa-regular') ||
+             iconStr.includes('ai ai-'))) {
+          // Adding extra validation for classes
+          const validIconPattern = /^<i class=\"(fa|fas|far|fal|fab|ai)[ -][\w\d -]+"><\/i>$/;
+          if (validIconPattern.test(iconStr)) {
+            iconEl.innerHTML = sanitizeHTML(iconStr);
+          } else {
+            // Fallback to displaying as text if pattern doesn't match exactly
+            iconEl.textContent = '🔍'; // Default search icon as fallback
+            if (CONFIG && CONFIG.DEBUG) {
+              console.warn('Invalid icon format detected:', iconStr);
+            }
+          }
+        } else {
+          // Just use text for non-icon strings
+          iconEl.textContent = iconStr;
+        }
+      } else {
+        // Default icon if none provided
+        iconEl.textContent = '';
+      }
+      
+      // Create title element
       const titleEl = document.createElement('div');
       titleEl.className = 'command-palette-title';
       titleEl.textContent = cmd.title;
+      
+      // Build command element
+      cmdEl.appendChild(iconEl);
       cmdEl.appendChild(titleEl);
       
       // Add excerpt for search results if available
       if (cmd.excerpt) {
         const excerptEl = document.createElement('div');
         excerptEl.className = 'command-palette-excerpt';
-        
-        // Truncate excerpt text safely
-        const excerptText = cmd.excerpt.substring(0, 120) + (cmd.excerpt.length > 120 ? '...' : '');
-        excerptEl.textContent = excerptText;
-        
+        excerptEl.textContent = cmd.excerpt.substring(0, 120) + (cmd.excerpt.length > 120 ? '...' : '');
         cmdEl.appendChild(excerptEl);
       }
       
@@ -166,30 +233,19 @@ function renderSections(sections, container) {
 }
 
 /**
- * Initializes the command palette UI, event listeners, and search functionality on page load.
+ * Initializes the command palette UI and search functionality on page load.
  *
- * Prefetches the search database and sets up Fuse.js for fuzzy searching. Configures UI event handlers for opening, closing, input changes, keyboard navigation, and command activation. Registers global keyboard shortcuts and button interactions for accessibility.
+ * Sets up event listeners for keyboard shortcuts, input handling, and UI interactions. Prefetches the search database and initializes fuzzy search if available. Enables keyboard navigation, command execution, and closing the palette via backdrop or Escape key.
  *
- * @remark This function should be called once after the DOM is fully loaded to ensure all elements are available.
+ * @remark If the search database cannot be fetched, search functionality will be unavailable, but the command palette UI will still operate with local commands.
  */
 function initCommandPalette() {
   // Ensure search database is preloaded for command palette search functionality
   // Try to prefetch the search database if it exists
-  
-  // 1. Prefer an explicit <meta name="base-url"> if present
-  let basePath =
-    document.querySelector('meta[name="base-url"]')?.content ?? '';
-
-  // 2. Fallback: infer from location like before
-  if (!basePath) {
-    const parts = window.location.pathname.split('/');
-    parts.pop();
-    basePath = parts.join('/');
-  }
-
-  // Build the proper URL to the search database
-  const searchDbUrl = `${basePath}/assets/js/search_db.json`;
-  console.log('Attempting to load search database from:', searchDbUrl);
+  // Get base URL from meta tag to support GitHub Pages subfolders
+  const baseUrlMeta = document.querySelector('meta[name="base-url"]');
+  const baseUrl = baseUrlMeta ? baseUrlMeta.getAttribute('content') : '';
+  const searchDbUrl = baseUrl ? `${baseUrl}/assets/js/search_db.json` : '/assets/js/search_db.json';
   
   fetch(searchDbUrl).then(response => {
     if (response.ok) {
@@ -197,7 +253,9 @@ function initCommandPalette() {
     }
     throw new Error('Search database not found');
   }).then(data => {
-    console.log('Search database prefetched for command palette');
+    if (DEBUG) {
+      console.log('Search database prefetched for command palette');
+    }
     window.searchData = data;
     
     // Initialize Fuse.js with weighted keys
@@ -212,7 +270,9 @@ function initCommandPalette() {
       threshold: 0.4
     });
   }).catch(err => {
-    console.warn('Could not prefetch search database for command palette:', err.message);
+    if (DEBUG) {
+      console.warn('Could not prefetch search database for command palette:', err.message);
+    }
   });
 
   // Set up backdrop click to close
@@ -317,7 +377,9 @@ document.addEventListener('DOMContentLoaded', function() {
   // Ensure command palette button works correctly
   const commandPaletteBtn = document.getElementById('command-palette-btn');
   if (commandPaletteBtn) {
-    console.log('Command palette button initialized with new styling');
+    if (DEBUG) {
+      console.log('Command palette button initialized with new styling');
+    }
     
     // Make sure the button retains focus styles
     commandPaletteBtn.addEventListener('focus', function() {
@@ -334,45 +396,7 @@ document.addEventListener('DOMContentLoaded', function() {
 window.renderCommandResults = renderCommandResults;
 window.renderSections = renderSections;
 
-// Function to search the database with priority sorting
+// Use the shared search database function from search-helper.js
 window.searchDatabaseForCommandPalette = async function(query) {
-  if (!window.searchFuse) {
-    return [];
-  }
-  
-  try {
-    const results = window.searchFuse.search(query);
-    
-    // Sort results by priority first, then by Fuse.js score
-    // Lower priority number = higher priority (1 is highest, 5 is lowest)
-    const sortedResults = results.sort((a, b) => {
-      // First compare by priority
-      const priorityA = a.item.priority || 5; // Default to lowest priority if not specified
-      const priorityB = b.item.priority || 5;
-      
-      if (priorityA !== priorityB) {
-        return priorityA - priorityB; // Lower priority number comes first
-      }
-      
-      // If priorities are equal, use Fuse.js score (lower score = better match)
-      return a.score - b.score;
-    });
-    
-    // Return at most 5 results
-    return sortedResults.slice(0, 5).map(result => ({
-      id: `search-result-${result.refIndex}`,
-      title: result.item.title || 'Untitled',
-      handler: () => { 
-        if (result.item.url) {
-          window.location.href = result.item.url; 
-        }
-      },
-      section: "Search Results",
-      icon: '<i class="fa-solid fa-file-lines"></i>',
-      excerpt: result.item.excerpt || (result.item.content && result.item.content.substring(0, 100) + '...') || ''
-    }));
-  } catch (e) {
-    console.error('Error searching database:', e);
-    return [];
-  }
+  return window.searchHelper.searchDatabaseForCommandPalette(query);
 };

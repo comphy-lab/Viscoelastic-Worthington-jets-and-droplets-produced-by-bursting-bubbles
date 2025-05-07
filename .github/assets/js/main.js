@@ -6,15 +6,26 @@
 
     'use strict';
     
-    /* Reusable Helper Functions
-    * -------------------------------------------------- */
+    // Use centralized DEBUG flag from config
+    const DEBUG = window.CONFIG ? window.CONFIG.DEBUG : false;
+    
+    /**
+     * Copies the specified text to the clipboard, using the Clipboard API if available, with a fallback for older browsers.
+     *
+     * Updates the button state to indicate success or failure.
+     *
+     * @param {string} text - The text to be copied to the clipboard.
+     * @param {HTMLElement} button - The button element to update based on the copy result.
+     */
     function copyToClipboard(text, button) {
         // Try to use modern Clipboard API first with optional chaining
         if (navigator.clipboard?.writeText) {
             navigator.clipboard.writeText(text)
                 .then(() => updateButtonState(button, true))
                 .catch(err => {
-                    console.error('Clipboard API failed:', err);
+                    if (DEBUG) {
+                        console.error('Clipboard API failed:', err);
+                    }
                     fallbackCopyToClipboard(text, button);
                 });
         } else {
@@ -23,6 +34,16 @@
         }
     }
     
+    /**
+     * Attempts to copy text to the clipboard using a hidden textarea and the deprecated `execCommand('copy')` method.
+     *
+     * Updates the button state to indicate success or failure.
+     *
+     * @param {string} text - The text to be copied to the clipboard.
+     * @param {HTMLElement} button - The button element to update based on the copy result.
+     *
+     * @remark This function is used as a fallback when the modern Clipboard API is unavailable.
+     */
     function fallbackCopyToClipboard(text, button) {
         const textarea = document.createElement('textarea');
         textarea.value = text;
@@ -37,11 +58,15 @@
             if (success) {
                 updateButtonState(button, true);
             } else {
-                console.error('Copy command failed');
+                if (DEBUG) {
+                    console.error('Copy command failed');
+                }
                 updateButtonState(button, false);
             }
         } catch (err) {
-            console.error('Fallback copy failed:', err);
+            if (DEBUG) {
+                console.error('Fallback copy failed:', err);
+            }
             updateButtonState(button, false);
         } finally {
             document.body.removeChild(textarea);
@@ -90,146 +115,6 @@
         window.addEventListener('load', loadNewsContent);
     }
 
-    /* Load Featured Papers - Only on main page
-    * -------------------------------------------------- */
-    const loadFeaturedPapers = async () => {
-        // Only load featured papers if we're on the main page
-        if (window.location.pathname === '/' || window.location.pathname === '/index.html') {
-            try {
-                const response = await fetch('/research/');
-                if (!response.ok) {
-                    throw new Error(`Failed to fetch research content: ${response.status} ${response.statusText}`);
-                }
-                
-                const text = await response.text();
-                
-                // Create a temporary div to parse the HTML
-                const tempDiv = document.createElement('div');
-                tempDiv.innerHTML = text;
-                
-                // Find all paper sections
-                const paperSections = tempDiv.querySelectorAll('h3');
-                const featuredSections = Array.from(paperSections).filter(section => {
-                    // Find the next tags element
-                    let nextEl = section.nextElementSibling;
-                    while (nextEl && !nextEl.matches('tags')) {
-                        nextEl = nextEl.nextElementSibling;
-                    }
-                    return nextEl && nextEl.textContent.includes('Featured');
-                });
-
-                // Get the featured container
-                const featuredContainer = document.querySelector('.featured-item__image');
-                if (featuredContainer) {
-                    // Clear existing content
-                    featuredContainer.innerHTML = '';
-                    
-                    // Create a wrapper for featured papers
-                    const wrapper = document.createElement('div');
-                    wrapper.className = 'featured-papers';
-                    
-                    // Add each featured paper
-                    featuredSections.forEach((section) => {
-                        const paperDiv = document.createElement('div');
-                        paperDiv.className = 'featured-paper';
-                        paperDiv.style.cursor = 'pointer';
-                        
-                        // Get all content until the next h3 or end
-                        let content = [section.cloneNode(true)];
-                        let nextEl = section.nextElementSibling;
-                        
-                        while (nextEl && !nextEl.matches('h3')) {
-                            // Skip the Highlights section and its list
-                            if (nextEl.textContent.trim() === 'Highlights' || 
-                                (nextEl.matches('ul') && nextEl.previousElementSibling && 
-                                 nextEl.previousElementSibling.textContent.trim() === 'Highlights')) {
-                                nextEl = nextEl.nextElementSibling;
-                                continue;
-                            }
-                            
-                            // Include everything else (tags, images, iframes)
-                            const clone = nextEl.cloneNode(true);
-                            
-                            // If it's a tags element, make spans clickable
-                            if (clone.matches('tags')) {
-                                Array.from(clone.children).forEach(span => {
-                                    span.style.cursor = 'pointer';
-                                    span.addEventListener('click', (e) => {
-                                        e.stopPropagation(); // Prevent container click
-                                        window.location.href = `/research/?tag=${span.textContent.trim()}`;
-                                    });
-                                });
-                            }
-                            
-                            content.push(clone);
-                            nextEl = nextEl.nextElementSibling;
-                        }
-                        
-                        // Get the paper title for creating the anchor
-                        const title = content[0];
-                        const originalTitle = title.textContent;
-                        title.textContent = title.textContent.replace(/^\[\d+\]\s*/, '');
-                        
-                        content.forEach(el => paperDiv.appendChild(el));
-                        
-                        // Make the entire container clickable
-                        paperDiv.addEventListener('click', (e) => {
-                            // Don't navigate if clicking on a link, tag, or iframe
-                            if (e.target.closest('a') || e.target.closest('tags') || e.target.closest('iframe')) {
-                                return;
-                            }
-                            
-                            // Extract paper number and navigate
-                            const paperNumber = originalTitle.match(/^\[(\d+)\]/)?.[1];
-                            if (paperNumber) {
-                                // Navigate to research page with the paper ID
-                                window.location.href = `/research/#${paperNumber}`;
-                            } else {
-                                window.location.href = '/research/';
-                            }
-                        });
-                        
-                        // Prevent iframe clicks from triggering container click
-                        const iframes = paperDiv.querySelectorAll('iframe');
-                        iframes.forEach(iframe => {
-                            iframe.addEventListener('click', (e) => {
-                                e.stopPropagation();
-                            });
-                        });
-                        
-                        // Prevent link clicks from triggering container click
-                        const links = paperDiv.querySelectorAll('a');
-                        links.forEach(link => {
-                            link.addEventListener('click', (e) => {
-                                e.stopPropagation();
-                            });
-                        });
-                        
-                        wrapper.appendChild(paperDiv);
-                    });
-                    
-                    featuredContainer.appendChild(wrapper);
-                }
-            } catch (error) {
-                console.error('Error loading featured papers:', error);
-                // Add visible error message in the featured section
-                const featuredContainer = document.querySelector('.featured-item__image');
-                if (featuredContainer) {
-                    featuredContainer.innerHTML = `
-                        <div class="featured-error">
-                            <p>Error loading featured papers. Make sure Jekyll is running:</p>
-                            <code>bundle exec jekyll serve</code>
-                            <p style="margin-top: 1rem; font-size: 1.4rem; color: #666;">Error: ${error.message}</p>
-                        </div>
-                    `;
-                }
-            }
-        }
-    };
-
-    // Load featured papers when page loads
-    window.addEventListener('load', loadFeaturedPapers);
-
     /* Mobile Menu
     * -------------------------------------------------- */
     const menuToggle = document.querySelector('.s-header__menu-toggle');
@@ -238,19 +123,23 @@
     const menuLinks = document.querySelectorAll('.s-header__nav-list a');
     
     // Debug elements
-    console.log('Menu elements found:', { 
-        menuToggle: menuToggle !== null, 
-        nav: nav !== null, 
-        closeBtn: closeBtn !== null,
-        menuLinksCount: menuLinks ? menuLinks.length : 0
-    });
+    if (DEBUG) {
+        console.log('Menu elements found:', { 
+            menuToggle: menuToggle !== null, 
+            nav: nav !== null, 
+            closeBtn: closeBtn !== null,
+            menuLinksCount: menuLinks ? menuLinks.length : 0
+        });
+    }
 
     // Handle click outside
     document.addEventListener('click', function(e) {
         if (nav && nav.classList.contains('is-active')) {
             // Check if click is outside nav and not on menu toggle
             if (!nav.contains(e.target) && !menuToggle?.contains(e.target)) {
-                console.log('Click outside detected');
+                if (DEBUG) {
+                    console.log('Click outside detected');
+                }
                 nav.classList.remove('is-active');
                 // Reset the style
                 nav.style.right = '-300px';
@@ -262,44 +151,64 @@
         menuToggle.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation(); // Prevent document click from immediately closing
-            console.log('Menu toggle clicked');
+            if (DEBUG) {
+                console.log('Menu toggle clicked');
+            }
             if (nav) {
-                console.log('Adding is-active class to nav');
+                if (DEBUG) {
+                    console.log('Adding is-active class to nav');
+                }
                 nav.classList.add('is-active');
                 
                 // Make sure the style change is applied
                 nav.style.right = '0';
             } else {
-                console.error('Nav element not found when toggle clicked');
+                if (DEBUG) {
+                    console.error('Nav element not found when toggle clicked');
+                }
             }
         });
     } else {
-        console.error('Menu toggle element not found');
+        if (DEBUG) {
+            console.error('Menu toggle element not found');
+        }
     }
 
     if (closeBtn) {
         closeBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            console.log('Close button clicked');
+            if (DEBUG) {
+                console.log('Close button clicked');
+            }
             if (nav) {
-                console.log('Removing is-active class from nav');
+                if (DEBUG) {
+                    console.log('Removing is-active class from nav');
+                }
                 nav.classList.remove('is-active');
                 // Reset the style
                 nav.style.right = '-300px';
             } else {
-                console.error('Nav element not found when close clicked');
+                if (DEBUG) {
+                    console.error('Nav element not found when close clicked');
+                }
             }
         });
     } else {
-        console.error('Close button element not found');
+        if (DEBUG) {
+            console.error('Close button element not found');
+        }
     }
 
     if (menuLinks && menuLinks.length > 0) {
         menuLinks.forEach(link => {
             link.addEventListener('click', () => {
-                console.log('Menu link clicked');
+                if (DEBUG) {
+                    console.log('Menu link clicked');
+                }
                 if (nav) {
-                    console.log('Removing is-active class from nav');
+                    if (DEBUG) {
+                        console.log('Removing is-active class from nav');
+                    }
                     nav.classList.remove('is-active');
                     // Reset the style
                     nav.style.right = '-300px';
