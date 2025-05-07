@@ -1,6 +1,6 @@
 # Viscoelastic Worthington Jets & Droplets Produced by Bursting Bubbles
 
-[![Website Status](https://img.shields.io/website?url=https%3A%2F%2Fcomphy-lab.github.io%2FViscoelastic3D%2F&style=flat-square&logo=github&label=Website)](https://comphy-lab.github.io/Viscoelastic3D/)
+[![Website Status](https://img.shields.io/website?url=https%3A%2F%2Fcomphy-lab.github.io%2FViscoelastic-Worthington-jets-and-droplets-produced-by-bursting-bubbles%2F&style=flat-square&logo=github&label=Website)](https://comphy-lab.github.io/Viscoelastic-Worthington-jets-and-droplets-produced-by-bursting-bubbles/)
 [![DOI](https://zenodo.org/badge/893135483.svg)](https://doi.org/10.5281/zenodo.14349207)
 [![Blog](https://img.shields.io/badge/Blog-Coming%20Soon-yellow?style=flat-square&logo=obsidian&logoColor=white)](https://blogs.comphy-lab.org/0_ToDo-Blog-public)
 
