@@ -1,41 +1,64 @@
-/** Title: log-conform-viscoelastic-scalar-2D.h
-# Version: 2.5
-# Main feature 1: A exists in across the domain and relaxes according to \lambda. The stress only acts according to G.
-# Main feature 2: This is the 2D+axi **scalar** implementation of [log-conform-viscoelastic.h](log-conform-viscoelastic.h).
+/** 
+# Log-Conformation Method for 2D Viscoelastic Fluids
 
-# Author: Vatsal Sanjay
-# vatsalsanjay@gmail.com
-# Physics of Fluids
-# Updated: Nov 23, 2024
+## Overview
+- **Title**: log-conform-viscoelastic-scalar-2D.h
+- **Version**: 2.5
+- **Description**: 2D and axisymmetric scalar implementation of viscoelastic fluid dynamics using the log-conformation method
 
-# change log: Oct 18, 2024 (v1.0)
-- 2D+axi implementation
-- scalar implementation
+### Key Features
+1. Conformation tensor A exists across domain and relaxes according to λ
+2. Stress acts according to elastic modulus G
+3. Supports both 2D and axisymmetric configurations
+4. Scalar implementation approach for better performance
+5. Compatible with [log-conform-viscoelastic.h](log-conform-viscoelastic.h)
 
-# The code is same as http://basilisk.fr/src/log-conform.h but 
-- written with G-\lambda formulation. 
-- It also fixes the bug where [\sigma_p] = 0 & [\sigma_s] = \gamma\kappa instead of [\sigma_s+\sigma_p] = \gamma\kappa.
+### Author Information
+- **Name**: Vatsal Sanjay
+- **Email**: vatsalsanjay@gmail.com
+- **Institution**: Physics of Fluids
+- **Last Updated**: Nov 23, 2024
 
-# change log: Nov 3, 2024 (v2.0)
-- Added documentation and made the code an axi mirror version of [log-conform-viscoelastic-scalar-3D.h](log-conform-viscoelastic-scalar-3D.h).
-- v2.0 is documentation only change to keep version number in sync with [log-conform-viscoelastic-scalar-3D.h](log-conform-viscoelastic-scalar-3D.h).
+### Implementation Notes
+- Based on http://basilisk.fr/src/log-conform.h with key improvements:
+  - Uses G-λ formulation for better physical interpretation
+  - Fixes surface tension coupling bug where [σ_p] = 0 & [σ_s] = γκ
+  - Ensures [σ_s+σ_p] = γκ for correct interface behavior
 
-Other under the hood changes:
-- Added a check for negative eigenvalues. If any are found, print the location and value of the offending eigenvalue. Please report this bug by opening an issue on the GitHub repository. 
-- Added some initialization functions for pseudo_v and pseudo_t.
+## Version History
 
-# change log: Nov 14, 2024 (v2.1)
-- added a way to do infinite De
+### v1.0 (Oct 18, 2024)
+- Initial implementation with 2D+axi support
+- Scalar-based implementation for efficiency
 
-# change log: Nov 23, 2024 (v2.5)
-- improved documentation.
+### v2.0 (Nov 3, 2024)
+- Major documentation improvements
+- Made code an axisymmetric mirror of [log-conform-viscoelastic-scalar-3D.h](log-conform-viscoelastic-scalar-3D.h)
+- Added negative eigenvalue detection with location reporting
+- Added initialization functions for pseudo_v and pseudo_t
 
-# TODO: (non-critical, non-urgent)
- * Ideally, we would like to consistently use tensor formulation to leverage ease of readability and maintainability. Also, tensors will be more efficient and would avoid bugs. It is also a prerequisite for axi compatibility of the 3D version of this code: [log-conform-viscoelastic-scalar-3D.h](log-conform-viscoelastic-scalar-3D.h). See: https://github.com/comphy-lab/Viscoelastic3D/issues/11 and https://github.com/comphy-lab/Viscoelastic3D/issues/5. 
- * - [ ] enfore all tensors and make the code generally compatible using foreach_dimensions
-*/
+### v2.1 (Nov 14, 2024)
+- Added support for infinite Deborah number cases
 
-/**
+### v2.5 (Nov 23, 2024)
+- Enhanced documentation clarity and completeness
+
+## Future Work
+
+### Tensor Formulation
+- Convert to consistent tensor formulation for:
+  - Improved readability and maintainability
+  - Better computational efficiency
+  - Reduced potential for bugs
+  - Prerequisites for axi compatibility in 3D version
+- Related issues:
+  - https://github.com/comphy-lab/Viscoelastic3D/issues/11
+  - https://github.com/comphy-lab/Viscoelastic3D/issues/5
+
+### Code Improvements
+- [ ] Enforce tensor usage throughout codebase
+- [ ] Implement foreach_dimension compatibility
+
 # The log-conformation method for viscoelastic constitutive models
 
 ## Introduction
@@ -73,7 +96,7 @@ where $D_t$ denotes the material derivative and
 $\mathbf{f_r}(\cdot)$ is the relaxation function. Here, $\lambda$ is the relaxation time.
 
 In the case of an Oldroyd-B viscoelastic fluid, $\mathbf{f}_s
-(\mathbf{A}) = \mathbf{f}_r (\mathbf{A}) = \mathbf{A} -\mathbf{I}$,
+ (\mathbf{A}) = \mathbf{f}_r (\mathbf{A}) = \mathbf{A} -\mathbf{I}$,
 and the above equations can be combined to avoid the use of
 $\mathbf{A}$
 $$
@@ -158,11 +181,11 @@ where $Tr$ denotes the trace of the tensor and $L$ is an additional
 property of the viscoelastic fluid.
 
 We will use the Bell--Collela--Glaz scheme to advect the log-conformation 
-tensor $\Psi$. */
+tensor $\Psi$. 
 
-/*
 TODO: 
 - Perhaps, instead of the Bell--Collela--Glaz scheme, we can use the conservative form of the advection equation and transport the log-conformation tensor with the VoF color function, similar to [http://basilisk.fr/src/navier-stokes/conserving.h](http://basilisk.fr/src/navier-stokes/conserving.h)
+
 */
 
 #include "bcg.h"

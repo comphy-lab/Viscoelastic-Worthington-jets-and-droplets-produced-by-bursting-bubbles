@@ -198,10 +198,10 @@
   </style>
 <a id="" href="#"></a>
   <!-- Critical Meta Tags -->
-  <meta name="description" content="static void tridiagonalizesymmetric3x3(double matrix[3][3], double eigenvectors[3][3], 13 double diagonal[3], double subdiagonal[2]) 14 { 15 const int size =...">
+  <meta name="description" content="This module provides algorithms for computing eigenvalues and eigenvectors of 3x3 symmetric matrices, which are commonly encountered in computational fluid d...">
   <meta name="author" content="CoMPhy Lab">
   <meta name="robots" content="index, follow">
-  <meta name="keywords" content="calculates, decomposition, eigen, reduces">
+  <meta name="keywords" content="decomposition, eigen">
   <meta name="msapplication-TileColor" content="#da532c">
   <meta name="theme-color" content="#ffffff">
   <meta name="apple-mobile-web-app-title" content="CoMPhy Lab">
@@ -417,181 +417,243 @@
                     </a>
                 </div>
 <a id="" href="#"></a>
-                <p>#define SQUARE(x) ((x)*(x))</p>
+                <h1 id="matrix-eigenvalue-solver">Matrix Eigenvalue
+                Solver</h1>
+                <p>This module provides algorithms for computing
+                eigenvalues and eigenvectors of 3x3 symmetric matrices,
+                which are commonly encountered in computational fluid
+                dynamics, solid mechanics, and other physics-based
+                simulations.</p>
+                <h2 id="mathematical-background">Mathematical
+                Background</h2>
+                <p>The implementation uses the Householder
+                transformation to reduce a symmetric matrix to
+                tridiagonal form, followed by the QL algorithm with
+                implicit shifts to compute the eigenvalues and
+                eigenvectors.</p>
+                <p>For a 3x3 symmetric matrix, these methods are
+                particularly efficient and numerically stable, providing
+                accurate results even for matrices with closely spaced
+                eigenvalues.</p>
+                <h3
+                id="tridiagonalize-a-3x3-symmetric-matrix">Tridiagonalize
+                a 3x3 Symmetric Matrix</h3>
+                <p>Reduces a 3x3 symmetric matrix to tridiagonal form
+                using the Householder method, which applies a series of
+                orthogonal transformations to eliminate elements below
+                the subdiagonal.</p>
                 <ul>
-                <li><span class="citation"
-                data-cites="brief">@brief</span> Tridiagonalize a 3x3
-                symmetric matrix using the Householder method.</li>
-                <li></li>
-                <li>This function reduces a 3x3 symmetric matrix A to
-                tridiagonal form.</li>
-                <li></li>
-                <li><span class="citation" data-cites="param">@param
-                [in]</span> matrix Input 3x3 symmetric matrix</li>
-                <li><span class="citation" data-cites="param">@param
-                [out]</span> eigenvectors Orthogonal matrix of
-                Householder vectors</li>
-                <li><span class="citation" data-cites="param">@param
-                [out]</span> diagonal Diagonal elements of the
+                <li>Parameters:
+                <ul>
+                <li>matrix[in]: Input 3x3 symmetric matrix to be
+                tridiagonalized</li>
+                <li>eigenvectors[out]: Orthogonal matrix of Householder
+                vectors</li>
+                <li>diagonal[out]: Diagonal elements of the resulting
                 tridiagonal matrix</li>
-                <li><span class="citation" data-cites="param">@param
-                [out]</span> subdiagonal Subdiagonal elements of the
+                <li>subdiagonal[out]: Subdiagonal elements of the
                 tridiagonal matrix</li>
+                </ul></li>
+                <li>Implementation Notes:
+                <ul>
+                <li>The original matrix is preserved</li>
+                <li>The eigenvectors matrix is initialized to identity
+                and then transformed</li>
+                <li>The algorithm exploits the symmetry of the input
+                matrix</li>
+                </ul></li>
                 </ul>
                 <div class="code-block-container"><div class="code-block-container"><pre
-                class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><span class="dt">static</span> <span class="dt">void</span> tridiagonalize_symmetric_3x3<span class="op">(</span><span class="dt">double</span> matrix<span class="op">[</span><span class="dv">3</span><span class="op">][</span><span class="dv">3</span><span class="op">],</span> <span class="dt">double</span> eigenvectors<span class="op">[</span><span class="dv">3</span><span class="op">][</span><span class="dv">3</span><span class="op">],</span></span>
-<span id="cb1-2">                                         <span class="dt">double</span> diagonal<span class="op">[</span><span class="dv">3</span><span class="op">],</span> <span class="dt">double</span> subdiagonal<span class="op">[</span><span class="dv">2</span><span class="op">])</span></span>
-<span id="cb1-3"><span class="op">{</span></span>
-<span id="cb1-4">    <span class="dt">const</span> <span class="dt">int</span> size <span class="op">=</span> <span class="dv">3</span><span class="op">;</span></span>
-<span id="cb1-5">    <span class="dt">double</span> householder_vector<span class="op">[</span>size<span class="op">],</span> temp_vector<span class="op">[</span>size<span class="op">];</span></span>
-<span id="cb1-6">    <span class="dt">double</span> omega<span class="op">,</span> scale<span class="op">,</span> sigma<span class="op">,</span> tau<span class="op">;</span></span>
-<span id="cb1-7"></span>
-<span id="cb1-8">    <span class="co">// Initialize eigenvectors to the identity matrix</span></span>
-<span id="cb1-9">    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> size<span class="op">;</span> i<span class="op">++)</span> <span class="op">{</span></span>
-<span id="cb1-10">        eigenvectors<span class="op">[</span>i<span class="op">][</span>i<span class="op">]</span> <span class="op">=</span> <span class="fl">1.0</span><span class="op">;</span></span>
-<span id="cb1-11">        <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> j <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> j <span class="op">&lt;</span> i<span class="op">;</span> j<span class="op">++)</span></span>
-<span id="cb1-12">            eigenvectors<span class="op">[</span>i<span class="op">][</span>j<span class="op">]</span> <span class="op">=</span> eigenvectors<span class="op">[</span>j<span class="op">][</span>i<span class="op">]</span> <span class="op">=</span> <span class="fl">0.0</span><span class="op">;</span></span>
-<span id="cb1-13">    <span class="op">}</span></span>
-<span id="cb1-14"></span>
-<span id="cb1-15">    <span class="co">// Compute the first Householder reflection</span></span>
-<span id="cb1-16">    scale <span class="op">=</span> SQUARE<span class="op">(</span>matrix<span class="op">[</span><span class="dv">0</span><span class="op">][</span><span class="dv">1</span><span class="op">])</span> <span class="op">+</span> SQUARE<span class="op">(</span>matrix<span class="op">[</span><span class="dv">0</span><span class="op">][</span><span class="dv">2</span><span class="op">]);</span></span>
-<span id="cb1-17">    sigma <span class="op">=</span> <span class="op">(</span>matrix<span class="op">[</span><span class="dv">0</span><span class="op">][</span><span class="dv">1</span><span class="op">]</span> <span class="op">&gt;</span> <span class="dv">0</span><span class="op">)</span> <span class="op">?</span> <span class="op">-</span>sqrt<span class="op">(</span>scale<span class="op">)</span> <span class="op">:</span> sqrt<span class="op">(</span>scale<span class="op">);</span></span>
-<span id="cb1-18">    subdiagonal<span class="op">[</span><span class="dv">0</span><span class="op">]</span> <span class="op">=</span> sigma<span class="op">;</span></span>
-<span id="cb1-19">    tau <span class="op">=</span> sigma <span class="op">*</span> matrix<span class="op">[</span><span class="dv">0</span><span class="op">][</span><span class="dv">1</span><span class="op">];</span></span>
-<span id="cb1-20">    householder_vector<span class="op">[</span><span class="dv">1</span><span class="op">]</span> <span class="op">=</span> matrix<span class="op">[</span><span class="dv">0</span><span class="op">][</span><span class="dv">1</span><span class="op">]</span> <span class="op">-</span> sigma<span class="op">;</span></span>
-<span id="cb1-21">    householder_vector<span class="op">[</span><span class="dv">2</span><span class="op">]</span> <span class="op">=</span> matrix<span class="op">[</span><span class="dv">0</span><span class="op">][</span><span class="dv">2</span><span class="op">];</span></span>
-<span id="cb1-22"></span>
-<span id="cb1-23">    omega <span class="op">=</span> scale <span class="op">-</span> tau<span class="op">;</span></span>
-<span id="cb1-24">    <span class="cf">if</span> <span class="op">(</span>omega <span class="op">&gt;</span> <span class="fl">0.0</span><span class="op">)</span> <span class="op">{</span></span>
-<span id="cb1-25">        omega <span class="op">=</span> <span class="fl">1.0</span> <span class="op">/</span> omega<span class="op">;</span></span>
-<span id="cb1-26">        sigma <span class="op">=</span> <span class="fl">0.0</span><span class="op">;</span></span>
-<span id="cb1-27">        <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">1</span><span class="op">;</span> i <span class="op">&lt;</span> size<span class="op">;</span> i<span class="op">++)</span> <span class="op">{</span></span>
-<span id="cb1-28">            tau <span class="op">=</span> matrix<span class="op">[</span><span class="dv">1</span><span class="op">][</span>i<span class="op">]</span> <span class="op">*</span> householder_vector<span class="op">[</span><span class="dv">1</span><span class="op">]</span> <span class="op">+</span> matrix<span class="op">[</span>i<span class="op">][</span><span class="dv">2</span><span class="op">]</span> <span class="op">*</span> householder_vector<span class="op">[</span><span class="dv">2</span><span class="op">];</span></span>
-<span id="cb1-29">            temp_vector<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> omega <span class="op">*</span> tau<span class="op">;</span></span>
-<span id="cb1-30">            sigma <span class="op">+=</span> householder_vector<span class="op">[</span>i<span class="op">]</span> <span class="op">*</span> tau<span class="op">;</span></span>
-<span id="cb1-31">        <span class="op">}</span></span>
-<span id="cb1-32">        sigma <span class="op">*=</span> <span class="fl">0.5</span> <span class="op">*</span> SQUARE<span class="op">(</span>omega<span class="op">);</span></span>
-<span id="cb1-33"></span>
-<span id="cb1-34">        <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">1</span><span class="op">;</span> i <span class="op">&lt;</span> size<span class="op">;</span> i<span class="op">++)</span></span>
-<span id="cb1-35">            temp_vector<span class="op">[</span>i<span class="op">]</span> <span class="op">-=</span> sigma <span class="op">*</span> householder_vector<span class="op">[</span>i<span class="op">];</span></span>
-<span id="cb1-36"></span>
-<span id="cb1-37">        diagonal<span class="op">[</span><span class="dv">0</span><span class="op">]</span> <span class="op">=</span> matrix<span class="op">[</span><span class="dv">0</span><span class="op">][</span><span class="dv">0</span><span class="op">];</span></span>
-<span id="cb1-38">        diagonal<span class="op">[</span><span class="dv">1</span><span class="op">]</span> <span class="op">=</span> matrix<span class="op">[</span><span class="dv">1</span><span class="op">][</span><span class="dv">1</span><span class="op">]</span> <span class="op">-</span> <span class="fl">2.0</span> <span class="op">*</span> temp_vector<span class="op">[</span><span class="dv">1</span><span class="op">]</span> <span class="op">*</span> householder_vector<span class="op">[</span><span class="dv">1</span><span class="op">];</span></span>
-<span id="cb1-39">        diagonal<span class="op">[</span><span class="dv">2</span><span class="op">]</span> <span class="op">=</span> matrix<span class="op">[</span><span class="dv">2</span><span class="op">][</span><span class="dv">2</span><span class="op">]</span> <span class="op">-</span> <span class="fl">2.0</span> <span class="op">*</span> temp_vector<span class="op">[</span><span class="dv">2</span><span class="op">]</span> <span class="op">*</span> householder_vector<span class="op">[</span><span class="dv">2</span><span class="op">];</span></span>
-<span id="cb1-40"></span>
-<span id="cb1-41">        <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> j <span class="op">=</span> <span class="dv">1</span><span class="op">;</span> j <span class="op">&lt;</span> size<span class="op">;</span> j<span class="op">++)</span> <span class="op">{</span></span>
-<span id="cb1-42">            tau <span class="op">=</span> omega <span class="op">*</span> householder_vector<span class="op">[</span>j<span class="op">];</span></span>
-<span id="cb1-43">            <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">1</span><span class="op">;</span> i <span class="op">&lt;</span> size<span class="op">;</span> i<span class="op">++)</span></span>
-<span id="cb1-44">                eigenvectors<span class="op">[</span>i<span class="op">][</span>j<span class="op">]</span> <span class="op">-=</span> tau <span class="op">*</span> householder_vector<span class="op">[</span>i<span class="op">];</span></span>
-<span id="cb1-45">        <span class="op">}</span></span>
-<span id="cb1-46"></span>
-<span id="cb1-47">        subdiagonal<span class="op">[</span><span class="dv">1</span><span class="op">]</span> <span class="op">=</span> matrix<span class="op">[</span><span class="dv">1</span><span class="op">][</span><span class="dv">2</span><span class="op">]</span> <span class="op">-</span> temp_vector<span class="op">[</span><span class="dv">1</span><span class="op">]</span> <span class="op">*</span> householder_vector<span class="op">[</span><span class="dv">2</span><span class="op">]</span> <span class="op">-</span> householder_vector<span class="op">[</span><span class="dv">1</span><span class="op">]</span> <span class="op">*</span> temp_vector<span class="op">[</span><span class="dv">2</span><span class="op">];</span></span>
-<span id="cb1-48">    <span class="op">}</span></span>
-<span id="cb1-49">    <span class="cf">else</span> <span class="op">{</span></span>
-<span id="cb1-50">        <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> size<span class="op">;</span> i<span class="op">++)</span></span>
-<span id="cb1-51">            diagonal<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> matrix<span class="op">[</span>i<span class="op">][</span>i<span class="op">];</span></span>
-<span id="cb1-52">        subdiagonal<span class="op">[</span><span class="dv">1</span><span class="op">]</span> <span class="op">=</span> matrix<span class="op">[</span><span class="dv">1</span><span class="op">][</span><span class="dv">2</span><span class="op">];</span></span>
-<span id="cb1-53">    <span class="op">}</span></span>
-<span id="cb1-54"><span class="op">}</span></span></code></pre></div></div>
+                class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><span class="pp">#define SQUARE</span><span class="op">(</span><span class="pp">x</span><span class="op">)</span><span class="pp"> </span><span class="op">((</span><span class="pp">x</span><span class="op">)*(</span><span class="pp">x</span><span class="op">))</span><span class="pp"></span><span class="dv">36</span><span class="pp"></span></span>
+<span id="cb1-2"></span>
+<span id="cb1-3"><span class="dt">static</span> <span class="dt">void</span> tridiagonalize_symmetric_3x3<span class="op">(</span><span class="dt">double</span> matrix<span class="op">[</span><span class="dv">3</span><span class="op">][</span><span class="dv">3</span><span class="op">],</span></span>
+<span id="cb1-4">                                         <span class="dt">double</span> eigenvectors<span class="op">[</span><span class="dv">3</span><span class="op">][</span><span class="dv">3</span><span class="op">],</span></span>
+<span id="cb1-5">                                         <span class="dt">double</span> diagonal<span class="op">[</span><span class="dv">3</span><span class="op">],</span></span>
+<span id="cb1-6">                                         <span class="dt">double</span> subdiagonal<span class="op">[</span><span class="dv">2</span><span class="op">])</span></span>
+<span id="cb1-7"><span class="op">{</span></span>
+<span id="cb1-8">  <span class="dt">const</span> <span class="dt">int</span> size <span class="op">=</span> <span class="dv">3</span><span class="op">;</span></span>
+<span id="cb1-9">  <span class="dt">double</span> householder_vector<span class="op">[</span>size<span class="op">],</span> temp_vector<span class="op">[</span>size<span class="op">];</span></span>
+<span id="cb1-10">  <span class="dt">double</span> omega<span class="op">,</span> scale<span class="op">,</span> sigma<span class="op">,</span> tau<span class="op">;</span></span>
+<span id="cb1-11"></span>
+<span id="cb1-12">  <span class="co">// Initialize eigenvectors to the identity matrix</span></span>
+<span id="cb1-13">  <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> size<span class="op">;</span> i<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb1-14">    eigenvectors<span class="op">[</span>i<span class="op">][</span>i<span class="op">]</span> <span class="op">=</span> <span class="fl">1.0</span><span class="op">;</span></span>
+<span id="cb1-15">    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> j <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> j <span class="op">&lt;</span> i<span class="op">;</span> j<span class="op">++)</span></span>
+<span id="cb1-16">      eigenvectors<span class="op">[</span>i<span class="op">][</span>j<span class="op">]</span> <span class="op">=</span> eigenvectors<span class="op">[</span>j<span class="op">][</span>i<span class="op">]</span> <span class="op">=</span> <span class="fl">0.0</span><span class="op">;</span></span>
+<span id="cb1-17">  <span class="op">}</span></span>
+<span id="cb1-18"></span>
+<span id="cb1-19">  <span class="co">// Compute the first Householder reflection</span></span>
+<span id="cb1-20">  scale <span class="op">=</span> SQUARE<span class="op">(</span>matrix<span class="op">[</span><span class="dv">0</span><span class="op">][</span><span class="dv">1</span><span class="op">])</span> <span class="op">+</span> SQUARE<span class="op">(</span>matrix<span class="op">[</span><span class="dv">0</span><span class="op">][</span><span class="dv">2</span><span class="op">]);</span></span>
+<span id="cb1-21">  sigma <span class="op">=</span> <span class="op">(</span>matrix<span class="op">[</span><span class="dv">0</span><span class="op">][</span><span class="dv">1</span><span class="op">]</span> <span class="op">&gt;</span> <span class="dv">0</span><span class="op">)</span> <span class="op">?</span> <span class="op">-</span>sqrt<span class="op">(</span>scale<span class="op">)</span> <span class="op">:</span> sqrt<span class="op">(</span>scale<span class="op">);</span></span>
+<span id="cb1-22">  subdiagonal<span class="op">[</span><span class="dv">0</span><span class="op">]</span> <span class="op">=</span> sigma<span class="op">;</span></span>
+<span id="cb1-23">  tau <span class="op">=</span> sigma <span class="op">*</span> matrix<span class="op">[</span><span class="dv">0</span><span class="op">][</span><span class="dv">1</span><span class="op">];</span></span>
+<span id="cb1-24">  householder_vector<span class="op">[</span><span class="dv">1</span><span class="op">]</span> <span class="op">=</span> matrix<span class="op">[</span><span class="dv">0</span><span class="op">][</span><span class="dv">1</span><span class="op">]</span> <span class="op">-</span> sigma<span class="op">;</span></span>
+<span id="cb1-25">  householder_vector<span class="op">[</span><span class="dv">2</span><span class="op">]</span> <span class="op">=</span> matrix<span class="op">[</span><span class="dv">0</span><span class="op">][</span><span class="dv">2</span><span class="op">];</span></span>
+<span id="cb1-26"></span>
+<span id="cb1-27">  omega <span class="op">=</span> scale <span class="op">-</span> tau<span class="op">;</span></span>
+<span id="cb1-28">  <span class="cf">if</span> <span class="op">(</span>omega <span class="op">&gt;</span> <span class="fl">0.0</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-29">    omega <span class="op">=</span> <span class="fl">1.0</span> <span class="op">/</span> omega<span class="op">;</span></span>
+<span id="cb1-30">    sigma <span class="op">=</span> <span class="fl">0.0</span><span class="op">;</span></span>
+<span id="cb1-31">    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">1</span><span class="op">;</span> i <span class="op">&lt;</span> size<span class="op">;</span> i<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb1-32">      tau <span class="op">=</span> matrix<span class="op">[</span><span class="dv">1</span><span class="op">][</span>i<span class="op">]</span> <span class="op">*</span> householder_vector<span class="op">[</span><span class="dv">1</span><span class="op">]</span> <span class="op">+</span></span>
+<span id="cb1-33">            matrix<span class="op">[</span>i<span class="op">][</span><span class="dv">2</span><span class="op">]</span> <span class="op">*</span> householder_vector<span class="op">[</span><span class="dv">2</span><span class="op">];</span></span>
+<span id="cb1-34">      temp_vector<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> omega <span class="op">*</span> tau<span class="op">;</span></span>
+<span id="cb1-35">      sigma <span class="op">+=</span> householder_vector<span class="op">[</span>i<span class="op">]</span> <span class="op">*</span> tau<span class="op">;</span></span>
+<span id="cb1-36">    <span class="op">}</span></span>
+<span id="cb1-37">    sigma <span class="op">*=</span> <span class="fl">0.5</span> <span class="op">*</span> SQUARE<span class="op">(</span>omega<span class="op">);</span></span>
+<span id="cb1-38"></span>
+<span id="cb1-39">    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">1</span><span class="op">;</span> i <span class="op">&lt;</span> size<span class="op">;</span> i<span class="op">++)</span></span>
+<span id="cb1-40">      temp_vector<span class="op">[</span>i<span class="op">]</span> <span class="op">-=</span> sigma <span class="op">*</span> householder_vector<span class="op">[</span>i<span class="op">];</span></span>
+<span id="cb1-41"></span>
+<span id="cb1-42">    diagonal<span class="op">[</span><span class="dv">0</span><span class="op">]</span> <span class="op">=</span> matrix<span class="op">[</span><span class="dv">0</span><span class="op">][</span><span class="dv">0</span><span class="op">];</span></span>
+<span id="cb1-43">    diagonal<span class="op">[</span><span class="dv">1</span><span class="op">]</span> <span class="op">=</span> matrix<span class="op">[</span><span class="dv">1</span><span class="op">][</span><span class="dv">1</span><span class="op">]</span> <span class="op">-</span> <span class="fl">2.0</span> <span class="op">*</span> temp_vector<span class="op">[</span><span class="dv">1</span><span class="op">]</span> <span class="op">*</span> householder_vector<span class="op">[</span><span class="dv">1</span><span class="op">];</span></span>
+<span id="cb1-44">    diagonal<span class="op">[</span><span class="dv">2</span><span class="op">]</span> <span class="op">=</span> matrix<span class="op">[</span><span class="dv">2</span><span class="op">][</span><span class="dv">2</span><span class="op">]</span> <span class="op">-</span> <span class="fl">2.0</span> <span class="op">*</span> temp_vector<span class="op">[</span><span class="dv">2</span><span class="op">]</span> <span class="op">*</span> householder_vector<span class="op">[</span><span class="dv">2</span><span class="op">];</span></span>
+<span id="cb1-45"></span>
+<span id="cb1-46">    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> j <span class="op">=</span> <span class="dv">1</span><span class="op">;</span> j <span class="op">&lt;</span> size<span class="op">;</span> j<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb1-47">      tau <span class="op">=</span> omega <span class="op">*</span> householder_vector<span class="op">[</span>j<span class="op">];</span></span>
+<span id="cb1-48">      <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">1</span><span class="op">;</span> i <span class="op">&lt;</span> size<span class="op">;</span> i<span class="op">++)</span></span>
+<span id="cb1-49">        eigenvectors<span class="op">[</span>i<span class="op">][</span>j<span class="op">]</span> <span class="op">-=</span> tau <span class="op">*</span> householder_vector<span class="op">[</span>i<span class="op">];</span></span>
+<span id="cb1-50">    <span class="op">}</span></span>
+<span id="cb1-51"></span>
+<span id="cb1-52">    subdiagonal<span class="op">[</span><span class="dv">1</span><span class="op">]</span> <span class="op">=</span> matrix<span class="op">[</span><span class="dv">1</span><span class="op">][</span><span class="dv">2</span><span class="op">]</span> <span class="op">-</span> temp_vector<span class="op">[</span><span class="dv">1</span><span class="op">]</span> <span class="op">*</span> householder_vector<span class="op">[</span><span class="dv">2</span><span class="op">]</span> <span class="op">-</span></span>
+<span id="cb1-53">                     householder_vector<span class="op">[</span><span class="dv">1</span><span class="op">]</span> <span class="op">*</span> temp_vector<span class="op">[</span><span class="dv">2</span><span class="op">];</span></span>
+<span id="cb1-54">  <span class="op">}</span></span>
+<span id="cb1-55">  <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb1-56">    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> size<span class="op">;</span> i<span class="op">++)</span></span>
+<span id="cb1-57">      diagonal<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> matrix<span class="op">[</span>i<span class="op">][</span>i<span class="op">];</span></span>
+<span id="cb1-58">    subdiagonal<span class="op">[</span><span class="dv">1</span><span class="op">]</span> <span class="op">=</span> matrix<span class="op">[</span><span class="dv">1</span><span class="op">][</span><span class="dv">2</span><span class="op">];</span></span>
+<span id="cb1-59">  <span class="op">}</span></span>
+<span id="cb1-60"><span class="op">}</span></span></code></pre></div></div>
+                <p>### Compute Eigenvalues and Eigenvectors of a 3x3
+                Symmetric Matrix</p>
+                <p>Calculates the complete eigensystem (eigenvalues and
+                eigenvectors) of a 3x3 symmetric matrix using the QL
+                algorithm with implicit shifts, after first reducing the
+                matrix to tridiagonal form.</p>
                 <ul>
-                <li><span class="citation"
-                data-cites="brief">@brief</span> Compute eigenvalues and
-                eigenvectors of a 3x3 symmetric matrix.</li>
-                <li></li>
-                <li>This function calculates the eigenvalues and
-                eigenvectors of a 3x3 symmetric matrix</li>
-                <li>using the QL algorithm with implicit shifts.</li>
-                <li></li>
-                <li><span class="citation" data-cites="param">@param
-                [in]</span> matrix Input 3x3 symmetric matrix</li>
-                <li><span class="citation" data-cites="param">@param
-                [out]</span> eigenvectors Matrix of eigenvectors
-                (column-wise)</li>
-                <li><span class="citation" data-cites="param">@param
-                [out]</span> eigenvalues Array of eigenvalues</li>
-                <li><span class="citation"
-                data-cites="return">@return</span> 0 if successful, -1
-                if the algorithm fails to converge</li>
+                <li><p>Parameters:</p>
+                <ul>
+                <li>matrix[in]: Input 3x3 symmetric matrix whose
+                eigensystem will be computed</li>
+                <li>eigenvectors[out]: Matrix whose columns are the
+                eigenvectors</li>
+                <li>eigenvalues[out]: Array containing the
+                eigenvalues</li>
+                </ul></li>
+                <li><p>Return Value:</p>
+                <ul>
+                <li>0: Computation successful</li>
+                <li>-1: Algorithm failed to converge within the maximum
+                number of iterations</li>
+                </ul></li>
+                <li><p>Algorithm Details:</p>
+                <ul>
+                <li>First checks if the matrix is already diagonal</li>
+                <li>If not, tridiagonalizes the matrix using Householder
+                transformations</li>
+                <li>Applies the QL algorithm with implicit shifts to
+                compute eigenvalues</li>
+                <li>Maximum of 30 iterations are allowed for
+                convergence</li>
+                <li>Numerical tolerance of 1e-15 is used for detecting
+                diagonal matrices</li>
+                </ul></li>
+                <li><p>Usage Example:</p>
+                <div class="code-block-container"><div class="code-block-container"><pre
+                class="sourceCode c"><code class="sourceCode c"><span id="cb2-1"><span class="dt">double</span> matrix<span class="op">[</span><span class="dv">3</span><span class="op">][</span><span class="dv">3</span><span class="op">]</span> <span class="op">=</span> <span class="op">{{</span><span class="fl">1.0</span><span class="op">,</span> <span class="fl">0.5</span><span class="op">,</span> <span class="fl">0.3</span><span class="op">},</span></span>
+<span id="cb2-2">                       <span class="op">{</span><span class="fl">0.5</span><span class="op">,</span> <span class="fl">2.0</span><span class="op">,</span> <span class="fl">0.1</span><span class="op">},</span></span>
+<span id="cb2-3">                       <span class="op">{</span><span class="fl">0.3</span><span class="op">,</span> <span class="fl">0.1</span><span class="op">,</span> <span class="fl">3.0</span><span class="op">}};</span></span>
+<span id="cb2-4"><span class="dt">double</span> eigenvectors<span class="op">[</span><span class="dv">3</span><span class="op">][</span><span class="dv">3</span><span class="op">];</span></span>
+<span id="cb2-5"><span class="dt">double</span> eigenvalues<span class="op">[</span><span class="dv">3</span><span class="op">];</span></span>
+<span id="cb2-6"></span>
+<span id="cb2-7"><span class="dt">int</span> result <span class="op">=</span> compute_eigensystem_symmetric_3x3<span class="op">(</span>matrix<span class="op">,</span> eigenvectors<span class="op">,</span> eigenvalues<span class="op">);</span></span>
+<span id="cb2-8"><span class="cf">if</span> <span class="op">(</span>result <span class="op">==</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-9">  <span class="co">// Computation successful</span></span>
+<span id="cb2-10"><span class="op">}</span></span></code></pre></div></div></li>
                 </ul>
                 <div class="code-block-container"><div class="code-block-container"><pre
-                class="sourceCode c"><code class="sourceCode c"><span id="cb2-1"><span class="dt">static</span> <span class="dt">int</span> compute_eigensystem_symmetric_3x3<span class="op">(</span><span class="dt">double</span> matrix<span class="op">[</span><span class="dv">3</span><span class="op">][</span><span class="dv">3</span><span class="op">],</span> <span class="dt">double</span> eigenvectors<span class="op">[</span><span class="dv">3</span><span class="op">][</span><span class="dv">3</span><span class="op">],</span> <span class="dt">double</span> eigenvalues<span class="op">[</span><span class="dv">3</span><span class="op">])</span></span>
-<span id="cb2-2"><span class="op">{</span></span>
-<span id="cb2-3">    <span class="dt">const</span> <span class="dt">int</span> size <span class="op">=</span> <span class="dv">3</span><span class="op">;</span></span>
-<span id="cb2-4">    <span class="dt">const</span> <span class="dt">int</span> max_iterations <span class="op">=</span> <span class="dv">30</span><span class="op">;</span></span>
-<span id="cb2-5">    <span class="dt">double</span> subdiagonal<span class="op">[</span><span class="dv">3</span><span class="op">];</span></span>
-<span id="cb2-6">    <span class="dt">double</span> g<span class="op">,</span> r<span class="op">,</span> p<span class="op">,</span> f<span class="op">,</span> b<span class="op">,</span> s<span class="op">,</span> c<span class="op">,</span> t<span class="op">;</span></span>
-<span id="cb2-7">    <span class="dt">int</span> iteration_count<span class="op">;</span></span>
-<span id="cb2-8">    <span class="dt">int</span> m<span class="op">;</span></span>
-<span id="cb2-9"></span>
-<span id="cb2-10">    <span class="co">// Check for diagonal matrix with unit entries</span></span>
-<span id="cb2-11">    <span class="cf">if</span> <span class="op">(</span>SQUARE<span class="op">(</span>matrix<span class="op">[</span><span class="dv">0</span><span class="op">][</span><span class="dv">1</span><span class="op">])</span> <span class="op">&lt;</span> <span class="fl">1e-15</span> <span class="op">&amp;&amp;</span> SQUARE<span class="op">(</span>matrix<span class="op">[</span><span class="dv">0</span><span class="op">][</span><span class="dv">2</span><span class="op">])</span> <span class="op">&lt;</span> <span class="fl">1e-15</span> <span class="op">&amp;&amp;</span> SQUARE<span class="op">(</span>matrix<span class="op">[</span><span class="dv">1</span><span class="op">][</span><span class="dv">2</span><span class="op">])</span> <span class="op">&lt;</span> <span class="fl">1e-15</span><span class="op">)</span> <span class="op">{</span></span>
-<span id="cb2-12">        <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> size<span class="op">;</span> i<span class="op">++)</span> <span class="op">{</span></span>
-<span id="cb2-13">            <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> j <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> j <span class="op">&lt;</span> size<span class="op">;</span> j<span class="op">++)</span> <span class="op">{</span></span>
-<span id="cb2-14">                eigenvectors<span class="op">[</span>i<span class="op">][</span>j<span class="op">]</span> <span class="op">=</span> <span class="op">(</span>i <span class="op">==</span> j<span class="op">)</span> <span class="op">?</span> <span class="fl">1.0</span> <span class="op">:</span> <span class="fl">0.0</span><span class="op">;</span></span>
-<span id="cb2-15">            <span class="op">}</span></span>
-<span id="cb2-16">            eigenvalues<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> matrix<span class="op">[</span>i<span class="op">][</span>i<span class="op">];</span></span>
-<span id="cb2-17">        <span class="op">}</span></span>
-<span id="cb2-18">        <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
-<span id="cb2-19">    <span class="op">}</span></span>
-<span id="cb2-20"></span>
-<span id="cb2-21">    tridiagonalize_symmetric_3x3<span class="op">(</span>matrix<span class="op">,</span> eigenvectors<span class="op">,</span> eigenvalues<span class="op">,</span> subdiagonal<span class="op">);</span></span>
-<span id="cb2-22"></span>
-<span id="cb2-23">    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> l <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> l <span class="op">&lt;</span> size <span class="op">-</span> <span class="dv">1</span><span class="op">;</span> l<span class="op">++)</span> <span class="op">{</span></span>
-<span id="cb2-24">        iteration_count <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
-<span id="cb2-25">        <span class="cf">while</span> <span class="op">(</span><span class="dv">1</span><span class="op">)</span> <span class="op">{</span></span>
-<span id="cb2-26">            <span class="cf">for</span> <span class="op">(</span>m <span class="op">=</span> l<span class="op">;</span> m <span class="op">&lt;=</span> size <span class="op">-</span> <span class="dv">2</span><span class="op">;</span> m<span class="op">++)</span> <span class="op">{</span></span>
-<span id="cb2-27">                g <span class="op">=</span> fabs<span class="op">(</span>eigenvalues<span class="op">[</span>m<span class="op">])</span> <span class="op">+</span> fabs<span class="op">(</span>eigenvalues<span class="op">[</span>m<span class="op">+</span><span class="dv">1</span><span class="op">]);</span></span>
-<span id="cb2-28">                <span class="cf">if</span> <span class="op">(</span>fabs<span class="op">(</span>subdiagonal<span class="op">[</span>m<span class="op">])</span> <span class="op">+</span> g <span class="op">==</span> g<span class="op">)</span></span>
-<span id="cb2-29">                    <span class="cf">break</span><span class="op">;</span></span>
-<span id="cb2-30">            <span class="op">}</span></span>
-<span id="cb2-31">            <span class="cf">if</span> <span class="op">(</span>m <span class="op">==</span> l<span class="op">)</span></span>
-<span id="cb2-32">                <span class="cf">break</span><span class="op">;</span></span>
-<span id="cb2-33"></span>
-<span id="cb2-34">            <span class="cf">if</span> <span class="op">(</span>iteration_count<span class="op">++</span> <span class="op">&gt;=</span> max_iterations<span class="op">)</span></span>
-<span id="cb2-35">                <span class="cf">return</span> <span class="op">-</span><span class="dv">1</span><span class="op">;</span></span>
-<span id="cb2-36"></span>
-<span id="cb2-37">            g <span class="op">=</span> <span class="op">(</span>eigenvalues<span class="op">[</span>l<span class="op">+</span><span class="dv">1</span><span class="op">]</span> <span class="op">-</span> eigenvalues<span class="op">[</span>l<span class="op">])</span> <span class="op">/</span> <span class="op">(</span><span class="fl">2.0</span> <span class="op">*</span> subdiagonal<span class="op">[</span>l<span class="op">]);</span></span>
-<span id="cb2-38">            r <span class="op">=</span> sqrt<span class="op">(</span>SQUARE<span class="op">(</span>g<span class="op">)</span> <span class="op">+</span> <span class="fl">1.0</span><span class="op">);</span></span>
-<span id="cb2-39">            g <span class="op">=</span> eigenvalues<span class="op">[</span>m<span class="op">]</span> <span class="op">-</span> eigenvalues<span class="op">[</span>l<span class="op">]</span> <span class="op">+</span> subdiagonal<span class="op">[</span>l<span class="op">]</span> <span class="op">/</span> <span class="op">(</span>g <span class="op">+</span> <span class="op">(</span>g <span class="op">&gt;</span> <span class="dv">0</span> <span class="op">?</span> fabs<span class="op">(</span>r<span class="op">)</span> <span class="op">:</span> <span class="op">-</span>fabs<span class="op">(</span>r<span class="op">)));</span></span>
-<span id="cb2-40"></span>
-<span id="cb2-41">            s <span class="op">=</span> c <span class="op">=</span> <span class="fl">1.0</span><span class="op">;</span></span>
-<span id="cb2-42">            p <span class="op">=</span> <span class="fl">0.0</span><span class="op">;</span></span>
-<span id="cb2-43">            <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> m <span class="op">-</span> <span class="dv">1</span><span class="op">;</span> i <span class="op">&gt;=</span> l<span class="op">;</span> i<span class="op">--)</span> <span class="op">{</span></span>
-<span id="cb2-44">                f <span class="op">=</span> s <span class="op">*</span> subdiagonal<span class="op">[</span>i<span class="op">];</span></span>
-<span id="cb2-45">                b <span class="op">=</span> c <span class="op">*</span> subdiagonal<span class="op">[</span>i<span class="op">];</span></span>
-<span id="cb2-46">                <span class="cf">if</span> <span class="op">(</span>fabs<span class="op">(</span>f<span class="op">)</span> <span class="op">&gt;</span> fabs<span class="op">(</span>g<span class="op">))</span> <span class="op">{</span></span>
-<span id="cb2-47">                    c <span class="op">=</span> g <span class="op">/</span> f<span class="op">;</span></span>
-<span id="cb2-48">                    r <span class="op">=</span> sqrt<span class="op">(</span>SQUARE<span class="op">(</span>c<span class="op">)</span> <span class="op">+</span> <span class="fl">1.0</span><span class="op">);</span></span>
-<span id="cb2-49">                    subdiagonal<span class="op">[</span>i<span class="op">+</span><span class="dv">1</span><span class="op">]</span> <span class="op">=</span> f <span class="op">*</span> r<span class="op">;</span></span>
-<span id="cb2-50">                    c <span class="op">*=</span> <span class="op">(</span>s <span class="op">=</span> <span class="fl">1.0</span> <span class="op">/</span> r<span class="op">);</span></span>
-<span id="cb2-51">                <span class="op">}</span></span>
-<span id="cb2-52">                <span class="cf">else</span> <span class="op">{</span></span>
-<span id="cb2-53">                    s <span class="op">=</span> f <span class="op">/</span> g<span class="op">;</span></span>
-<span id="cb2-54">                    r <span class="op">=</span> sqrt<span class="op">(</span>SQUARE<span class="op">(</span>s<span class="op">)</span> <span class="op">+</span> <span class="fl">1.0</span><span class="op">);</span></span>
-<span id="cb2-55">                    subdiagonal<span class="op">[</span>i<span class="op">+</span><span class="dv">1</span><span class="op">]</span> <span class="op">=</span> g <span class="op">*</span> r<span class="op">;</span></span>
-<span id="cb2-56">                    s <span class="op">*=</span> <span class="op">(</span>c <span class="op">=</span> <span class="fl">1.0</span> <span class="op">/</span> r<span class="op">);</span></span>
-<span id="cb2-57">                <span class="op">}</span></span>
-<span id="cb2-58"></span>
-<span id="cb2-59">                g <span class="op">=</span> eigenvalues<span class="op">[</span>i<span class="op">+</span><span class="dv">1</span><span class="op">]</span> <span class="op">-</span> p<span class="op">;</span></span>
-<span id="cb2-60">                r <span class="op">=</span> <span class="op">(</span>eigenvalues<span class="op">[</span>i<span class="op">]</span> <span class="op">-</span> g<span class="op">)</span> <span class="op">*</span> s <span class="op">+</span> <span class="fl">2.0</span> <span class="op">*</span> c <span class="op">*</span> b<span class="op">;</span></span>
-<span id="cb2-61">                p <span class="op">=</span> s <span class="op">*</span> r<span class="op">;</span></span>
-<span id="cb2-62">                eigenvalues<span class="op">[</span>i<span class="op">+</span><span class="dv">1</span><span class="op">]</span> <span class="op">=</span> g <span class="op">+</span> p<span class="op">;</span></span>
-<span id="cb2-63">                g <span class="op">=</span> c <span class="op">*</span> r <span class="op">-</span> b<span class="op">;</span></span>
-<span id="cb2-64"></span>
-<span id="cb2-65">                <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> k <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> k <span class="op">&lt;</span> size<span class="op">;</span> k<span class="op">++)</span> <span class="op">{</span></span>
-<span id="cb2-66">                    t <span class="op">=</span> eigenvectors<span class="op">[</span>k<span class="op">][</span>i<span class="op">+</span><span class="dv">1</span><span class="op">];</span></span>
-<span id="cb2-67">                    eigenvectors<span class="op">[</span>k<span class="op">][</span>i<span class="op">+</span><span class="dv">1</span><span class="op">]</span> <span class="op">=</span> s <span class="op">*</span> eigenvectors<span class="op">[</span>k<span class="op">][</span>i<span class="op">]</span> <span class="op">+</span> c <span class="op">*</span> t<span class="op">;</span></span>
-<span id="cb2-68">                    eigenvectors<span class="op">[</span>k<span class="op">][</span>i<span class="op">]</span>   <span class="op">=</span> c <span class="op">*</span> eigenvectors<span class="op">[</span>k<span class="op">][</span>i<span class="op">]</span> <span class="op">-</span> s <span class="op">*</span> t<span class="op">;</span></span>
-<span id="cb2-69">                <span class="op">}</span></span>
-<span id="cb2-70">            <span class="op">}</span></span>
-<span id="cb2-71">            eigenvalues<span class="op">[</span>l<span class="op">]</span> <span class="op">-=</span> p<span class="op">;</span></span>
-<span id="cb2-72">            subdiagonal<span class="op">[</span>l<span class="op">]</span> <span class="op">=</span> g<span class="op">;</span></span>
-<span id="cb2-73">            subdiagonal<span class="op">[</span>m<span class="op">]</span> <span class="op">=</span> <span class="fl">0.0</span><span class="op">;</span></span>
-<span id="cb2-74">        <span class="op">}</span></span>
-<span id="cb2-75">    <span class="op">}</span></span>
-<span id="cb2-76"></span>
-<span id="cb2-77">    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
-<span id="cb2-78"><span class="op">}</span></span></code></pre></div></div>
+                class="sourceCode c"><code class="sourceCode c"><span id="cb3-1"><span class="dt">static</span> <span class="dt">int</span> compute_eigensystem_symmetric_3x3<span class="op">(</span><span class="dt">double</span> matrix<span class="op">[</span><span class="dv">3</span><span class="op">][</span><span class="dv">3</span><span class="op">],</span></span>
+<span id="cb3-2">                                            <span class="dt">double</span> eigenvectors<span class="op">[</span><span class="dv">3</span><span class="op">][</span><span class="dv">3</span><span class="op">],</span></span>
+<span id="cb3-3">                                            <span class="dt">double</span> eigenvalues<span class="op">[</span><span class="dv">3</span><span class="op">])</span></span>
+<span id="cb3-4"><span class="op">{</span></span>
+<span id="cb3-5">  <span class="dt">const</span> <span class="dt">int</span> size <span class="op">=</span> <span class="dv">3</span><span class="op">;</span></span>
+<span id="cb3-6">  <span class="dt">const</span> <span class="dt">int</span> max_iterations <span class="op">=</span> <span class="dv">30</span><span class="op">;</span></span>
+<span id="cb3-7">  <span class="dt">double</span> subdiagonal<span class="op">[</span><span class="dv">3</span><span class="op">];</span></span>
+<span id="cb3-8">  <span class="dt">double</span> g<span class="op">,</span> r<span class="op">,</span> p<span class="op">,</span> f<span class="op">,</span> b<span class="op">,</span> s<span class="op">,</span> c<span class="op">,</span> t<span class="op">;</span></span>
+<span id="cb3-9">  <span class="dt">int</span> iteration_count<span class="op">;</span></span>
+<span id="cb3-10">  <span class="dt">int</span> m<span class="op">;</span></span>
+<span id="cb3-11"></span>
+<span id="cb3-12">  <span class="co">// Check for diagonal matrix with unit entries</span></span>
+<span id="cb3-13">  <span class="cf">if</span> <span class="op">(</span>SQUARE<span class="op">(</span>matrix<span class="op">[</span><span class="dv">0</span><span class="op">][</span><span class="dv">1</span><span class="op">])</span> <span class="op">&lt;</span> <span class="fl">1e-15</span> <span class="op">&amp;&amp;</span> SQUARE<span class="op">(</span>matrix<span class="op">[</span><span class="dv">0</span><span class="op">][</span><span class="dv">2</span><span class="op">])</span> <span class="op">&lt;</span> <span class="fl">1e-15</span> <span class="op">&amp;&amp;</span></span>
+<span id="cb3-14">      SQUARE<span class="op">(</span>matrix<span class="op">[</span><span class="dv">1</span><span class="op">][</span><span class="dv">2</span><span class="op">])</span> <span class="op">&lt;</span> <span class="fl">1e-15</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb3-15">    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> size<span class="op">;</span> i<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb3-16">      <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> j <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> j <span class="op">&lt;</span> size<span class="op">;</span> j<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb3-17">        eigenvectors<span class="op">[</span>i<span class="op">][</span>j<span class="op">]</span> <span class="op">=</span> <span class="op">(</span>i <span class="op">==</span> j<span class="op">)</span> <span class="op">?</span> <span class="fl">1.0</span> <span class="op">:</span> <span class="fl">0.0</span><span class="op">;</span></span>
+<span id="cb3-18">      <span class="op">}</span></span>
+<span id="cb3-19">      eigenvalues<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> matrix<span class="op">[</span>i<span class="op">][</span>i<span class="op">];</span></span>
+<span id="cb3-20">    <span class="op">}</span></span>
+<span id="cb3-21">    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb3-22">  <span class="op">}</span></span>
+<span id="cb3-23"></span>
+<span id="cb3-24">  tridiagonalize_symmetric_3x3<span class="op">(</span>matrix<span class="op">,</span> eigenvectors<span class="op">,</span> eigenvalues<span class="op">,</span> subdiagonal<span class="op">);</span></span>
+<span id="cb3-25"></span>
+<span id="cb3-26">  <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> l <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> l <span class="op">&lt;</span> size <span class="op">-</span> <span class="dv">1</span><span class="op">;</span> l<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb3-27">    iteration_count <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb3-28">    <span class="cf">while</span> <span class="op">(</span><span class="dv">1</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb3-29">      <span class="cf">for</span> <span class="op">(</span>m <span class="op">=</span> l<span class="op">;</span> m <span class="op">&lt;=</span> size <span class="op">-</span> <span class="dv">2</span><span class="op">;</span> m<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb3-30">        g <span class="op">=</span> fabs<span class="op">(</span>eigenvalues<span class="op">[</span>m<span class="op">])</span> <span class="op">+</span> fabs<span class="op">(</span>eigenvalues<span class="op">[</span>m<span class="op">+</span><span class="dv">1</span><span class="op">]);</span></span>
+<span id="cb3-31">        <span class="cf">if</span> <span class="op">(</span>fabs<span class="op">(</span>subdiagonal<span class="op">[</span>m<span class="op">])</span> <span class="op">+</span> g <span class="op">==</span> g<span class="op">)</span></span>
+<span id="cb3-32">          <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb3-33">      <span class="op">}</span></span>
+<span id="cb3-34">      <span class="cf">if</span> <span class="op">(</span>m <span class="op">==</span> l<span class="op">)</span></span>
+<span id="cb3-35">        <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb3-36"></span>
+<span id="cb3-37">      <span class="cf">if</span> <span class="op">(</span>iteration_count<span class="op">++</span> <span class="op">&gt;=</span> max_iterations<span class="op">)</span></span>
+<span id="cb3-38">        <span class="cf">return</span> <span class="op">-</span><span class="dv">1</span><span class="op">;</span></span>
+<span id="cb3-39"></span>
+<span id="cb3-40">      g <span class="op">=</span> <span class="op">(</span>eigenvalues<span class="op">[</span>l<span class="op">+</span><span class="dv">1</span><span class="op">]</span> <span class="op">-</span> eigenvalues<span class="op">[</span>l<span class="op">])</span> <span class="op">/</span> <span class="op">(</span><span class="fl">2.0</span> <span class="op">*</span> subdiagonal<span class="op">[</span>l<span class="op">]);</span></span>
+<span id="cb3-41">      r <span class="op">=</span> sqrt<span class="op">(</span>SQUARE<span class="op">(</span>g<span class="op">)</span> <span class="op">+</span> <span class="fl">1.0</span><span class="op">);</span></span>
+<span id="cb3-42">      g <span class="op">=</span> eigenvalues<span class="op">[</span>m<span class="op">]</span> <span class="op">-</span> eigenvalues<span class="op">[</span>l<span class="op">]</span> <span class="op">+</span> subdiagonal<span class="op">[</span>l<span class="op">]</span> <span class="op">/</span></span>
+<span id="cb3-43">          <span class="op">(</span>g <span class="op">+</span> <span class="op">(</span>g <span class="op">&gt;</span> <span class="dv">0</span> <span class="op">?</span> fabs<span class="op">(</span>r<span class="op">)</span> <span class="op">:</span> <span class="op">-</span>fabs<span class="op">(</span>r<span class="op">)));</span></span>
+<span id="cb3-44"></span>
+<span id="cb3-45">      s <span class="op">=</span> c <span class="op">=</span> <span class="fl">1.0</span><span class="op">;</span></span>
+<span id="cb3-46">      p <span class="op">=</span> <span class="fl">0.0</span><span class="op">;</span></span>
+<span id="cb3-47">      <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> m <span class="op">-</span> <span class="dv">1</span><span class="op">;</span> i <span class="op">&gt;=</span> l<span class="op">;</span> i<span class="op">--)</span> <span class="op">{</span></span>
+<span id="cb3-48">        f <span class="op">=</span> s <span class="op">*</span> subdiagonal<span class="op">[</span>i<span class="op">];</span></span>
+<span id="cb3-49">        b <span class="op">=</span> c <span class="op">*</span> subdiagonal<span class="op">[</span>i<span class="op">];</span></span>
+<span id="cb3-50">        <span class="cf">if</span> <span class="op">(</span>fabs<span class="op">(</span>f<span class="op">)</span> <span class="op">&gt;</span> fabs<span class="op">(</span>g<span class="op">))</span> <span class="op">{</span></span>
+<span id="cb3-51">          c <span class="op">=</span> g <span class="op">/</span> f<span class="op">;</span></span>
+<span id="cb3-52">          r <span class="op">=</span> sqrt<span class="op">(</span>SQUARE<span class="op">(</span>c<span class="op">)</span> <span class="op">+</span> <span class="fl">1.0</span><span class="op">);</span></span>
+<span id="cb3-53">          subdiagonal<span class="op">[</span>i<span class="op">+</span><span class="dv">1</span><span class="op">]</span> <span class="op">=</span> f <span class="op">*</span> r<span class="op">;</span></span>
+<span id="cb3-54">          c <span class="op">*=</span> <span class="op">(</span>s <span class="op">=</span> <span class="fl">1.0</span> <span class="op">/</span> r<span class="op">);</span></span>
+<span id="cb3-55">        <span class="op">}</span></span>
+<span id="cb3-56">        <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb3-57">          s <span class="op">=</span> f <span class="op">/</span> g<span class="op">;</span></span>
+<span id="cb3-58">          r <span class="op">=</span> sqrt<span class="op">(</span>SQUARE<span class="op">(</span>s<span class="op">)</span> <span class="op">+</span> <span class="fl">1.0</span><span class="op">);</span></span>
+<span id="cb3-59">          subdiagonal<span class="op">[</span>i<span class="op">+</span><span class="dv">1</span><span class="op">]</span> <span class="op">=</span> g <span class="op">*</span> r<span class="op">;</span></span>
+<span id="cb3-60">          s <span class="op">*=</span> <span class="op">(</span>c <span class="op">=</span> <span class="fl">1.0</span> <span class="op">/</span> r<span class="op">);</span></span>
+<span id="cb3-61">        <span class="op">}</span></span>
+<span id="cb3-62"></span>
+<span id="cb3-63">        g <span class="op">=</span> eigenvalues<span class="op">[</span>i<span class="op">+</span><span class="dv">1</span><span class="op">]</span> <span class="op">-</span> p<span class="op">;</span></span>
+<span id="cb3-64">        r <span class="op">=</span> <span class="op">(</span>eigenvalues<span class="op">[</span>i<span class="op">]</span> <span class="op">-</span> g<span class="op">)</span> <span class="op">*</span> s <span class="op">+</span> <span class="fl">2.0</span> <span class="op">*</span> c <span class="op">*</span> b<span class="op">;</span></span>
+<span id="cb3-65">        p <span class="op">=</span> s <span class="op">*</span> r<span class="op">;</span></span>
+<span id="cb3-66">        eigenvalues<span class="op">[</span>i<span class="op">+</span><span class="dv">1</span><span class="op">]</span> <span class="op">=</span> g <span class="op">+</span> p<span class="op">;</span></span>
+<span id="cb3-67">        g <span class="op">=</span> c <span class="op">*</span> r <span class="op">-</span> b<span class="op">;</span></span>
+<span id="cb3-68"></span>
+<span id="cb3-69">        <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> k <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> k <span class="op">&lt;</span> size<span class="op">;</span> k<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb3-70">          t <span class="op">=</span> eigenvectors<span class="op">[</span>k<span class="op">][</span>i<span class="op">+</span><span class="dv">1</span><span class="op">];</span></span>
+<span id="cb3-71">          eigenvectors<span class="op">[</span>k<span class="op">][</span>i<span class="op">+</span><span class="dv">1</span><span class="op">]</span> <span class="op">=</span> s <span class="op">*</span> eigenvectors<span class="op">[</span>k<span class="op">][</span>i<span class="op">]</span> <span class="op">+</span> c <span class="op">*</span> t<span class="op">;</span></span>
+<span id="cb3-72">          eigenvectors<span class="op">[</span>k<span class="op">][</span>i<span class="op">]</span>   <span class="op">=</span> c <span class="op">*</span> eigenvectors<span class="op">[</span>k<span class="op">][</span>i<span class="op">]</span> <span class="op">-</span> s <span class="op">*</span> t<span class="op">;</span></span>
+<span id="cb3-73">        <span class="op">}</span></span>
+<span id="cb3-74">      <span class="op">}</span></span>
+<span id="cb3-75">      eigenvalues<span class="op">[</span>l<span class="op">]</span> <span class="op">-=</span> p<span class="op">;</span></span>
+<span id="cb3-76">      subdiagonal<span class="op">[</span>l<span class="op">]</span> <span class="op">=</span> g<span class="op">;</span></span>
+<span id="cb3-77">      subdiagonal<span class="op">[</span>m<span class="op">]</span> <span class="op">=</span> <span class="fl">0.0</span><span class="op">;</span></span>
+<span id="cb3-78">    <span class="op">}</span></span>
+<span id="cb3-79">  <span class="op">}</span></span>
+<span id="cb3-80"></span>
+<span id="cb3-81">  <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb3-82"><span class="op">}</span></span></code></pre></div></div>
             </div>
         </main>
 <a id="" href="#"></a>

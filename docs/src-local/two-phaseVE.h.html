@@ -486,11 +486,11 @@
                 (i.e. harmonic).</p>
                 <div class="code-block-container"><div class="code-block-container"><pre
                 class="sourceCode c"><code class="sourceCode c"><span id="cb4-1"><span class="pp">#ifndef rho</span></span>
-<span id="cb4-2"><span class="pp"># define rho</span><span class="op">(</span><span class="pp">f</span><span class="op">)</span><span class="pp"> </span><span class="op">(</span><span class="pp">clamp</span><span class="op">(</span><span class="pp">f</span><span class="op">,</span><span class="fl">0.</span><span class="op">,</span><span class="fl">1.</span><span class="op">)*(</span><span class="pp">rho1 </span><span class="op">-</span><span class="pp"> rho2</span><span class="op">)</span><span class="pp"> </span><span class="op">+</span><span class="pp"> rho2</span><span class="op">)</span><span class="pp"></span><span class="dv">61</span><span class="pp"></span></span>
+<span id="cb4-2"><span class="pp"># define rho</span><span class="op">(</span><span class="pp">f</span><span class="op">)</span><span class="pp"> </span><span class="op">(</span><span class="pp">clamp</span><span class="op">(</span><span class="pp">f</span><span class="op">,</span><span class="fl">0.</span><span class="op">,</span><span class="fl">1.</span><span class="op">)*(</span><span class="pp">rho1 </span><span class="op">-</span><span class="pp"> rho2</span><span class="op">)</span><span class="pp"> </span><span class="op">+</span><span class="pp"> rho2</span><span class="op">)</span><span class="pp"></span><span class="dv">62</span><span class="pp"></span></span>
 <span id="cb4-3"><span class="pp">#endif</span></span>
 <span id="cb4-4"><span class="pp">#ifndef mu</span></span>
 <span id="cb4-5"><span class="co">// for Arithmetic mean, use this</span></span>
-<span id="cb4-6"><span class="pp"># define mu</span><span class="op">(</span><span class="pp">f</span><span class="op">)</span><span class="pp">  </span><span class="op">(</span><span class="pp">clamp</span><span class="op">(</span><span class="pp">f</span><span class="op">,</span><span class="fl">0.</span><span class="op">,</span><span class="fl">1.</span><span class="op">)*(</span><span class="pp">mu1 </span><span class="op">-</span><span class="pp"> mu2</span><span class="op">)</span><span class="pp"> </span><span class="op">+</span><span class="pp"> mu2</span><span class="op">)</span><span class="pp"></span><span class="dv">65</span><span class="pp"></span></span>
+<span id="cb4-6"><span class="pp"># define mu</span><span class="op">(</span><span class="pp">f</span><span class="op">)</span><span class="pp">  </span><span class="op">(</span><span class="pp">clamp</span><span class="op">(</span><span class="pp">f</span><span class="op">,</span><span class="fl">0.</span><span class="op">,</span><span class="fl">1.</span><span class="op">)*(</span><span class="pp">mu1 </span><span class="op">-</span><span class="pp"> mu2</span><span class="op">)</span><span class="pp"> </span><span class="op">+</span><span class="pp"> mu2</span><span class="op">)</span><span class="pp"></span><span class="dv">66</span><span class="pp"></span></span>
 <span id="cb4-7"><span class="pp">#endif</span></span></code></pre></div></div>
                 <p>We have the option of using some “smearing” of the
                 density/viscosity jump.</p>
@@ -498,7 +498,7 @@
                 class="sourceCode c"><code class="sourceCode c"><span id="cb5-1"><span class="pp">#ifdef FILTERED</span></span>
 <span id="cb5-2">scalar sf<span class="op">[];</span></span>
 <span id="cb5-3"><span class="pp">#else</span></span>
-<span id="cb5-4"><span class="pp"># define sf f</span><span class="dv">75</span><span class="pp"></span></span>
+<span id="cb5-4"><span class="pp"># define sf f</span><span class="dv">76</span><span class="pp"></span></span>
 <span id="cb5-5"><span class="pp">#endif</span></span>
 <span id="cb5-6"></span>
 <span id="cb5-7">event tracer_advection <span class="op">(</span>i<span class="op">++)</span> <span class="op">{</span></span></code></pre></div></div>

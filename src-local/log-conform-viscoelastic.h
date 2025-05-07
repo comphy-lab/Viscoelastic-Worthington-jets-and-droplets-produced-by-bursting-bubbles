@@ -1,25 +1,59 @@
-/** Title: log-conform-viscoelastic.h
-# Version: 10.5
-# Main feature: A exists in across the domain and relaxes according to \lambda. The stress only acts according to G.
+/** 
+# Log-Conformation Method with Tensor Implementation
 
-# Author: Vatsal Sanjay
-# vatsalsanjay@gmail.com
-# Physics of Fluids
-# Updated: Nov 23, 2024
+## Overview
+- **Title**: log-conform-viscoelastic.h
+- **Version**: 10.5
+- **Description**: Tensor-based implementation of the log-conformation method for viscoelastic fluids
 
-# Important Note: 
-- This implementation is limited to 2D and axisymmetric cases only.
-- The boundary conditions for symmetric tensors are not implemented in Basilisk's core for 3D cases. This limitation is documented in basilisk/src/grid/cartesian-common.h around [line 230-251](https://github.com/comphy-lab/Viscoelastic3D/blob/main/basilisk/src/grid/cartesian-common.h#L230-L251) with the comment "fixme: boundary conditions don't work!".
-- For 3D simulations, please use log-conform-viscoelastic-scalar-3D.h which uses individual scalar components instead of tensors.
+### Key Features
+1. Conformation tensor A exists across domain and relaxes according to λ
+2. Stress acts according to elastic modulus G
+3. Uses native tensor data structures for better code organization
+4. Supports both 2D and axisymmetric configurations
 
-# The code is same as http://basilisk.fr/src/log-conform.h but 
-- written with G-\lambda formulation. 
-- It also fixes the bug where [\sigma_p] = 0 & [\sigma_s] = \gamma\kappa instead of [\sigma_s+\sigma_p] = \gamma\kappa.
-*/ 
+### Author Information
+- **Name**: Vatsal Sanjay
+- **Email**: vatsalsanjay@gmail.com
+- **Institution**: Physics of Fluids
+- **Last Updated**: Nov 23, 2024
 
-// In this code, conform_p, conform_qq are in fact the Conformation tensor.  
+### Implementation Notes
+- Based on http://basilisk.fr/src/log-conform.h with key improvements:
+  - Uses G-λ formulation for better physical interpretation
+  - Fixes surface tension coupling bug where [σ_p] = 0 & [σ_s] = γκ
+  - Ensures [σ_s+σ_p] = γκ for correct interface behavior
 
-/**
+## Important Limitations
+### 3D Compatibility
+- Currently limited to 2D and axisymmetric cases only
+- 3D support is blocked by Basilisk core limitations:
+  - Boundary conditions for symmetric tensors are not implemented in Basilisk core
+  - See basilisk/src/grid/cartesian-common.h [lines 230-251](https://github.com/comphy-lab/Viscoelastic3D/blob/main/basilisk/src/grid/cartesian-common.h#L230-L251)
+  - Comment in source: "fixme: boundary conditions don't work!"
+
+### Alternative for 3D
+- For 3D simulations, use `log-conform-viscoelastic-scalar-3D.h`
+- Scalar version uses individual components instead of tensors
+- Provides full 3D functionality without boundary condition limitations
+
+## Technical Notes
+### Variable Naming
+- `conform_p`, `conform_qq`: Represent the Conformation tensor
+- Tensor implementation provides more natural mathematical representation
+- Axisymmetric components handled separately when needed
+
+### Mathematical Framework
+The implementation follows the standard log-conformation approach:
+1. Uses tensor mathematics for clean formulation
+2. Handles both planar and axisymmetric geometries
+3. Provides natural extension to various constitutive models
+
+
+# Note: 
+In this code, conform_p, conform_qq are in fact the Conformation tensor.  
+
+
 # The log-conformation method for viscoelastic constitutive models
 
 ## Introduction
@@ -57,7 +91,7 @@ where $D_t$ denotes the material derivative and
 $\mathbf{f_r}(\cdot)$ is the relaxation function. Here, $\lambda$ is the relaxation time.
 
 In the case of an Oldroyd-B viscoelastic fluid, $\mathbf{f}_s
-(\mathbf{A}) = \mathbf{f}_r (\mathbf{A}) = \mathbf{A} -\mathbf{I}$,
+ (\mathbf{A}) = \mathbf{f}_r (\mathbf{A}) = \mathbf{A} -\mathbf{I}$,
 and the above equations can be combined to avoid the use of
 $\mathbf{A}$
 $$
@@ -142,9 +176,8 @@ where $Tr$ denotes the trace of the tensor and $L$ is an additional
 property of the viscoelastic fluid.
 
 We will use the Bell--Collela--Glaz scheme to advect the log-conformation 
-tensor $\Psi$. */
+tensor $\Psi$. 
 
-/*
 TODO: 
 - Perhaps, instead of the Bell--Collela--Glaz scheme, we can use the conservative form of the advection equation and transport the log-conformation tensor with the VoF color function, similar to [http://basilisk.fr/src/navier-stokes/conserving.h](http://basilisk.fr/src/navier-stokes/conserving.h)
 */

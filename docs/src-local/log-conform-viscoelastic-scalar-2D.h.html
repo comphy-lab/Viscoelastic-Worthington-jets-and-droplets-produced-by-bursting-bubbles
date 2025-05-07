@@ -198,7 +198,7 @@
   </style>
 <a id="" href="#"></a>
   <!-- Critical Meta Tags -->
-  <meta name="description" content="Other under the hood changes: - Added a check for negative eigenvalues. If any are found, print the location and value of the offending eigenvalue. Please re...">
+  <meta name="description" content="Viscoelastic fluids exhibit both viscous and elastic behaviour when subjected to deformation. Therefore these materials are governed by the Navier--Stokes eq...">
   <meta name="author" content="CoMPhy Lab">
   <meta name="robots" content="index, follow">
   <meta name="keywords" content="bcg.h, conform, scalar, struct, viscoelastic">
@@ -417,76 +417,97 @@
                     </a>
                 </div>
 <a id="" href="#"></a>
-                <p>Title: log-conform-viscoelastic-scalar-2D.h #
-                Version: 2.5 # Main feature 1: A exists in across the
-                domain and relaxes according to . The stress only acts
-                according to G. # Main feature 2: This is the 2D+axi
-                <strong>scalar</strong> implementation of <a
-                href="log-conform-viscoelastic.h">log-conform-viscoelastic.h</a>.</p>
-                <h1 id="author-vatsal-sanjay">Author: Vatsal Sanjay</h1>
                 <h1
-                id="vatsalsanjaygmail.com">vatsalsanjay@gmail.com</h1>
-                <h1 id="physics-of-fluids">Physics of Fluids</h1>
-                <h1 id="updated-nov-23-2024">Updated: Nov 23, 2024</h1>
-                <h1 id="change-log-oct-18-2024-v1.0">change log: Oct 18,
-                2024 (v1.0)</h1>
+                id="log-conformation-method-for-2d-viscoelastic-fluids">Log-Conformation
+                Method for 2D Viscoelastic Fluids</h1>
+                <h2 id="overview">Overview</h2>
                 <ul>
-                <li>2D+axi implementation</li>
-                <li>scalar implementation</li>
+                <li><strong>Title</strong>:
+                log-conform-viscoelastic-scalar-2D.h</li>
+                <li><strong>Version</strong>: 2.5</li>
+                <li><strong>Description</strong>: 2D and axisymmetric
+                scalar implementation of viscoelastic fluid dynamics
+                using the log-conformation method</li>
                 </ul>
-                <h1
-                id="the-code-is-same-as-httpbasilisk.frsrclog-conform.h-but">The
-                code is same as http://basilisk.fr/src/log-conform.h
-                but</h1>
+                <h3 id="key-features">Key Features</h3>
+                <ol type="1">
+                <li>Conformation tensor A exists across domain and
+                relaxes according to λ</li>
+                <li>Stress acts according to elastic modulus G</li>
+                <li>Supports both 2D and axisymmetric
+                configurations</li>
+                <li>Scalar implementation approach for better
+                performance</li>
+                <li>Compatible with <a
+                href="log-conform-viscoelastic.h">log-conform-viscoelastic.h</a></li>
+                </ol>
+                <h3 id="author-information">Author Information</h3>
                 <ul>
-                <li>written with G-formulation.</li>
-                <li>It also fixes the bug where [_p] = 0 &amp; [_s] =
-                instead of [_s+_p] = .</li>
+                <li><strong>Name</strong>: Vatsal Sanjay</li>
+                <li><strong>Email</strong>: vatsalsanjay@gmail.com</li>
+                <li><strong>Institution</strong>: Physics of Fluids</li>
+                <li><strong>Last Updated</strong>: Nov 23, 2024</li>
                 </ul>
-                <h1 id="change-log-nov-3-2024-v2.0">change log: Nov 3,
-                2024 (v2.0)</h1>
+                <h3 id="implementation-notes">Implementation Notes</h3>
                 <ul>
-                <li>Added documentation and made the code an axi mirror
-                version of <a
-                href="log-conform-viscoelastic-scalar-3D.h">log-conform-viscoelastic-scalar-3D.h</a>.</li>
-                <li>v2.0 is documentation only change to keep version
-                number in sync with <a
-                href="log-conform-viscoelastic-scalar-3D.h">log-conform-viscoelastic-scalar-3D.h</a>.</li>
-                </ul>
-                <p>Other under the hood changes: - Added a check for
-                negative eigenvalues. If any are found, print the
-                location and value of the offending eigenvalue. Please
-                report this bug by opening an issue on the GitHub
-                repository. - Added some initialization functions for
-                pseudo_v and pseudo_t.</p>
-                <h1 id="change-log-nov-14-2024-v2.1">change log: Nov 14,
-                2024 (v2.1)</h1>
+                <li>Based on http://basilisk.fr/src/log-conform.h with
+                key improvements:
                 <ul>
-                <li>added a way to do infinite De</li>
-                </ul>
-                <h1 id="change-log-nov-23-2024-v2.5">change log: Nov 23,
-                2024 (v2.5)</h1>
-                <ul>
-                <li>improved documentation.</li>
-                </ul>
-                <h1 id="todo-non-critical-non-urgent">TODO:
-                (non-critical, non-urgent)</h1>
-                <ul>
-                <li>Ideally, we would like to consistently use tensor
-                formulation to leverage ease of readability and
-                maintainability. Also, tensors will be more efficient
-                and would avoid bugs. It is also a prerequisite for axi
-                compatibility of the 3D version of this code: <a
-                href="log-conform-viscoelastic-scalar-3D.h">log-conform-viscoelastic-scalar-3D.h</a>.
-                See:
-                https://github.com/comphy-lab/Viscoelastic3D/issues/11
-                and
-                https://github.com/comphy-lab/Viscoelastic3D/issues/5.</li>
-                <li><ul class="task-list">
-                <li><label><input type="checkbox" />enfore all tensors
-                and make the code generally compatible using
-                foreach_dimensions</label></li>
+                <li>Uses G-λ formulation for better physical
+                interpretation</li>
+                <li>Fixes surface tension coupling bug where [σ_p] = 0
+                &amp; [σ_s] = γκ</li>
+                <li>Ensures [σ_s+σ_p] = γκ for correct interface
+                behavior</li>
                 </ul></li>
+                </ul>
+                <h2 id="version-history">Version History</h2>
+                <h3 id="v1.0-oct-18-2024">v1.0 (Oct 18, 2024)</h3>
+                <ul>
+                <li>Initial implementation with 2D+axi support</li>
+                <li>Scalar-based implementation for efficiency</li>
+                </ul>
+                <h3 id="v2.0-nov-3-2024">v2.0 (Nov 3, 2024)</h3>
+                <ul>
+                <li>Major documentation improvements</li>
+                <li>Made code an axisymmetric mirror of <a
+                href="log-conform-viscoelastic-scalar-3D.h">log-conform-viscoelastic-scalar-3D.h</a></li>
+                <li>Added negative eigenvalue detection with location
+                reporting</li>
+                <li>Added initialization functions for pseudo_v and
+                pseudo_t</li>
+                </ul>
+                <h3 id="v2.1-nov-14-2024">v2.1 (Nov 14, 2024)</h3>
+                <ul>
+                <li>Added support for infinite Deborah number cases</li>
+                </ul>
+                <h3 id="v2.5-nov-23-2024">v2.5 (Nov 23, 2024)</h3>
+                <ul>
+                <li>Enhanced documentation clarity and completeness</li>
+                </ul>
+                <h2 id="future-work">Future Work</h2>
+                <h3 id="tensor-formulation">Tensor Formulation</h3>
+                <ul>
+                <li>Convert to consistent tensor formulation for:
+                <ul>
+                <li>Improved readability and maintainability</li>
+                <li>Better computational efficiency</li>
+                <li>Reduced potential for bugs</li>
+                <li>Prerequisites for axi compatibility in 3D
+                version</li>
+                </ul></li>
+                <li>Related issues:
+                <ul>
+                <li>https://github.com/comphy-lab/Viscoelastic3D/issues/11</li>
+                <li>https://github.com/comphy-lab/Viscoelastic3D/issues/5</li>
+                </ul></li>
+                </ul>
+                <h3 id="code-improvements">Code Improvements</h3>
+                <ul class="task-list">
+                <li><label><input type="checkbox" />Enforce tensor usage
+                throughout codebase</label></li>
+                <li><label><input type="checkbox" />Implement
+                foreach_dimension compatibility</label></li>
                 </ul>
                 <h1
                 id="the-log-conformation-method-for-viscoelastic-constitutive-models">The
@@ -638,66 +659,66 @@
                 <p>We will use the Bell–Collela–Glaz scheme to advect
                 the log-conformation tensor <span
                 class="math inline">\(\Psi\)</span>.</p>
+                <p>TODO: - Perhaps, instead of the Bell–Collela–Glaz
+                scheme, we can use the conservative form of the
+                advection equation and transport the log-conformation
+                tensor with the VoF color function, similar to <a
+                href="http://basilisk.fr/src/navier-stokes/conserving.h">http://basilisk.fr/src/navier-stokes/conserving.h</a></p>
                 <div class="code-block-container"><div class="code-block-container"><pre
-                class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><span class="co">/*</span></span>
-<span id="cb1-2"><span class="al">TODO</span><span class="co">:</span></span>
-<span id="cb1-3"><span class="co">- Perhaps, instead of the Bell--Collela--Glaz scheme, we can use the conservative form of the advection equation and transport the log-conformation tensor with the VoF color function, similar to [http://basilisk.fr/src/navier-stokes/conserving.h](http://basilisk.fr/src/navier-stokes/conserving.h)</span></span>
-<span id="cb1-4"><span class="co">*/</span></span>
+                class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><span class="pp">#include </span><a href="http://basilisk.fr/src/bcg.h" title="Link to Basilisk source for bcg.h"><span class="im">"bcg.h"</span></a></span>
+<span id="cb1-2"></span>
+<span id="cb1-3"><span class="op">(</span><span class="dt">const</span><span class="op">)</span> scalar Gp <span class="op">=</span> unity<span class="op">;</span> <span class="co">// elastic modulus</span></span>
+<span id="cb1-4"><span class="op">(</span><span class="dt">const</span><span class="op">)</span> scalar lambda <span class="op">=</span> unity<span class="op">;</span> <span class="co">// relaxation time</span></span>
 <span id="cb1-5"></span>
-<span id="cb1-6"><span class="pp">#include </span><a href="http://basilisk.fr/src/bcg.h" title="Link to Basilisk source for bcg.h"><span class="im">"bcg.h"</span></a></span>
-<span id="cb1-7"></span>
-<span id="cb1-8"><span class="op">(</span><span class="dt">const</span><span class="op">)</span> scalar Gp <span class="op">=</span> unity<span class="op">;</span> <span class="co">// elastic modulus</span></span>
-<span id="cb1-9"><span class="op">(</span><span class="dt">const</span><span class="op">)</span> scalar lambda <span class="op">=</span> unity<span class="op">;</span> <span class="co">// relaxation time</span></span>
-<span id="cb1-10"></span>
-<span id="cb1-11">scalar A11<span class="op">[],</span> A12<span class="op">[],</span> A22<span class="op">[];</span> <span class="co">// conformation tensor</span></span>
-<span id="cb1-12">scalar T11<span class="op">[],</span> T12<span class="op">[],</span> T22<span class="op">[];</span> <span class="co">// stress tensor</span></span>
-<span id="cb1-13"><span class="pp">#if AXI</span></span>
-<span id="cb1-14">scalar AThTh<span class="op">[],</span> T_ThTh<span class="op">[];</span></span>
-<span id="cb1-15"><span class="pp">#endif</span></span>
-<span id="cb1-16"></span>
-<span id="cb1-17">event defaults <span class="op">(</span>i <span class="op">=</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
-<span id="cb1-18">  <span class="cf">if</span> <span class="op">(</span>is_constant <span class="op">(</span>a<span class="op">.</span>x<span class="op">))</span></span>
-<span id="cb1-19">    a <span class="op">=</span> new face vector<span class="op">;</span></span>
-<span id="cb1-20"></span>
-<span id="cb1-21">  <span class="co">/*</span></span>
-<span id="cb1-22"><span class="co">  initialize A and T</span></span>
-<span id="cb1-23"><span class="co">  */</span></span>
-<span id="cb1-24">  <span class="cf">for</span> <span class="op">(</span>scalar s in <span class="op">{</span>A11<span class="op">,</span> A22<span class="op">})</span> <span class="op">{</span></span>
-<span id="cb1-25">    foreach <span class="op">()</span> <span class="op">{</span></span>
-<span id="cb1-26">      s<span class="op">[]</span> <span class="op">=</span> <span class="fl">1.</span><span class="op">;</span></span>
+<span id="cb1-6">scalar A11<span class="op">[],</span> A12<span class="op">[],</span> A22<span class="op">[];</span> <span class="co">// conformation tensor</span></span>
+<span id="cb1-7">scalar T11<span class="op">[],</span> T12<span class="op">[],</span> T22<span class="op">[];</span> <span class="co">// stress tensor</span></span>
+<span id="cb1-8"><span class="pp">#if AXI</span></span>
+<span id="cb1-9">scalar AThTh<span class="op">[],</span> T_ThTh<span class="op">[];</span></span>
+<span id="cb1-10"><span class="pp">#endif</span></span>
+<span id="cb1-11"></span>
+<span id="cb1-12">event defaults <span class="op">(</span>i <span class="op">=</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-13">  <span class="cf">if</span> <span class="op">(</span>is_constant <span class="op">(</span>a<span class="op">.</span>x<span class="op">))</span></span>
+<span id="cb1-14">    a <span class="op">=</span> new face vector<span class="op">;</span></span>
+<span id="cb1-15"></span>
+<span id="cb1-16">  <span class="co">/*</span></span>
+<span id="cb1-17"><span class="co">  initialize A and T</span></span>
+<span id="cb1-18"><span class="co">  */</span></span>
+<span id="cb1-19">  <span class="cf">for</span> <span class="op">(</span>scalar s in <span class="op">{</span>A11<span class="op">,</span> A22<span class="op">})</span> <span class="op">{</span></span>
+<span id="cb1-20">    foreach <span class="op">()</span> <span class="op">{</span></span>
+<span id="cb1-21">      s<span class="op">[]</span> <span class="op">=</span> <span class="fl">1.</span><span class="op">;</span></span>
+<span id="cb1-22">    <span class="op">}</span></span>
+<span id="cb1-23">  <span class="op">}</span></span>
+<span id="cb1-24">  <span class="cf">for</span> <span class="op">(</span>scalar s in <span class="op">{</span>T11<span class="op">,</span> T12<span class="op">,</span> T22<span class="op">,</span> A12<span class="op">})</span> <span class="op">{</span></span>
+<span id="cb1-25">    foreach<span class="op">(){</span></span>
+<span id="cb1-26">      s<span class="op">[]</span> <span class="op">=</span> <span class="fl">0.</span><span class="op">;</span></span>
 <span id="cb1-27">    <span class="op">}</span></span>
 <span id="cb1-28">  <span class="op">}</span></span>
-<span id="cb1-29">  <span class="cf">for</span> <span class="op">(</span>scalar s in <span class="op">{</span>T11<span class="op">,</span> T12<span class="op">,</span> T22<span class="op">,</span> A12<span class="op">})</span> <span class="op">{</span></span>
-<span id="cb1-30">    foreach<span class="op">(){</span></span>
-<span id="cb1-31">      s<span class="op">[]</span> <span class="op">=</span> <span class="fl">0.</span><span class="op">;</span></span>
-<span id="cb1-32">    <span class="op">}</span></span>
+<span id="cb1-29"><span class="pp">#if AXI</span></span>
+<span id="cb1-30">  foreach<span class="op">(){</span></span>
+<span id="cb1-31">    T_ThTh<span class="op">[]</span> <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb1-32">    AThTh<span class="op">[]</span> <span class="op">=</span> <span class="fl">1.</span><span class="op">;</span></span>
 <span id="cb1-33">  <span class="op">}</span></span>
-<span id="cb1-34"><span class="pp">#if AXI</span></span>
-<span id="cb1-35">  foreach<span class="op">(){</span></span>
-<span id="cb1-36">    T_ThTh<span class="op">[]</span> <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
-<span id="cb1-37">    AThTh<span class="op">[]</span> <span class="op">=</span> <span class="fl">1.</span><span class="op">;</span></span>
-<span id="cb1-38">  <span class="op">}</span></span>
-<span id="cb1-39"><span class="pp">#endif</span></span>
-<span id="cb1-40"></span>
-<span id="cb1-41">  <span class="cf">for</span> <span class="op">(</span>scalar s in <span class="op">{</span>T11<span class="op">,</span> T12<span class="op">,</span> T22<span class="op">})</span> <span class="op">{</span></span>
-<span id="cb1-42">    <span class="cf">if</span> <span class="op">(</span>s<span class="op">.</span>boundary<span class="op">[</span>left<span class="op">]</span> <span class="op">!=</span> periodic_bc<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb1-43">        s<span class="op">[</span>left<span class="op">]</span> <span class="op">=</span> neumann<span class="op">(</span><span class="dv">0</span><span class="op">);</span></span>
-<span id="cb1-44">          s<span class="op">[</span>right<span class="op">]</span> <span class="op">=</span> neumann<span class="op">(</span><span class="dv">0</span><span class="op">);</span></span>
-<span id="cb1-45">      <span class="op">}</span></span>
-<span id="cb1-46">  <span class="op">}</span></span>
-<span id="cb1-47"></span>
-<span id="cb1-48">  <span class="cf">for</span> <span class="op">(</span>scalar s in <span class="op">{</span>A11<span class="op">,</span> A12<span class="op">,</span> A22<span class="op">})</span> <span class="op">{</span></span>
-<span id="cb1-49">    <span class="cf">if</span> <span class="op">(</span>s<span class="op">.</span>boundary<span class="op">[</span>left<span class="op">]</span> <span class="op">!=</span> periodic_bc<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb1-50">        s<span class="op">[</span>left<span class="op">]</span> <span class="op">=</span> neumann<span class="op">(</span><span class="dv">0</span><span class="op">);</span></span>
-<span id="cb1-51">          s<span class="op">[</span>right<span class="op">]</span> <span class="op">=</span> neumann<span class="op">(</span><span class="dv">0</span><span class="op">);</span></span>
-<span id="cb1-52">    <span class="op">}</span></span>
-<span id="cb1-53">  <span class="op">}</span></span>
-<span id="cb1-54"></span>
-<span id="cb1-55"><span class="pp">#if AXI</span></span>
-<span id="cb1-56">  T12<span class="op">[</span>bottom<span class="op">]</span> <span class="op">=</span> dirichlet <span class="op">(</span><span class="fl">0.</span><span class="op">);</span></span>
-<span id="cb1-57">  A12<span class="op">[</span>bottom<span class="op">]</span> <span class="op">=</span> dirichlet <span class="op">(</span><span class="fl">0.</span><span class="op">);</span></span>
-<span id="cb1-58"><span class="pp">#endif</span></span>
-<span id="cb1-59"><span class="op">}</span></span></code></pre></div></div>
+<span id="cb1-34"><span class="pp">#endif</span></span>
+<span id="cb1-35"></span>
+<span id="cb1-36">  <span class="cf">for</span> <span class="op">(</span>scalar s in <span class="op">{</span>T11<span class="op">,</span> T12<span class="op">,</span> T22<span class="op">})</span> <span class="op">{</span></span>
+<span id="cb1-37">    <span class="cf">if</span> <span class="op">(</span>s<span class="op">.</span>boundary<span class="op">[</span>left<span class="op">]</span> <span class="op">!=</span> periodic_bc<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-38">        s<span class="op">[</span>left<span class="op">]</span> <span class="op">=</span> neumann<span class="op">(</span><span class="dv">0</span><span class="op">);</span></span>
+<span id="cb1-39">          s<span class="op">[</span>right<span class="op">]</span> <span class="op">=</span> neumann<span class="op">(</span><span class="dv">0</span><span class="op">);</span></span>
+<span id="cb1-40">      <span class="op">}</span></span>
+<span id="cb1-41">  <span class="op">}</span></span>
+<span id="cb1-42"></span>
+<span id="cb1-43">  <span class="cf">for</span> <span class="op">(</span>scalar s in <span class="op">{</span>A11<span class="op">,</span> A12<span class="op">,</span> A22<span class="op">})</span> <span class="op">{</span></span>
+<span id="cb1-44">    <span class="cf">if</span> <span class="op">(</span>s<span class="op">.</span>boundary<span class="op">[</span>left<span class="op">]</span> <span class="op">!=</span> periodic_bc<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-45">        s<span class="op">[</span>left<span class="op">]</span> <span class="op">=</span> neumann<span class="op">(</span><span class="dv">0</span><span class="op">);</span></span>
+<span id="cb1-46">          s<span class="op">[</span>right<span class="op">]</span> <span class="op">=</span> neumann<span class="op">(</span><span class="dv">0</span><span class="op">);</span></span>
+<span id="cb1-47">    <span class="op">}</span></span>
+<span id="cb1-48">  <span class="op">}</span></span>
+<span id="cb1-49"></span>
+<span id="cb1-50"><span class="pp">#if AXI</span></span>
+<span id="cb1-51">  T12<span class="op">[</span>bottom<span class="op">]</span> <span class="op">=</span> dirichlet <span class="op">(</span><span class="fl">0.</span><span class="op">);</span></span>
+<span id="cb1-52">  A12<span class="op">[</span>bottom<span class="op">]</span> <span class="op">=</span> dirichlet <span class="op">(</span><span class="fl">0.</span><span class="op">);</span></span>
+<span id="cb1-53"><span class="pp">#endif</span></span>
+<span id="cb1-54"><span class="op">}</span></span></code></pre></div></div>
                 <h2 id="useful-functions-in-2d">Useful functions in
                 2D</h2>
                 <p>The first step is to implement a routine to calculate

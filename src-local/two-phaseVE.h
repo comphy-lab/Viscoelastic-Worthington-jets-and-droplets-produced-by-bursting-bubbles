@@ -19,7 +19,8 @@ combination with a [Navier--Stokes solver](navier-stokes/centered.h).
 The interface between the fluids is tracked with a Volume-Of-Fluid
 method. The volume fraction in fluid 1 is $f=1$ and $f=0$ in fluid
 2. The densities and dynamic viscosities for fluid 1 and 2 are *rho1*,
-*mu1*, *rho2*, *mu2*, respectively. */
+*mu1*, *rho2*, *mu2*, respectively. 
+*/
 
 #include "vof.h"
 
