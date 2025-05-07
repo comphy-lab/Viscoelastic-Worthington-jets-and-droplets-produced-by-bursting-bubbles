@@ -19,7 +19,13 @@ window.openCommandPalette = function() {
   }
 };
 
-// Function to render command results based on search
+/**
+ * Filters and displays command palette results based on the provided search query.
+ *
+ * Updates the command palette UI by filtering available commands by title or section, grouping them by section, and rendering the results. If the query is at least three characters and a database search function is available, performs an asynchronous search and merges those results under a "Search Results" section. Displays a message if no commands are found.
+ *
+ * @param {string} query - The search string used to filter commands.
+ */
 function renderCommandResults(query) {
   const resultsContainer = document.getElementById('command-palette-results');
   if (!resultsContainer) return;
@@ -78,7 +84,14 @@ function renderCommandResults(query) {
   }
 }
 
-// Helper function to render sections
+/**
+ * Renders grouped command sections and their commands into the specified container element.
+ *
+ * Each section is displayed with a title and a list of commands. Commands include an icon, title, and optional excerpt, and are clickable to execute their associated handler. The "Search Results" section receives a special CSS class for styling.
+ *
+ * @param {Object.<string, Array>} sections - An object mapping section names to arrays of command objects.
+ * @param {HTMLElement} container - The DOM element where the sections and commands will be rendered.
+ */
 function renderSections(sections, container) {
   // Clear container first
   container.innerHTML = '';
@@ -152,7 +165,13 @@ function renderSections(sections, container) {
   });
 }
 
-// Initialization function to set up command palette when DOM is loaded
+/**
+ * Initializes the command palette UI, event listeners, and search functionality on page load.
+ *
+ * Prefetches the search database and sets up Fuse.js for fuzzy searching. Configures UI event handlers for opening, closing, input changes, keyboard navigation, and command activation. Registers global keyboard shortcuts and button interactions for accessibility.
+ *
+ * @remark This function should be called once after the DOM is fully loaded to ensure all elements are available.
+ */
 function initCommandPalette() {
   // Ensure search database is preloaded for command palette search functionality
   // Try to prefetch the search database if it exists

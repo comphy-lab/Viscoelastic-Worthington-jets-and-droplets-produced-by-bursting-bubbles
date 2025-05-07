@@ -12,11 +12,25 @@ DEBUG = args.debug
 FORCE_REBUILD = args.force_rebuild
 
 def debug_print(msg):
-    """Print debug messages only if debug mode is enabled."""
+    """
+    Prints a debug message if debug mode is enabled.
+    
+    Args:
+        msg: The message to print when debugging is active.
+    """
     if DEBUG: print(msg)
 
 def calculate_asset_prefix(output_path: Path, docs_dir: Path) -> str:
-    """Calculate relative path prefix for assets based on HTML file depth."""
+    """
+    Returns the relative path prefix to reference assets from an HTML file based on its location within the documentation directory.
+    
+    Args:
+        output_path: The path to the generated HTML file.
+        docs_dir: The root directory of the documentation output.
+    
+    Returns:
+        A string representing the relative path prefix (e.g., ".", "..", "../..") to use for asset references.
+    """
     try:
         if output_path.name == "index.html" and output_path.parent == docs_dir:
             return "."
@@ -26,7 +40,18 @@ def calculate_asset_prefix(output_path: Path, docs_dir: Path) -> str:
         return "."
 
 def extract_seo_metadata(file_path: Path, content: str) -> Dict[str, str]:
-    """Extract SEO metadata from file content."""
+    """
+    Extracts SEO metadata such as description and keywords from file content.
+    
+    If embedded SEO metadata is present (as a JSON object in an HTML comment), it is parsed and sanitized. Otherwise, the function generates a description from the first paragraph or header and derives keywords from the filename and code patterns (functions, classes, includes). The resulting metadata is suitable for use in HTML meta tags.
+    
+    Args:
+        file_path: Path to the source file.
+        content: The content of the file as a string.
+    
+    Returns:
+        A dictionary containing SEO metadata fields such as 'description' and 'keywords'.
+    """
     metadata = {}
     
     # Check for embedded SEO metadata (used by Jupyter notebooks)
@@ -119,7 +144,11 @@ except Exception as e:
     BASE_DOMAIN = "https://test.comphy-lab.org"
 
 def extract_h1_from_readme(readme_path: Path) -> str:
-    """Extract the first markdown H1 header from README."""
+    """
+    Extracts the first H1 markdown header from a README file.
+    
+    If no H1 header is found or the file cannot be read, returns "Documentation".
+    """
     try:
         with open(readme_path, 'r', encoding='utf-8') as f:
             content = f.read()
@@ -136,7 +165,15 @@ def extract_h1_from_readme(readme_path: Path) -> str:
 WIKI_TITLE = extract_h1_from_readme(README_PATH)
 
 def process_template_for_assets(template_path: Path) -> str:
-    """Process template to ensure correct asset paths."""
+    """
+    Reads and returns the content of the HTML template file for asset path processing.
+    
+    Args:
+        template_path: Path to the HTML template file.
+    
+    Returns:
+        The content of the template file as a string, or an empty string if an error occurs.
+    """
     try:
         with open(template_path, 'r', encoding='utf-8') as f:
             template_content = f.read()
@@ -148,7 +185,14 @@ def process_template_for_assets(template_path: Path) -> str:
         return ""
 
 def validate_config() -> bool:
-    """Validate that all required configuration paths exist."""
+    """
+    Validates the existence of essential directories and files required for documentation generation.
+    
+    Checks for the presence of core directories and files, processes the HTML template for Pandoc, and creates a temporary template file for use during conversion. Updates the global template path if successful.
+    
+    Returns:
+        True if all required paths exist and the template is processed successfully; False otherwise.
+    """
     global TEMPLATE_PATH
     
     essential_paths = [
@@ -186,7 +230,18 @@ def validate_config() -> bool:
     return True
 
 def find_source_files(root_dir: Path, source_dirs: List[str]) -> List[Path]:
-    """Find source files of supported types in specified directories."""
+    """
+    Finds all supported source files in the specified directories and root directory.
+    
+    Searches recursively within each source directory and non-recursively in the root directory for files with supported extensions (.c, .h, .py, .sh, .ipynb) or named 'Makefile', excluding files ending with '.dat'.
+    
+    Args:
+        root_dir: The root directory to search for source files.
+        source_dirs: List of subdirectory names to search recursively.
+    
+    Returns:
+        A sorted list of Paths to the discovered source files.
+    """
     valid_exts = {'.c', '.h', '.py', '.sh', '.ipynb'}
     valid_names = {'Makefile'}
     files = set()
@@ -212,12 +267,18 @@ def find_source_files(root_dir: Path, source_dirs: List[str]) -> List[Path]:
     return sorted(files)
 
 def process_markdown_file(file_path: Path) -> str:
-    """Process markdown file content for HTML conversion."""
+    """
+    Reads and returns the content of a Markdown file for further processing or conversion.
+    """
     with open(file_path, 'r', encoding='utf-8') as f:
         return f.read()
 
 def process_shell_file(file_path: Path) -> str:
-    """Read a shell script file and return as Markdown bash code block."""
+    """
+    Reads a shell script file and returns its content as a Markdown-formatted bash code block.
+    
+    The script content is escaped to prevent Pandoc from interpreting shell variables or boolean assignments.
+    """
     with open(file_path, 'r', encoding='utf-8') as f:
         content = f.read()
         # Escape any potential variables that could conflict with Pandoc
@@ -228,7 +289,17 @@ def process_shell_file(file_path: Path) -> str:
         return f"# {file_path.name}\n\n```bash\n{content}\n```"
 
 def process_jupyter_notebook(file_path: Path) -> str:
-    """Generate HTML for embedding a Jupyter notebook with preview and links."""
+    """
+    Generates an HTML snippet to embed a Jupyter notebook with preview, download, and external viewing options.
+    
+    Reads the notebook file, extracts the title, description, and up to three key features from the first markdown cell (if present), and sanitizes metadata for safe HTML embedding. The output includes a preview iframe (using nbviewer), download and external links (nbviewer, Colab), and fallback messaging if the preview cannot be loaded. SEO metadata is embedded in an HTML comment for later extraction.
+    
+    Args:
+        file_path: Path to the Jupyter notebook file.
+    
+    Returns:
+        A Markdown-formatted string containing the HTML embed for the notebook, including metadata and interactive elements.
+    """
     notebook_filename = file_path.name
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
@@ -403,7 +474,15 @@ def process_jupyter_notebook(file_path: Path) -> str:
         return f"# {notebook_filename}\n\nError processing notebook: {str(e)}"
 
 def process_python_file(file_path: Path) -> str:
-    """Convert Python source to Markdown separating docstrings and code."""
+    """
+    Converts a Python source file into Markdown by extracting docstrings as prose and wrapping code sections in fenced code blocks.
+    
+    Args:
+        file_path: Path to the Python source file.
+    
+    Returns:
+        A Markdown-formatted string with docstrings as paragraphs and code as Python code blocks.
+    """
     with open(file_path, 'r', encoding='utf-8') as f:
         file_content = f.read()
     
@@ -469,7 +548,12 @@ def process_python_file(file_path: Path) -> str:
     return '\n'.join(processed_lines)
 
 def process_c_file(file_path: Path, literate_c_script: Path) -> str:
-    """Process C/C++ source file using literate-C preprocessing."""
+    """
+    Converts a C or C++ source file to Markdown using a literate-C preprocessor.
+    
+    Attempts to process the file with the specified literate-C script. If preprocessing fails,
+    returns the file content wrapped in a Markdown C code block.
+    """
     with open(file_path, 'r', encoding='utf-8') as f:
         file_content = f.read()
     
@@ -498,7 +582,11 @@ def process_c_file(file_path: Path, literate_c_script: Path) -> str:
         return markdown_content
 
 def prepare_pandoc_input(file_path: Path, literate_c_script: Path) -> str:
-    """Prepare source file content for Pandoc conversion by file type."""
+    """
+    Prepares the content of a source file for Pandoc conversion based on its type.
+    
+    Selects the appropriate processing function for the given file, converting it to Markdown or HTML as needed for Pandoc input. Supports Markdown, Python, shell scripts, Jupyter notebooks, Makefiles, and C/C++ files.
+    """
     file_suffix = file_path.suffix.lower()
     file_name = file_path.name
     
@@ -519,7 +607,26 @@ def run_pandoc(pandoc_input: str, output_html_path: Path, template_path: Path,
                base_url: str, wiki_title: str, page_url: str, page_title: str,
                asset_path_prefix: str, seo_metadata: Dict[str, str] = None,
                source_path: str = None) -> str:
-    """Convert Markdown to HTML using Pandoc."""
+    """
+               Converts Markdown input to standalone HTML using Pandoc and applies post-processing.
+               
+               Runs Pandoc with a custom template and variables for SEO metadata, repository info, and asset paths to generate an HTML file from Markdown input. After conversion, cleans up the HTML by removing empty anchors, fixing malformed meta description tags, and ensuring valid HTML structure. Returns Pandoc's standard output as a string.
+               
+               Args:
+                   pandoc_input: Markdown content to convert.
+                   output_html_path: Path to write the generated HTML file.
+                   template_path: Path to the Pandoc HTML template.
+                   base_url: Base URL for the documentation site.
+                   wiki_title: Title of the wiki or documentation set.
+                   page_url: URL of the current page.
+                   page_title: Title of the current page.
+                   asset_path_prefix: Relative path prefix for assets.
+                   seo_metadata: Optional dictionary with SEO metadata (description, keywords, image).
+                   source_path: Optional source file path for reference.
+               
+               Returns:
+                   The standard output from the Pandoc process as a string, or an empty string if Pandoc fails.
+               """
     if seo_metadata is None:
         seo_metadata = {}
     
@@ -618,9 +725,28 @@ def run_pandoc(pandoc_input: str, output_html_path: Path, template_path: Path,
     return process.stdout
 
 def post_process_python_shell_html(html_content: str) -> str:
-    """Post-process HTML from Python/shell files for better display."""
+    """
+    Enhances HTML generated from Python or shell files for improved display and navigation.
+    
+    Wraps code blocks in container divs for styling, updates documentation links to use `.html` extensions, removes dynamic path resolution scripts, and injects a JavaScript variable with the repository name into the HTML body.
+    
+    Args:
+        html_content: The HTML content to be post-processed.
+    
+    Returns:
+        The processed HTML content with enhanced formatting and navigation.
+    """
     # Wrap code blocks with container divs
     def wrap_pre_code(match):
+        """
+        Wraps a matched <pre><code> HTML block in a container div for styling.
+        
+        Args:
+            match: A regex match object containing a <pre><code> HTML block.
+        
+        Returns:
+            The HTML block wrapped in a div with class "code-block-container".
+        """
         return f'<div class="code-block-container">{match.group(0)}</div>'
     
     processed_html = re.sub(
@@ -631,6 +757,15 @@ def post_process_python_shell_html(html_content: str) -> str:
     )
     
     def wrap_source_code(match):
+        """
+        Wraps matched source code in a div container for styling.
+        
+        Args:
+            match: A regex match object containing the code block as group 1.
+        
+        Returns:
+            The code block wrapped in a div with class "code-block-container".
+        """
         return f'<div class="code-block-container">{match.group(1)}</div>'
     
     processed_html = re.sub(
@@ -642,6 +777,11 @@ def post_process_python_shell_html(html_content: str) -> str:
     
     # Fix links to docs by adding .html extension
     def fix_doc_links(match):
+        """
+        Appends '.html' to local documentation links in HTML anchor tags if missing.
+        
+        This function is intended for use as a replacement callback in regular expression operations. It modifies anchor tags so that links to source files (with extensions .c, .h, .py, .sh, .md) are updated to point to their corresponding HTML documentation, unless the link is already external, an anchor, or already ends with '.html'.
+        """
         link_tag = match.group(0)
         href_match = re.search(r'href="([^"]+)"', link_tag)
         
@@ -676,7 +816,22 @@ def post_process_python_shell_html(html_content: str) -> str:
 
 def run_awk_post_processing(html_content: str, file_path: Path, 
                            repo_root: Path, darcsit_dir: Path) -> str:
-    """Apply awk post-processing to HTML content from C files."""
+    """
+                           Runs an AWK script to add declaration anchors to HTML content generated from C files.
+                           
+                           Args:
+                               html_content: The HTML content to process.
+                               file_path: Path to the original C source file.
+                               repo_root: Path to the repository root for relative path resolution.
+                               darcsit_dir: Path to the directory containing the AWK script.
+                           
+                           Returns:
+                               The post-processed HTML content with declaration anchors added.
+                           
+                           Raises:
+                               FileNotFoundError: If the required AWK script is not found.
+                               RuntimeError: If the AWK post-processing fails.
+                           """
     decl_anchors_script = darcsit_dir / 'decl_anchors.awk'
     if not decl_anchors_script.is_file():
         raise FileNotFoundError(f"decl_anchors.awk script not found at {decl_anchors_script}")
@@ -714,7 +869,21 @@ def run_awk_post_processing(html_content: str, file_path: Path,
 
 def post_process_c_html(html_content: str, file_path: Path, 
                       repo_root: Path, darcsit_dir: Path, docs_dir: Path) -> str:
-    """Post-process HTML from C/C++ files."""
+    """
+                      Post-processes HTML generated from C or C++ source files for enhanced documentation.
+                      
+                      Removes trailing line numbers, wraps code blocks in container divs for styling, and converts `#include` statements into links to local documentation or the Basilisk source if unavailable locally. Cleans out dynamic path resolution scripts and injects a JavaScript variable with the repository name into the HTML body.
+                      
+                      Args:
+                          html_content: The HTML content to process.
+                          file_path: Path to the original source file.
+                          repo_root: Path to the repository root.
+                          darcsit_dir: Path to the Darcsit directory.
+                          docs_dir: Path to the documentation output directory.
+                      
+                      Returns:
+                          The post-processed HTML content as a string.
+                      """
     # Remove trailing line numbers
     cleaned_html = re.sub(
         r'(\s*(?:<span class="[^"]*">\s*\d+\s*</span>|\s+\d+)\s*)+(\s*</span>)', 
@@ -724,6 +893,15 @@ def post_process_c_html(html_content: str, file_path: Path,
     
     # Wrap code blocks with container divs
     def wrap_pre_code(match):
+        """
+        Wraps a matched code block in a container div for styling.
+        
+        Args:
+            match: A regex match object representing a code block.
+        
+        Returns:
+            The HTML string with the code block wrapped in a div.
+        """
         return f'<div class="code-block-container">{match.group(0)}</div>'
     
     cleaned_html = re.sub(
@@ -734,6 +912,15 @@ def post_process_c_html(html_content: str, file_path: Path,
     )
     
     def wrap_source_code(match):
+        """
+        Wraps matched source code in a div container for styling.
+        
+        Args:
+            match: A regex match object containing the code block as group 1.
+        
+        Returns:
+            The code block wrapped in a div with class "code-block-container".
+        """
         return f'<div class="code-block-container">{match.group(1)}</div>'
     
     cleaned_html = re.sub(
@@ -745,6 +932,15 @@ def post_process_c_html(html_content: str, file_path: Path,
     
     # Add links to #include statements
     def create_include_link(match):
+        """
+        Generates an HTML link for a C/C++ #include statement, pointing to local documentation if available or to the Basilisk source otherwise.
+        
+        Args:
+            match: A regex match object capturing the include statement components.
+        
+        Returns:
+            An HTML anchor tag wrapping the original include span, linking to the appropriate documentation or source file.
+        """
         prefix = match.group(1)
         span_tag_open = match.group(2)
         filename = match.group(3)
@@ -786,7 +982,11 @@ def post_process_c_html(html_content: str, file_path: Path,
     return cleaned_html
 
 def insert_css_link_in_html(html_file_path: Path, css_path: Path, is_root: bool = True) -> bool:
-    """Insert CSS link tag into an HTML file's <head> section."""
+    """
+    Inserts a CSS link tag into the <head> section of an HTML file.
+    
+    If the <head> tag is missing, creates a minimal HTML structure with the CSS link included. Returns True on success, or False if an error occurs.
+    """
     try:
         with open(html_file_path, 'r', encoding='utf-8') as f:
             content = f.read()
@@ -827,7 +1027,11 @@ def insert_css_link_in_html(html_file_path: Path, css_path: Path, is_root: bool 
         return False
 
 def insert_javascript_in_html(html_file_path: Path) -> bool:
-    """Insert inline JS for copy-to-clipboard on code blocks."""
+    """
+    Inserts inline JavaScript into an HTML file to add copy-to-clipboard buttons on code blocks.
+    
+    Adds a "Copy" button to each code block container, enabling users to copy code snippets to the clipboard. If the HTML file lacks a <body> tag, a minimal HTML structure is created. Returns True if the script is inserted or already present, False on error.
+    """
     try:
         with open(html_file_path, 'r', encoding='utf-8') as f:
             content = f.read()
@@ -939,7 +1143,11 @@ document.addEventListener('DOMContentLoaded', function() {
 def process_file_with_page2html_logic(file_path: Path, output_html_path: Path, repo_root: Path, 
                                      basilisk_dir: Path, darcsit_dir: Path, template_path: Path, 
                                      base_url: str, wiki_title: str, literate_c_script: Path, docs_dir: Path) -> bool:
-    """Convert a source file to HTML with appropriate post-processing."""
+    """
+                                     Converts a source file to an HTML documentation page with type-specific post-processing.
+                                     
+                                     Handles copying Jupyter notebooks, prepares input for Pandoc conversion, extracts SEO metadata, and applies appropriate post-processing for Python, shell, Markdown, Jupyter, or C/C++ files. Inserts JavaScript for code block copy functionality. Returns True on success, False on error.
+                                     """
     print(f"  Processing {file_path.relative_to(repo_root)} -> {output_html_path.relative_to(repo_root / 'docs')}")
 
     try:
@@ -1026,7 +1234,17 @@ def process_file_with_page2html_logic(file_path: Path, output_html_path: Path, r
         return False
 
 def convert_directory_tree_to_html(readme_content: str) -> str:
-    """Convert plain text directory tree in README to HTML site map."""
+    """
+    Converts a plain text directory tree block in README content into an HTML-formatted site map.
+    
+    The function searches for a code block representing a directory tree (using ASCII tree characters) in the README content, parses its structure, and replaces it with an HTML div containing a formatted list of directories and files. Directory and file names are converted into Markdown links pointing to their respective documentation pages, and descriptions are preserved if present.
+    
+    Args:
+        readme_content: The content of the README file as a string.
+    
+    Returns:
+        The modified README content with the directory tree replaced by an HTML site map.
+    """
     tree_pattern = r'```\s*\n(├.*?\n.*?└.*?)\n```'
     tree_match = re.search(tree_pattern, readme_content, re.DOTALL)
     
@@ -1102,7 +1320,11 @@ def convert_directory_tree_to_html(readme_content: str) -> str:
     return modified_content
 
 def generate_directory_index(directory_name: str, directory_path: Path, generated_files: Dict[Path, Path], docs_dir: Path, repo_root: Path) -> bool:
-    """Generate index.html for a directory listing all generated HTML files."""
+    """
+    Generates an index.html page for a directory, listing all generated documentation files.
+    
+    Creates a directory index page that displays links to all HTML documentation files within the specified directory, including file descriptions extracted from meta tags. The output uses a template, formats the directory name for display, and includes file-type icons and descriptions. Returns True on success, or False if an error occurs.
+    """
     try:
         index_path = directory_path / "index.html"
         
@@ -1236,14 +1458,32 @@ def generate_directory_index(directory_name: str, directory_path: Path, generate
         return False
 
 def get_title_from_filename(filename: str) -> str:
-    """Convert filename to readable title."""
+    """
+    Converts a filename into a human-readable title.
+    
+    Removes the file extension, replaces dashes and underscores with spaces, and capitalizes each word.
+    """
     name = filename.split('.')[0]
     name = name.replace('-', ' ').replace('_', ' ')
     return ' '.join(word.capitalize() for word in name.split())
 
 def generate_index(readme_path: Path, index_path: Path, generated_files: Dict[Path, Path], 
                   docs_dir: Path, repo_root: Path) -> bool:
-    """Generate main index.html from README.md with documentation links."""
+    """
+                  Generates the main index.html page from README.md, appending grouped documentation links.
+                  
+                  Reads the README.md file, converts any directory tree blocks to HTML, and appends a section listing links to all generated documentation files, grouped by top-level directory. Converts the combined content to HTML using Pandoc with the project template, post-processes code blocks, and injects JavaScript for enhanced code block interaction.
+                  
+                  Args:
+                      readme_path: Path to the README.md file.
+                      index_path: Output path for the generated index.html.
+                      generated_files: Mapping of source file paths to their corresponding generated HTML paths.
+                      docs_dir: Path to the documentation output directory.
+                      repo_root: Path to the repository root.
+                  
+                  Returns:
+                      True if index.html was generated successfully, False otherwise.
+                  """
     if not readme_path.exists():
         print(f"Warning: README.md not found at {readme_path}")
         readme_content = "# Project Documentation\n"
@@ -1335,7 +1575,15 @@ def generate_index(readme_path: Path, index_path: Path, generated_files: Dict[Pa
     return True
 
 def generate_robots_txt(docs_dir: Path) -> bool:
-    """Generate robots.txt file for search engines."""
+    """
+    Creates a robots.txt file in the documentation directory to allow all user agents and specify the sitemap location.
+    
+    Args:
+        docs_dir: Path to the documentation output directory.
+    
+    Returns:
+        True if the robots.txt file was generated successfully, False otherwise.
+    """
     robots_path = docs_dir / 'robots.txt'
     
     try:
@@ -1352,7 +1600,11 @@ def generate_robots_txt(docs_dir: Path) -> bool:
         return False
 
 def generate_sitemap(docs_dir: Path, generated_files: Dict[Path, Path]) -> bool:
-    """Generate sitemap.xml for search engines."""
+    """
+    Generates a sitemap.xml file listing all generated HTML documentation pages for search engines.
+    
+    The sitemap includes the homepage and all generated HTML files, assigning higher priority to index pages and files in key directories. Returns True if the sitemap is created successfully, otherwise False.
+    """
     sitemap_path = docs_dir / 'sitemap.xml'
     
     try:
@@ -1394,7 +1646,16 @@ def generate_sitemap(docs_dir: Path, generated_files: Dict[Path, Path]) -> bool:
         return False
 
 def copy_css_file(css_path: Path, docs_dir: Path) -> bool:
-    """Copy CSS file to docs directory."""
+    """
+    Copies a CSS file to the documentation directory.
+    
+    Args:
+    	css_path: Path to the source CSS file.
+    	docs_dir: Path to the documentation output directory.
+    
+    Returns:
+    	True if the file was copied successfully, False otherwise.
+    """
     try:
         shutil.copy2(css_path, docs_dir / css_path.name)
         debug_print(f"Copied CSS file to {docs_dir / css_path.name}")
@@ -1404,7 +1665,18 @@ def copy_css_file(css_path: Path, docs_dir: Path) -> bool:
         return False
 
 def create_favicon_files(docs_dir: Path, logos_dir: Path) -> bool:
-    """Create favicon files in docs/assets/favicon directory."""
+    """
+    Creates favicon files and a web manifest in the documentation assets directory.
+    
+    Copies existing favicon files from the source favicon directory to `docs/assets/favicon`. If a logo file is found in the logos directory, generates a `site.webmanifest` file if it does not already exist.
+    
+    Args:
+        docs_dir: Path to the documentation output directory.
+        logos_dir: Path to the directory containing logo files.
+    
+    Returns:
+        True if favicon files and manifest are created successfully, False otherwise.
+    """
     try:
         favicon_dir = docs_dir / "assets" / "favicon"
         favicon_dir.mkdir(exist_ok=True)
@@ -1456,7 +1728,12 @@ def create_favicon_files(docs_dir: Path, logos_dir: Path) -> bool:
         return False
 
 def copy_assets(assets_dir: Path, docs_dir: Path) -> bool:
-    """Copy assets from source to destination."""
+    """
+    Copies all asset files (CSS, JavaScript, images, logos, and favicons) from the source assets directory to the documentation output directory, migrating legacy files and ensuring required assets are present.
+    
+    Returns:
+        True if all assets are copied successfully, False if any error occurs.
+    """
     try:
         debug_print(f"Copying assets from {assets_dir} to {docs_dir}")
         
@@ -1591,7 +1868,11 @@ def copy_assets(assets_dir: Path, docs_dir: Path) -> bool:
         return False
 
 def main():
-    """Generate HTML documentation for the project."""
+    """
+    Generates the complete HTML documentation site for the project.
+    
+    Creates the documentation output directory, optionally cleans existing HTML files if force rebuild is enabled, copies all required assets, processes each supported source file into HTML with appropriate post-processing, generates index pages for directories and the main index from README.md, and creates robots.txt and sitemap.xml for search engines. Also copies additional JavaScript files required for Basilisk integration and cleans up temporary files.
+    """
     if not validate_config():
         return
     
