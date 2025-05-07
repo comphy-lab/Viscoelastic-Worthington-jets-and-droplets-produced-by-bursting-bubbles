@@ -110,6 +110,11 @@ function renderSections(sections, container) {
     const sectionEl = document.createElement('div');
     sectionEl.className = 'command-palette-section';
     
+    // Add additional class for search results section to style it properly
+    if (section === 'Search Results') {
+      sectionEl.classList.add('command-palette-search-results-section');
+    }
+    
     const sectionTitle = document.createElement('div');
     sectionTitle.className = 'command-palette-section-title';
     sectionTitle.textContent = section;
