@@ -167,7 +167,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="base-url" content="..">
-  <title>Simulation Cases | Documentation</title>
+  <title>simulationCases/runCodesInParallel.sh | Viscoelastic Worthington Jets & Droplets Produced by Bursting Bubbles</title>
   
   <!-- Critical CSS for fastest paint -->
   <style>
@@ -198,10 +198,10 @@
   </style>
 
   <!-- Critical Meta Tags -->
-  <meta name="description" content="Documentation for the CoMPhy-Lab computational fluid dynamics framework.">
+  <meta name="description" content="if [ \$ -lt 1 ]; then echo 'Usage: \$0  [numberofprocesses]' exit 1 fi file=\$1 NP=\${2:-4} use 4 as default if not provided mkdir -p \$file CC99='...">
   <meta name="author" content="CoMPhy Lab">
   <meta name="robots" content="index, follow">
-  <meta name="keywords" content="fluid dynamics, CFD, Basilisk, simulationCases, documentation">
+  <meta name="keywords" content="runcodesinparallel">
   <meta name="msapplication-TileColor" content="#da532c">
   <meta name="theme-color" content="#ffffff">
   <meta name="apple-mobile-web-app-title" content="CoMPhy Lab">
@@ -288,7 +288,7 @@
         link.href = href;
         link.crossOrigin = 'anonymous';
         link.onerror = (e) => {
-          console.error(`Failed to load stylesheet: ${href}`, e);
+          console.error(`Failed to load stylesheet: `, e);
           console.log('Trying alternative Font Awesome source...');
         };
         document.head.appendChild(link);
@@ -329,6 +329,8 @@
   </script>
 </head>
 <body id="top">
+<script>window.repoName = "Viscoelastic-Worthington-jets-and-droplets-produced-by-bursting-bubbles";</script>
+
 
     <!-- Preloader with theme variables applied -->
     <div id="preloader">
@@ -404,31 +406,37 @@
         <!-- Main content -->
         <main class="content">
             
-
             <div class="page-content">
-<h1>Simulation Cases</h1>
-
-<div class="documentation-section">
-<table class="documentation-files">
-<tr>
-  <td class="file-icon"><span class="file-c"></span></td>
-  <td class="file-link" style="padding-right: 2em;"><a href="burstingBubbleVE.c.html" class="doc-link-button">burstingBubbleVE.c</a></td>
-  <td class="file-desc">This simulation models the dynamics of bursting bubbles in viscoelastic media using the Basilisk framework. It partic...</td>
-</tr>
-<tr>
-  <td class="file-icon"><span class="file-other"></span></td>
-  <td class="file-link" style="padding-right: 2em;"><a href="Makefile.html" class="doc-link-button">Makefile</a></td>
-  <td class="file-desc">ifeq (\$(wildcard ../.projectconfig),) \$(error '../.projectconfig not found') endif BASILISK := \$(shell . ../.proje...</td>
-</tr>
-<tr>
-  <td class="file-icon"><span class="file-other"></span></td>
-  <td class="file-link" style="padding-right: 2em;"><a href="runCodesInParallel.sh.html" class="doc-link-button">runCodesInParallel.sh</a></td>
-  <td class="file-desc">if [ \$ -lt 1 ]; then echo 'Usage: \$0  [numberofprocesses]' exit 1 fi file=\$1 NP=\${2:-4} use 4 as default if not p...</td>
-</tr>
-</table>
-</div>
-
-</div>
+                
+                                <h1 class="page-title">simulationCases/runCodesInParallel.sh</h1>
+                
+                                
+                                <div class="raw-file-button-container">
+                    <a href="https://github.com/comphy-lab/Viscoelastic-Worthington-jets-and-droplets-produced-by-bursting-bubbles/raw/main/simulationCases/runCodesInParallel.sh" class="raw-file-button" target="_blank">
+                        <i class="fa-brands fa-github"></i> See raw file
+                    </a>
+                </div>
+                
+                <h1
+                id="runcodesinparallel.sh">runCodesInParallel.sh</h1>
+                <div class="code-block-container"><div class="code-block-container"><pre
+                class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><span class="co">#!/bin/bash</span></span>
+<span id="cb1-2"></span>
+<span id="cb1-3"><span class="co"># check that CLI inputs are there. 1 is compulsory. if 2 is not there, use 4 (default)</span></span>
+<span id="cb1-4"><span class="cf">if</span> <span class="bu">[</span> <span class="dt">\$</span># <span class="ot">-lt</span> 1 <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb1-5">    <span class="bu">echo</span> <span class="st">&quot;Usage: </span><span class="dt">\$</span><span class="st">0 &lt;filename&gt; [number_of_processes]&quot;</span></span>
+<span id="cb1-6">    <span class="bu">exit</span> 1</span>
+<span id="cb1-7"><span class="cf">fi</span></span>
+<span id="cb1-8"></span>
+<span id="cb1-9"><span class="va">file</span><span class="op">=</span><span class="dt">\$</span>1</span>
+<span id="cb1-10"><span class="va">NP</span><span class="op">=</span><span class="dt">\$</span>{2:-4}  <span class="co"># use 4 as default if not provided</span></span>
+<span id="cb1-11"></span>
+<span id="cb1-12"><span class="fu">mkdir</span> <span class="at">-p</span> <span class="dt">\$</span>file</span>
+<span id="cb1-13"><span class="va">CC99</span><span class="op">=</span><span class="st">&#39;mpicc -std=c99&#39;</span> <span class="ex">qcc</span> <span class="at">-Wall</span> <span class="at">-O2</span> <span class="at">-D_MPI</span><span class="op">=</span>1 <span class="at">-I\$PWD</span>/src-local <span class="at">-I\$PWD</span>/../src-local <span class="at">-disable-dimensions</span> <span class="dt">\$</span>file.c <span class="at">-o</span> <span class="dt">\$</span>file/\$file <span class="at">-lm</span></span>
+<span id="cb1-14"><span class="fu">chmod</span> +x <span class="dt">\$</span>file/\$file  <span class="co"># Ensure executable has proper permissions</span></span>
+<span id="cb1-15"><span class="bu">cd</span> <span class="dt">\$</span>file</span>
+<span id="cb1-16"><span class="ex">mpirun</span> <span class="at">--allow-run-as-root</span> <span class="at">-np</span> <span class="dt">\$</span>NP ./\$file</span></code></pre></div></div>
+            </div>
         </main>
 
         <footer class="site-footer">
@@ -489,5 +497,75 @@
         </div>
     </div>
 
-</body>
+
+<script type="text/javascript">
+document.addEventListener('DOMContentLoaded', function() {
+    // Add copy button to each code block container
+    const codeBlocks = document.querySelectorAll('.code-block-container pre');
+    codeBlocks.forEach(function(codeBlock, index) {
+        // Create button element
+        const button = document.createElement('button');
+        button.className = 'copy-button';
+        button.textContent = 'Copy';
+        button.setAttribute('aria-label', 'Copy code to clipboard');
+        button.setAttribute('data-copy-state', 'copy');
+        
+        // Get the code block container (parent of the pre)
+        const container = codeBlock.parentNode;
+        
+        // Add the button to the container
+        container.appendChild(button);
+        
+        // Set up click event
+        button.addEventListener('click', async function() {
+            const codeText = codeBlock.textContent;
+            
+            try {
+                // Try to use the modern clipboard API first
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    await navigator.clipboard.writeText(codeText);
+                    updateButtonState(button, 'success');
+                } else {
+                    // Fall back to the deprecated execCommand method
+                    const textarea = document.createElement('textarea');
+                    textarea.value = codeText;
+                    textarea.style.position = 'fixed';  // Prevent scrolling to the bottom
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    
+                    const successful = document.execCommand('copy');
+                    document.body.removeChild(textarea);
+                    
+                    if (successful) {
+                        updateButtonState(button, 'success');
+                    } else {
+                        updateButtonState(button, 'error');
+                    }
+                }
+            } catch (err) {
+                console.error('Copy failed:', err);
+                updateButtonState(button, 'error');
+            }
+        });
+    });
+    
+    // Function to update button state
+    function updateButtonState(button, state) {
+        if (state === 'success') {
+            button.textContent = 'Copied!';
+            button.classList.add('copied');
+        } else if (state === 'error') {
+            button.textContent = 'Error!';
+            button.classList.add('error');
+        }
+        
+        // Reset button state after 2 seconds
+        setTimeout(function() {
+            button.textContent = 'Copy';
+            button.classList.remove('copied', 'error');
+        }, 2000);
+    }
+});
+</script>
+        </body>
 </html>
