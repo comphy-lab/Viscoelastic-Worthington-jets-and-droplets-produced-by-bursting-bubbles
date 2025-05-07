@@ -504,7 +504,7 @@
                 <p>To ensure you have the necessary tools and a fresh
                 Basilisk installation, use the provided script:</p>
                 <div class="code-block-container"><div class="code-block-container"><pre
-                class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">./reset_install_requirements.sh</span></span></code></pre></div></div>
+                class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><span class="ex">./reset_install_requirements.sh</span></span></code></pre></div></div>
                 <h3 id="function">Function</h3>
                 <p>This script checks for Basilisk installation and
                 compiles it if not present.</p>
@@ -526,7 +526,7 @@
                 dependencies, re-run the script with
                 <code>--hard</code>:</p>
                 <div class="code-block-container"><div class="code-block-container"><pre
-                class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">./reset_install_requirements.sh</span> <span class="at">--hard</span></span></code></pre></div></div>
+                class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><span class="ex">./reset_install_requirements.sh</span> <span class="at">--hard</span></span></code></pre></div></div>
                 <h2 id="running-the-code">Running the Code</h2>
                 <h3 id="recommended-method-using-makefile">Recommended
                 Method: Using Makefile</h3>
@@ -537,12 +537,12 @@
                 directory:</li>
                 </ol>
                 <div class="code-block-container"><div class="code-block-container"><pre
-                class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> testCases</span></code></pre></div></div>
+                class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><span class="bu">cd</span> testCases</span></code></pre></div></div>
                 <ol start="2" type="1">
                 <li>Compile and run using make:</li>
                 </ol>
                 <div class="code-block-container"><div class="code-block-container"><pre
-                class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="va">CFLAGS</span><span class="op">=</span>-DDISPLAY=-1 <span class="fu">make</span> burstingBubbleVE.tst</span></code></pre></div></div>
+                class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><span class="va">CFLAGS</span><span class="op">=</span>-DDISPLAY=-1 <span class="fu">make</span> burstingBubbleVE.tst</span></code></pre></div></div>
                 <h3
                 id="alternative-method-direct-compilation">Alternative
                 Method: Direct Compilation</h3>
@@ -552,45 +552,45 @@
                 <li>Using include paths (recommended):</li>
                 </ol>
                 <div class="code-block-container"><div class="code-block-container"><pre
-                class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">qcc</span> <span class="at">-O2</span> <span class="at">-Wall</span> <span class="at">-disable-dimensions</span> <span class="at">-I</span><span class="va">$(</span><span class="ex">PWD</span><span class="va">)</span>/src-local <span class="at">-I</span><span class="va">$(</span><span class="ex">PWD</span><span class="va">)</span>/../src-local burstingBubbleVE.c <span class="at">-o</span> burstingBubbleVE <span class="at">-lm</span></span></code></pre></div></div>
+                class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><span class="ex">qcc</span> <span class="at">-O2</span> <span class="at">-Wall</span> <span class="at">-disable-dimensions</span> <span class="at">-I</span><span class="va">$(</span><span class="ex">PWD</span><span class="va">)</span>/src-local <span class="at">-I</span><span class="va">$(</span><span class="ex">PWD</span><span class="va">)</span>/../src-local burstingBubbleVE.c <span class="at">-o</span> burstingBubbleVE <span class="at">-lm</span></span></code></pre></div></div>
                 <ol start="2" type="1">
                 <li>Without include paths:</li>
                 </ol>
                 <div class="code-block-container"><div class="code-block-container"><pre
-                class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">qcc</span> <span class="at">-O2</span> <span class="at">-Wall</span> <span class="at">-disable-dimensions</span> burstingBubbleVE.c <span class="at">-o</span> burstingBubbleVE <span class="at">-lm</span></span></code></pre></div></div>
+                class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><span class="ex">qcc</span> <span class="at">-O2</span> <span class="at">-Wall</span> <span class="at">-disable-dimensions</span> burstingBubbleVE.c <span class="at">-o</span> burstingBubbleVE <span class="at">-lm</span></span></code></pre></div></div>
                 <p><strong>Note</strong>: If using method 2, you must
                 first manually copy the <code>src-local</code> folder to
                 your running directory.</p>
                 <h3 id="local-execution">Local Execution</h3>
                 <p>MacOS:</p>
                 <div class="code-block-container"><div class="code-block-container"><pre
-                class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># First source the configuration</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> .project_config</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Compile using include paths (recommended)</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="ex">qcc</span> <span class="at">-O2</span> <span class="at">-Wall</span> <span class="at">-disable-dimensions</span> <span class="at">-I</span><span class="va">$(</span><span class="ex">PWD</span><span class="va">)</span>/src-local <span class="at">-I</span><span class="va">$(</span><span class="ex">PWD</span><span class="va">)</span>/../src-local burstingBubbleVE.c <span class="at">-o</span> burstingBubbleVE <span class="at">-lm</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Or compile without include paths (requires manually copying src-local folder)</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="ex">qcc</span> <span class="at">-O2</span> <span class="at">-Wall</span> <span class="at">-disable-dimensions</span> burstingBubbleVE.c <span class="at">-o</span> burstingBubbleVE <span class="at">-lm</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Run the executable, only supports serial execution</span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="ex">./burstingBubbleVE</span></span></code></pre></div></div>
+                class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><span class="co"># First source the configuration</span></span>
+<span id="cb7-2"><span class="bu">source</span> .project_config</span>
+<span id="cb7-3"></span>
+<span id="cb7-4"><span class="co"># Compile using include paths (recommended)</span></span>
+<span id="cb7-5"><span class="ex">qcc</span> <span class="at">-O2</span> <span class="at">-Wall</span> <span class="at">-disable-dimensions</span> <span class="at">-I</span><span class="va">$(</span><span class="ex">PWD</span><span class="va">)</span>/src-local <span class="at">-I</span><span class="va">$(</span><span class="ex">PWD</span><span class="va">)</span>/../src-local burstingBubbleVE.c <span class="at">-o</span> burstingBubbleVE <span class="at">-lm</span></span>
+<span id="cb7-6"></span>
+<span id="cb7-7"><span class="co"># Or compile without include paths (requires manually copying src-local folder)</span></span>
+<span id="cb7-8"><span class="ex">qcc</span> <span class="at">-O2</span> <span class="at">-Wall</span> <span class="at">-disable-dimensions</span> burstingBubbleVE.c <span class="at">-o</span> burstingBubbleVE <span class="at">-lm</span></span>
+<span id="cb7-9"></span>
+<span id="cb7-10"><span class="co"># Run the executable, only supports serial execution</span></span>
+<span id="cb7-11"><span class="ex">./burstingBubbleVE</span></span></code></pre></div></div>
                 <p>Linux:</p>
                 <div class="code-block-container"><div class="code-block-container"><pre
-                class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># First source the configuration</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> .project_config</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Compile using include paths (recommended)</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="ex">qcc</span> <span class="at">-O2</span> <span class="at">-Wall</span> <span class="at">-disable-dimensions</span> <span class="at">-fopenmp</span> <span class="at">-I</span><span class="va">$(</span><span class="ex">PWD</span><span class="va">)</span>/src-local <span class="at">-I</span><span class="va">$(</span><span class="ex">PWD</span><span class="va">)</span>/../src-local burstingBubbleVE.c <span class="at">-o</span> burstingBubbleVE <span class="at">-lm</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Or compile without include paths (requires manually copying src-local folder)</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="ex">qcc</span> <span class="at">-O2</span> <span class="at">-Wall</span> <span class="at">-disable-dimensions</span> <span class="at">-fopenmp</span> burstingBubbleVE.c <span class="at">-o</span> burstingBubbleVE <span class="at">-lm</span></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Set the number of OpenMP threads</span></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">OMP_NUM_THREADS</span><span class="op">=</span>4</span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Run the executable</span></span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="ex">./burstingBubbleVE</span></span></code></pre></div></div>
+                class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><span class="co"># First source the configuration</span></span>
+<span id="cb8-2"><span class="bu">source</span> .project_config</span>
+<span id="cb8-3"></span>
+<span id="cb8-4"><span class="co"># Compile using include paths (recommended)</span></span>
+<span id="cb8-5"><span class="ex">qcc</span> <span class="at">-O2</span> <span class="at">-Wall</span> <span class="at">-disable-dimensions</span> <span class="at">-fopenmp</span> <span class="at">-I</span><span class="va">$(</span><span class="ex">PWD</span><span class="va">)</span>/src-local <span class="at">-I</span><span class="va">$(</span><span class="ex">PWD</span><span class="va">)</span>/../src-local burstingBubbleVE.c <span class="at">-o</span> burstingBubbleVE <span class="at">-lm</span></span>
+<span id="cb8-6"></span>
+<span id="cb8-7"><span class="co"># Or compile without include paths (requires manually copying src-local folder)</span></span>
+<span id="cb8-8"><span class="ex">qcc</span> <span class="at">-O2</span> <span class="at">-Wall</span> <span class="at">-disable-dimensions</span> <span class="at">-fopenmp</span> burstingBubbleVE.c <span class="at">-o</span> burstingBubbleVE <span class="at">-lm</span></span>
+<span id="cb8-9"></span>
+<span id="cb8-10"><span class="co"># Set the number of OpenMP threads</span></span>
+<span id="cb8-11"><span class="bu">export</span> <span class="va">OMP_NUM_THREADS</span><span class="op">=</span>4</span>
+<span id="cb8-12"></span>
+<span id="cb8-13"><span class="co"># Run the executable</span></span>
+<span id="cb8-14"><span class="ex">./burstingBubbleVE</span></span></code></pre></div></div>
                 <h3 id="hpc-cluster-execution-e.g.-snellius">HPC Cluster
                 Execution (e.g., Snellius)</h3>
                 <p>For cluster environments, it is strongly recommended
@@ -601,32 +601,32 @@
                 <li>First, copy the required files:</li>
                 </ol>
                 <div class="code-block-container"><div class="code-block-container"><pre
-                class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> <span class="at">-r</span> /path/to/original/src-local .</span></code></pre></div></div>
+                class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><span class="fu">cp</span> <span class="at">-r</span> /path/to/original/src-local .</span></code></pre></div></div>
                 <ol start="2" type="1">
                 <li>Compile the code for MPI:</li>
                 </ol>
                 <div class="code-block-container"><div class="code-block-container"><pre
-                class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="va">CC99</span><span class="op">=</span><span class="st">&#39;mpicc -std=c99&#39;</span> <span class="ex">qcc</span> <span class="at">-Wall</span> <span class="at">-O2</span> <span class="at">-D_MPI</span><span class="op">=</span>1 <span class="at">-disable-dimensions</span> burstingBubbleVE.c <span class="at">-o</span> burstingBubbleVE <span class="at">-lm</span></span></code></pre></div></div>
+                class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><span class="va">CC99</span><span class="op">=</span><span class="st">&#39;mpicc -std=c99&#39;</span> <span class="ex">qcc</span> <span class="at">-Wall</span> <span class="at">-O2</span> <span class="at">-D_MPI</span><span class="op">=</span>1 <span class="at">-disable-dimensions</span> burstingBubbleVE.c <span class="at">-o</span> burstingBubbleVE <span class="at">-lm</span></span></code></pre></div></div>
                 <ol start="3" type="1">
                 <li>Create a SLURM job script (e.g.,
                 <code>run_simulation.sh</code>):</li>
                 </ol>
                 <div class="code-block-container"><div class="code-block-container"><pre
-                class="sourceCode bash"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --nodes=1</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --ntasks=32</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --time=1:00:00</span></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --partition=genoa</span></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --mail-type=ALL</span></span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --mail-user=v.sanjay@utwente.nl</span></span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="ex">srun</span> <span class="at">--mpi</span><span class="op">=</span>pmi2 <span class="at">-n</span> 32 <span class="at">--gres</span><span class="op">=</span>cpu:32 <span class="at">--mem-per-cpu</span><span class="op">=</span>1750mb burstingBubbleVE</span></code></pre></div></div>
+                class="sourceCode bash"><code class="sourceCode bash"><span id="cb11-1"><span class="co">#!/bin/bash</span></span>
+<span id="cb11-2"></span>
+<span id="cb11-3"><span class="co">#SBATCH --nodes=1</span></span>
+<span id="cb11-4"><span class="co">#SBATCH --ntasks=32</span></span>
+<span id="cb11-5"><span class="co">#SBATCH --time=1:00:00</span></span>
+<span id="cb11-6"><span class="co">#SBATCH --partition=genoa</span></span>
+<span id="cb11-7"><span class="co">#SBATCH --mail-type=ALL</span></span>
+<span id="cb11-8"><span class="co">#SBATCH --mail-user=v.sanjay@utwente.nl</span></span>
+<span id="cb11-9"></span>
+<span id="cb11-10"><span class="ex">srun</span> <span class="at">--mpi</span><span class="op">=</span>pmi2 <span class="at">-n</span> 32 <span class="at">--gres</span><span class="op">=</span>cpu:32 <span class="at">--mem-per-cpu</span><span class="op">=</span>1750mb burstingBubbleVE</span></code></pre></div></div>
                 <ol start="4" type="1">
                 <li>Submit the job:</li>
                 </ol>
                 <div class="code-block-container"><div class="code-block-container"><pre
-                class="sourceCode bash"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">sbatch</span> run_simulation.sh</span></code></pre></div></div>
+                class="sourceCode bash"><code class="sourceCode bash"><span id="cb12-1"><span class="ex">sbatch</span> run_simulation.sh</span></code></pre></div></div>
                 <h3 id="additional-running-scripts">Additional Running
                 Scripts</h3>
                 <p>The <code>z_extras/running</code> directory contains
@@ -653,7 +653,7 @@
                 <p>To run the script, use the following command in your
                 terminal:</p>
                 <div class="code-block-container"><div class="code-block-container"><pre
-                class="sourceCode bash"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> reset_install_requirements.sh</span></code></pre></div></div>
+                class="sourceCode bash"><code class="sourceCode bash"><span id="cb13-1"><span class="fu">bash</span> reset_install_requirements.sh</span></code></pre></div></div>
                 <p>Make sure to have the necessary permissions to
                 execute the script.</p>
                 <h2 id="citation">Citation</h2>
@@ -661,27 +661,27 @@
                 cite:</p>
                 <h3 id="paper">Paper</h3>
                 <div class="code-block-container"><div class="code-block-container"><pre
-                class="sourceCode bibtex"><code class="sourceCode bibtex"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="va">@article</span>{<span class="ot">Dixit_Oratis_Zinelis_Lohse_Sanjay_2025</span>, </span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">title</span>={Viscoelastic Worthington jets and droplets produced by bursting bubbles}, </span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">volume</span>={1010}, </span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">journal</span>={J. Fluid Mech.}, </span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">author</span>={Dixit, A. K. and Oratis, A. and Zinelis, K. and Lohse, D. and Sanjay, V.}, </span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">year</span>={2025}, </span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">pages</span>={A2},</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">DOI</span>={10.1017/jfm.2025.237}}</span></code></pre></div></div>
+                class="sourceCode bibtex"><code class="sourceCode bibtex"><span id="cb14-1"><span class="va">@article</span>{<span class="ot">Dixit_Oratis_Zinelis_Lohse_Sanjay_2025</span>, </span>
+<span id="cb14-2">  <span class="dt">title</span>={Viscoelastic Worthington jets and droplets produced by bursting bubbles}, </span>
+<span id="cb14-3">  <span class="dt">volume</span>={1010}, </span>
+<span id="cb14-4">  <span class="dt">journal</span>={J. Fluid Mech.}, </span>
+<span id="cb14-5">  <span class="dt">author</span>={Dixit, A. K. and Oratis, A. and Zinelis, K. and Lohse, D. and Sanjay, V.}, </span>
+<span id="cb14-6">  <span class="dt">year</span>={2025}, </span>
+<span id="cb14-7">  <span class="dt">pages</span>={A2},</span>
+<span id="cb14-8">  <span class="dt">DOI</span>={10.1017/jfm.2025.237}}</span></code></pre></div></div>
                 <h3 id="software">Software</h3>
                 <div class="code-block-container"><div class="code-block-container"><pre
-                class="sourceCode bibtex"><code class="sourceCode bibtex"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">@software{vatsal_sanjay_2024_14210635,</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co">  author       = {Vatsal Sanjay},</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co">  title        = {{comphy-lab/Viscoelastic3D: 🌊 v2.5: ElastoFlow - </span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co">                   Complete 2D/3D Viscoelastic Framework}},</span></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="co">  month        = nov,</span></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="co">  year         = 2024,</span></span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="co">  publisher    = {Zenodo},</span></span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="co">  version      = {v2.5},</span></span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="co">  doi          = {10.5281/zenodo.14210635},</span></span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="co">  url          = {https://doi.org/10.5281/zenodo.14210635}</span></span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="co">}</span></span></code></pre></div></div>
+                class="sourceCode bibtex"><code class="sourceCode bibtex"><span id="cb15-1"><span class="co">@software{vatsal_sanjay_2024_14210635,</span></span>
+<span id="cb15-2"><span class="co">  author       = {Vatsal Sanjay},</span></span>
+<span id="cb15-3"><span class="co">  title        = {{comphy-lab/Viscoelastic3D: 🌊 v2.5: ElastoFlow - </span></span>
+<span id="cb15-4"><span class="co">                   Complete 2D/3D Viscoelastic Framework}},</span></span>
+<span id="cb15-5"><span class="co">  month        = nov,</span></span>
+<span id="cb15-6"><span class="co">  year         = 2024,</span></span>
+<span id="cb15-7"><span class="co">  publisher    = {Zenodo},</span></span>
+<span id="cb15-8"><span class="co">  version      = {v2.5},</span></span>
+<span id="cb15-9"><span class="co">  doi          = {10.5281/zenodo.14210635},</span></span>
+<span id="cb15-10"><span class="co">  url          = {https://doi.org/10.5281/zenodo.14210635}</span></span>
+<span id="cb15-11"><span class="co">}</span></span></code></pre></div></div>
                 <h2 id="features">Features</h2>
                 <ul>
                 <li>Simulation of bubble cavity collapse in viscoelastic

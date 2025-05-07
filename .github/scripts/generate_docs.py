@@ -677,8 +677,27 @@ def run_pandoc(pandoc_input: str, output_html_path: Path, template_path: Path,
         with open(output_html_path, 'r', encoding='utf-8') as f:
             content = f.read()
             
-        # Remove empty anchor tags
-        content = re.sub(r'<a[^>]*>\s*</a>', '', content)
+        # COMPREHENSIVE anchor tag removal from the entire document
+        # First pass: Remove the exact problematic anchor pattern seen in the documents
+        content = re.sub(r'<a\s+id=""\s+href="#">\s*</a>', '', content)
+        
+        # Second pass: Remove any empty anchor with any attributes
+        content = re.sub(r'<a\s+[^>]*>\s*</a>', '', content)
+        
+        # Third pass: Special handling for script blocks to ensure no anchors disrupt JavaScript
+        script_pattern = r'(<script[^>]*>.*?</script>)'
+        
+        def clean_script_blocks(match):
+            script_content = match.group(1)
+            # Aggressively remove ALL anchor tags from script blocks to prevent JavaScript syntax errors
+            cleaned_script = re.sub(r'<a[^>]*>.*?</a>', '', script_content)
+            return cleaned_script
+            
+        # Clean script blocks separately with specialized handling
+        content = re.sub(script_pattern, clean_script_blocks, content, flags=re.DOTALL)
+        
+        # Final pass: Look for any remaining anchor tags with empty content and remove them
+        content = re.sub(r'<a[^>]*?>\s*</a>', '', content)
         
         # Fix any malformed meta description tags, especially for Jupyter notebooks
         desc_meta_pattern = r'<meta\s+name="description"\s+content="([^"]*(?:target|href|class|style|onclick)[^"]*)"[^>]*>'
@@ -1148,6 +1167,34 @@ def process_file_with_page2html_logic(file_path: Path, output_html_path: Path, r
                                      
                                      Handles copying Jupyter notebooks, prepares input for Pandoc conversion, extracts SEO metadata, and applies appropriate post-processing for Python, shell, Markdown, Jupyter, or C/C++ files. Inserts JavaScript for code block copy functionality. Returns True on success, False on error.
                                      """
+    
+    # Function to ensure script tags are properly sanitized during the conversion process
+    def sanitize_pandoc_input(input_content: str) -> str:
+        """
+        Pre-processes Pandoc input to prevent script-related issues in the output HTML.
+        Removes any malformed HTML constructs that could cause problems after conversion.
+        """
+        # Convert self-closing a tags to proper a tags to avoid malformed HTML after conversion
+        input_content = re.sub(r'<a([^>]*)/>',
+                              r'<a\1></a>',
+                              input_content)
+        
+        # Escape or convert script blocks in code examples to avoid JavaScript syntax errors  
+        def escape_script_blocks(match):
+            html_content = match.group(1)
+            # Replace any potential anchor tags in script examples with harmless placeholders
+            html_content = re.sub(r'<a\s+[^>]*>\s*</a>',
+                                '/* anchor tag removed */',
+                                html_content)
+            return f"{html_content}"
+            
+        input_content = re.sub(r'```html(.*?)```',
+                              escape_script_blocks,
+                              input_content,
+                              flags=re.DOTALL)
+                              
+        return input_content
+    
     print(f"  Processing {file_path.relative_to(repo_root)} -> {output_html_path.relative_to(repo_root / 'docs')}")
 
     try:
@@ -1163,6 +1210,9 @@ def process_file_with_page2html_logic(file_path: Path, output_html_path: Path, r
         
         # Prepare pandoc input
         pandoc_input_content = prepare_pandoc_input(file_path, literate_c_script)
+        
+        # Apply additional pre-processing to sanitize input
+        pandoc_input_content = sanitize_pandoc_input(pandoc_input_content)
         
         # Calculate relative URL path
         page_url = (base_url + output_html_path.relative_to(repo_root / 'docs').as_posix()).replace('//', '/')

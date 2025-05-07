@@ -13,7 +13,12 @@
     {
       id: "home",
       title: "Go to Home (this wiki)",
-      handler: () => { window.location.href = `/${window.repoName || ''}`; },
+      handler: () => { 
+        // Get base URL from meta tag to support GitHub Pages subfolders
+        const baseUrlMeta = document.querySelector('meta[name="base-url"]');
+        const baseUrl = baseUrlMeta ? baseUrlMeta.getAttribute('content') : ''; 
+        window.location.href = baseUrl || `/${window.repoName || ''}`;
+      },
       section: "Navigation",
       icon: '<i class="fa-solid fa-brain"></i>'
     },

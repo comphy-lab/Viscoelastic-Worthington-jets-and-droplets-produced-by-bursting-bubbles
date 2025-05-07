@@ -34,18 +34,32 @@ rm -rf comphy-search
 DOCS_DIR="$PROJECT_ROOT/docs"
 PYTHON_SCRIPT="$PROJECT_ROOT/.github/scripts/generate_docs.py"
 
-echo "Running documentation generation script..."
-python3 "$PYTHON_SCRIPT" "$FORCE_REBUILD"
+# Function to display messages
+function log_message() {
+  echo "$(date +"%Y-%m-%d %H:%M:%S") - $1"
+}
+
+# Run the documentation generation script
+log_message "Starting documentation generation..."
+if [ -n "$FORCE_REBUILD" ]; then
+  python3 "$PYTHON_SCRIPT" --force-rebuild
+else
+  python3 "$PYTHON_SCRIPT"
+fi
+
+# Clean HTML files to remove empty anchor tags
+log_message "Cleaning HTML files to remove empty anchor tags..."
+python3 "$PROJECT_ROOT/.github/scripts/clean_html.py" --dir "$DOCS_DIR" --verbose
 
 if [ $? -ne 0 ]; then
-    echo "Documentation generation failed."
+    log_message "Documentation generation failed."
     exit 1
 fi
 
-echo "Documentation generated successfully in $DOCS_DIR"
+log_message "Documentation generated successfully in $DOCS_DIR"
 
 # Check if docs directory exists
 if [ ! -d "$DOCS_DIR" ]; then
-    echo "Error: Docs directory '$DOCS_DIR' not found after generation."
+    log_message "Error: Docs directory '$DOCS_DIR' not found after generation."
     exit 1
 fi
