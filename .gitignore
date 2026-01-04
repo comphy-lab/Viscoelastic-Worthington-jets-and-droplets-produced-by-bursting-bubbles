@@ -22,7 +22,7 @@
 **/getview3D
 **/dump
 **/log
-
+**/display.html
 # Case folders (4-digit numbered directories - simulation outputs)
 simulationCases/[0-9][0-9][0-9][0-9]/
 
