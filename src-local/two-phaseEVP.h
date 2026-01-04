@@ -1,13 +1,13 @@
 /**
- * Modification by Vatsal Sanjay 
- * Version 2.0, Oct 17, 2024
+ * Modification by Vatsal Sanjay, Arivazhagan G. Balasubramanian (Ari) 
+ * Version 2.0, Jun 30, 2025
 
 # Changelog
-- Oct 17, 2024: added support for VE simulations.
+- Jun 30, 2025: added support for EVP simulations.
 
 # Brief history
 - v1.0 is the vanilla Basilisk code for two-phase flows: http://basilisk.fr/src/two-phase.h + http://basilisk.fr/src/two-phase-generic.h
-- v2.0 is the modification for viscoelastic fluids using the log-conformation method.
+- v2.0 is the modification for elasto-viscoplastic fluids using the log-conformation method.
 
 # Two-phase interfacial flows
 This is a modified version of [two-phase.h](http://basilisk.fr/src/two-phase.h). It contains the implementation of
@@ -28,6 +28,7 @@ scalar f[], * interfaces = {f};
 double rho1 = 1., mu1 = 0., rho2 = 1., mu2 = 0.;
 double G1 = 0., G2 = 0.; // elastic moduli
 double lambda1 = 0., lambda2 = 0.; // relaxation times
+double tau01 = 0., tau02 = 0.; // yield-stress
 double TOLelastic = 1e-2; // tolerance for elastic modulus #TOFIX: this must always be a very small number.
 
 /**
@@ -38,13 +39,14 @@ face vector alphav[];
 scalar rhov[];
 scalar Gpd[];
 scalar lambdapd[];
+scalar tau0d[];
 
 event defaults (i = 0) {
   alpha = alphav;
   rho = rhov;
   Gp = Gpd;
   lambda = lambdapd;
-
+  tau0 = tau0d;
   /**
   If the viscosity is non-zero, we need to allocate the face-centered
   viscosity field. */
@@ -119,14 +121,17 @@ event properties (i++) {
 
     Gpd[] = 0.;
     lambdapd[] = 0.;
-
+    tau0d[] = 0.;
+    
     if (clamp(sf[], 0., 1.) > TOLelastic){
       Gpd[] += G1*clamp(sf[], 0., 1.);
       lambdapd[] += lambda1*clamp(sf[], 0., 1.);
+      tau0d[] += tau01*clamp(sf[], 0., 1.);
     }
     if (clamp((1-sf[]), 0., 1.) > TOLelastic){
       Gpd[] += G2*clamp((1-sf[]), 0., 1.);
       lambdapd[] += lambda2*clamp((1-sf[]), 0., 1.);
+      tau0d[] += tau02*clamp((1-sf[]), 0., 1.);
     }
   }
 
