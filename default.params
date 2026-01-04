@@ -14,7 +14,7 @@ CaseNo=1000
 # ============================================================
 # Deborah number: De = lambda/t_cap (relaxation time / capillary time)
 # Controls viscoelastic effects; higher De = more elastic behavior
-De=0.1
+De=0.10
 
 # Elastocapillary number: Ec = G*R/sigma (elastic / surface tension)
 # Controls polymer stress magnitude relative to surface tension
@@ -39,7 +39,7 @@ MAXlevel=10
 # Time Control
 # ============================================================
 # Maximum simulation time (dimensionless, based on capillary time scale)
-tmax=1.0
+tmax=1.00
 
 # ============================================================
 # Output Configuration

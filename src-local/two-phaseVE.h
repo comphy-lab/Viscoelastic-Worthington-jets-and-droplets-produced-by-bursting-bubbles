@@ -28,7 +28,7 @@ scalar f[], * interfaces = {f};
 double rho1 = 1., mu1 = 0., rho2 = 1., mu2 = 0.;
 double G1 = 0., G2 = 0.; // elastic moduli
 double lambda1 = 0., lambda2 = 0.; // relaxation times
-double TOLelastic = 1e-2; // tolerance for elastic modulus #TOFIX: this must always be a very small number.
+double TOLelastic = 5e-1; // tolerance for elastic modulus #TOFIX: this must always be a very small number.
 
 /**
 Auxilliary fields are necessary to define the (variable) specific
@@ -122,14 +122,18 @@ event properties (i++) {
 
     if (clamp(sf[], 0., 1.) > TOLelastic){
       Gpd[] += G1*clamp(sf[], 0., 1.);
+    }
+    if (clamp(sf[], 0., 1.) > 1e-1*TOLelastic){
       lambdapd[] += lambda1*clamp(sf[], 0., 1.);
     }
     if (clamp((1-sf[]), 0., 1.) > TOLelastic){
       Gpd[] += G2*clamp((1-sf[]), 0., 1.);
+    }
+    if (clamp((1-sf[]), 0., 1.) > 1e-1*TOLelastic){
       lambdapd[] += lambda2*clamp((1-sf[]), 0., 1.);
     }
   }
-
+  
 #if TREE
   sf.prolongation = fraction_refine;
   sf.dirty = true; // boundary conditions need to be updated
