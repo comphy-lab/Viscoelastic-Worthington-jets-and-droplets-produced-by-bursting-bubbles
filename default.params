@@ -1,0 +1,50 @@
+# Viscoelastic Bubble Bursting - Default Parameters
+# Format: key=value (one per line, # for comments)
+# This file provides a typical configuration for bursting bubble simulations
+
+# ============================================================
+# Case Identification
+# ============================================================
+# Case number for folder naming (4-digit: 1000-9999)
+# Output will be created in simulationCases/<CaseNo>/
+CaseNo=1000
+
+# ============================================================
+# Physical Parameters (Dimensionless Numbers)
+# ============================================================
+# Deborah number: De = lambda/t_cap (relaxation time / capillary time)
+# Controls viscoelastic effects; higher De = more elastic behavior
+De=0.1
+
+# Elastocapillary number: Ec = G*R/sigma (elastic / surface tension)
+# Controls polymer stress magnitude relative to surface tension
+Ec=0.01
+
+# Ohnesorge number: Oh = mu/sqrt(rho*sigma*R) (viscous / inertial-capillary)
+# Controls viscous vs surface tension effects
+Oh=1e-2
+
+# Bond number: Bo = rho*g*R^2/sigma (gravity / surface tension)
+# Controls gravitational effects; currently fixed at 1e-3 (only Bo0.0010.dat available)
+Bond=1e-3
+
+# ============================================================
+# Numerical Parameters (Mesh Adaptation)
+# ============================================================
+# Maximum refinement level (2^MAXlevel cells at finest resolution)
+# Level 10 -> 1024 cells, Level 12 -> 4096 cells
+MAXlevel=10
+
+# ============================================================
+# Time Control
+# ============================================================
+# Maximum simulation time (dimensionless, based on capillary time scale)
+tmax=1.0
+
+# ============================================================
+# Output Configuration
+# ============================================================
+# Output directory name (created inside case folder)
+output_dir=results
+
+# Snapshot interval (defined in source code as tsnap = 1e-2)

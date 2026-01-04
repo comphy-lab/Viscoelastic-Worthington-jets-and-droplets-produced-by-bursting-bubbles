@@ -1,0 +1,46 @@
+# Parameter Sweep Configuration for Viscoelastic Bubble Bursting
+# This file defines a parameter sweep for batch simulations
+
+# ============================================================
+# Base Configuration
+# ============================================================
+# Start from this parameter file and override sweep variables
+BASE_CONFIG=default.params
+
+# ============================================================
+# Case Number Range
+# ============================================================
+# Starting case number (4-digit: 1000-9999)
+# Each parameter combination gets auto-incremented CaseNo
+CASE_START=1000
+
+# Ending case number (inclusive)
+# Number of combinations should equal CASE_END - CASE_START + 1
+# For this sweep: 3 De × 2 Oh = 6 combinations, so CASE_END = 1005
+CASE_END=1005
+
+# ============================================================
+# Sweep Variables
+# ============================================================
+# Format: SWEEP_<variable>=value1,value2,value3,...
+# The sweep will generate all combinations (cartesian product)
+
+# Sweep Deborah number
+SWEEP_De=0.1,0.5,1.0
+
+# Sweep Ohnesorge number
+SWEEP_Oh=0.01,0.02
+
+# Optional sweeps (uncomment as needed)
+# SWEEP_Ec=0.01,0.1
+# SWEEP_MAXlevel=9,10,11
+
+# NOTE: Bond is fixed at 1e-3 (only Bo0.0010.dat geometry available)
+# To sweep Bond values, you would need to generate additional Bo*.dat files
+
+# ============================================================
+# Output Configuration
+# ============================================================
+# Output folders are created in simulationCases/<CaseNo>/
+# CaseNo auto-increments from CASE_START for each parameter combination
+# Cases run sequentially (one at a time)

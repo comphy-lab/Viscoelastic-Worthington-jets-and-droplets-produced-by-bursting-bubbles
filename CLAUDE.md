@@ -2,53 +2,118 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Project Structure 
-- `basilisk/src/`: Core Basilisk CFD library (reference only, do not modify)
-- `src-local/`: Custom header files extending Basilisk functionality
-- `simulationCases/`: Test cases with their own Makefile 
-- `postProcess/`: Project-specific post-processing tools
-- `docs/`: Generated documentation (do not edit directly)
+## Project Overview
 
-## Build & Test Commands
-- Compile single file: `qcc -O2 -Wall -disable-dimensions file.c -o executable -lm`
-- Compile with custom headers: `qcc -O2 -Wall -disable-dimensions -I$PWD/src-local file.c -o executable -lm`
-- Run specific test case: `cd simulationCases && make test_name.tst`
-- Generate documentation (but don't deploy): `bash .github/scripts/build.sh`
+Basilisk CFD simulations of viscoelastic bubble bursting dynamics using the log-conformation method. Investigates Worthington jet and droplet formation in viscoelastic media across the phase space of Ohnesorge, elastocapillary, and Deborah numbers.
+
+## Build & Run Commands
+
+### Initial Setup
+```bash
+./reset_install_requirements.sh          # Install Basilisk and create .project_config
+./reset_install_requirements.sh --hard   # Force reinstall
+source .project_config                   # Load environment (BASILISK, PATH)
+```
+
+### Compile & Run (Makefile - Recommended)
+```bash
+cd simulationCases
+CFLAGS=-DDISPLAY=-1 make burstingBubbleVE.tst
+```
+
+### Direct Compilation
+```bash
+# macOS (serial only)
+qcc -O2 -Wall -disable-dimensions -I$PWD/src-local file.c -o executable -lm
+
+# Linux (OpenMP)
+qcc -O2 -Wall -disable-dimensions -fopenmp -I$PWD/src-local file.c -o executable -lm
+export OMP_NUM_THREADS=4
+
+# MPI (HPC clusters)
+CC99='mpicc -std=c99' qcc -Wall -O2 -D_MPI=1 -disable-dimensions file.c -o executable -lm
+```
+
+### Parameter-Based Workflow (Recommended)
+Uses two-stage execution: Stage 1 generates restart file (distance.h incompatible with MPI), Stage 2 runs full simulation.
+
+```bash
+# Edit default.params to set parameters, then:
+./runSimulation.sh default.params           # Run both stages (default)
+./runSimulation.sh --mpi 8 default.params   # Stage 1 serial, Stage 2 with MPI
+
+# Run stages separately (for HPC workflows)
+./runSimulation.sh --stage1 default.params  # Stage 1 only: generate restart
+./runSimulation.sh --stage2 default.params  # Stage 2 only: full simulation
+
+# Parameter sweep (edit sweep.params first)
+./runParameterSweep.sh sweep.params         # Run all cases (Stage 1 + 2)
+./runParameterSweep.sh --stage1-only        # Generate all restart files
+./runParameterSweep.sh --stage2-only --mpi 8 # Run all Stage 2 simulations
+./runParameterSweep.sh --dry-run            # Preview combinations
+```
+
+Case outputs are created in `simulationCases/<CaseNo>/` (4-digit, e.g., 1000/).
+
+### Direct Execution (for quick tests)
+```bash
+./burstingBubbleVE MAXlevel De Ec Oh Bond tmax
+# MAXlevel: AMR refinement level
+# De: Deborah number (relaxation time / flow time)
+# Ec: Elastocapillary number (elastic / surface tension forces)
+# Oh: Ohnesorge number (viscous / inertial-capillary forces)
+# Bond: Bond number (gravity / surface tension forces)
+# tmax: Maximum simulation time
+```
+
+### Generate Documentation
+```bash
+bash .github/scripts/build.sh   # Generate HTML docs (do not deploy)
+```
+
+## Architecture
+
+### Viscoelastic Solver Hierarchy
+The `src-local/` headers implement the log-conformation method for numerical stability at high Deborah numbers:
+
+- **`log-conform-viscoelastic.h`**: 2D/axisymmetric tensor formulation (default)
+- **`log-conform-viscoelastic-scalar-2D.h`**: 2D/axisymmetric scalar formulation (enable with `#define _SCALAR`)
+- **`log-conform-viscoelastic-scalar-3D.h`**: 3D scalar formulation
+- **`two-phaseVE.h`**: Two-phase extension coupling VoF with viscoelastic stress
+- **`eigen_decomposition.h`**: 3×3 symmetric eigenvalue solver for log-conformation
+
+### Key Physical Parameters (defined in simulation `.c` files)
+- `G`: Elastic modulus → polymeric stress T = G·f(A)
+- `λ` (lambda): Relaxation time → conformation tensor evolution
+- Conformation tensor A tracks polymer chain deformation
+
+### Simulation Structure
+Simulation cases in `simulationCases/` include headers via:
+```c
+#include "axi.h"                          // Axisymmetric geometry
+#include "navier-stokes/centered.h"       // Momentum solver
+#include "log-conform-viscoelastic.h"     // Viscoelastic constitutive model
+#include "two-phaseVE.h"                  // Two-phase VoF coupling
+```
 
 ## Code Style
 
-- **Indentation**: 2 spaces (no tabs).
-- **Line Length**: Maximum 80 characters per line.
-- **Comments**: Use markdown in comments starting with `/**`; avoid bare `*` in comments.
-- **Spacing**: Include spaces after commas and around operators (`+`, `-`).
-- **File Organization**: 
-  - Place core functionality in `.h` headers
-  - Implement tests in `.c` files
-- **Naming Conventions**: 
-  - Use `snake_case` for variables and parameters
-  - Use `camelCase` for functions and methods
-- **Error Handling**: Return meaningful values and provide descriptive `stderr` messages.
+- 2 spaces indentation, 80 char line limit
+- Markdown in `/**` comments for documentation
+- `snake_case` for variables, `camelCase` for functions
+- Core functionality in `.h` headers, tests/simulations in `.c` files
 
-## Documentation Generation
+## Key Directories
 
-- Read `.github/Website-generator-readme.md` for the website generation process.
-- Do not auto-deploy the website; generating HTML is permitted using `.github/scripts/build.sh`.
-- Avoid editing HTML files directly; they are generated using `.github/scripts/build.sh`, which utilizes `.github/scripts/generate_docs.py`.
-- The website is deployed at `https://comphy-lab.org/repositoryName`; refer to the `CNAME` file for configuration. Update if not done already. 
+- `basilisk/src/`: Core Basilisk library (reference only, do not modify)
+- `src-local/`: Custom viscoelastic solvers and parameter parsing utilities
+- `simulationCases/`: Simulation source files and case outputs (numbered folders)
+- `postProcess/`: Data extraction (`.c`) and visualization (`.py`) tools
+- `docs/`: Auto-generated documentation (do not edit directly)
 
-## Purpose
+## Key Files
 
-This rule provides guidance for maintaining and generating documentation for code repositories in the CoMPhy Lab, ensuring consistency and proper workflow for website generation.
-
-## Process Details
-
-The documentation generation process utilizes Python scripts to convert source code files into HTML documentation. The process handles C/C++, Python, Shell, and Markdown files, generating a complete documentation website with navigation, search functionality, and code highlighting.
-
-## Best Practices
-
-- Always use the build script for generating documentation rather than manually editing HTML files
-- Customize styling through CSS files in `.github/assets/css/`
-- Modify functionality through JavaScript files in `.github/assets/js/`
-- For template changes, edit `.github/assets/custom_template.html`
-- Troubleshoot generation failures by checking error messages and verifying paths and dependencies
-- Do not edit any files in the folder `docs/` as they are generated by the build script.  
+- `default.params`: Default simulation parameters (edit for single runs)
+- `sweep.params`: Parameter sweep configuration (CASE_START/END, SWEEP_* variables)
+- `runSimulation.sh`: Single case executor with two-stage model
+- `runParameterSweep.sh`: Batch executor for parameter sweeps  
