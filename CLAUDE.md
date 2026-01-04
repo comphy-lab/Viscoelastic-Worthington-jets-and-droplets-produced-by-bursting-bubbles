@@ -76,11 +76,22 @@ bash .github/scripts/build.sh   # Generate HTML docs (do not deploy)
 ### Viscoelastic Solver Hierarchy
 The `src-local/` headers implement the log-conformation method for numerical stability at high Deborah numbers:
 
+**Viscoelastic (VE) - Oldroyd-B model:**
 - **`log-conform-viscoelastic.h`**: 2D/axisymmetric tensor formulation (default)
 - **`log-conform-viscoelastic-scalar-2D.h`**: 2D/axisymmetric scalar formulation (enable with `#define _SCALAR`)
 - **`log-conform-viscoelastic-scalar-3D.h`**: 3D scalar formulation
-- **`two-phaseVE.h`**: Two-phase extension coupling VoF with viscoelastic stress
+- **`two-phaseVE.h`**: Two-phase VoF coupling for viscoelastic
+
+**Elastoviscoplastic (EVP) - Saramito model:**
+- **`log-conform-elastoviscoplastic.h`**: 2D/axisymmetric tensor formulation
+- **`log-conform-elastoviscoplastic-scalar-2D.h`**: 2D/axisymmetric scalar formulation
+- **`log-conform-elastoviscoplastic-scalar-3D.h`**: 3D scalar formulation
+- **`two-phaseEVP.h`**: Two-phase VoF coupling for elastoviscoplastic
+
+**Utilities:**
 - **`eigen_decomposition.h`**: 3×3 symmetric eigenvalue solver for log-conformation
+
+**Note:** Tensor formulations are limited to 2D/axi due to Basilisk boundary condition limitations; use scalar versions for 3D.
 
 ### Key Physical Parameters (defined in simulation `.c` files)
 - `G`: Elastic modulus → polymeric stress T = G·f(A)
