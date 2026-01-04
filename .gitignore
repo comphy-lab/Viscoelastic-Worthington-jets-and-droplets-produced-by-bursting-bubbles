@@ -18,7 +18,7 @@
 # Custom executables (add your specific executable names here)
 **/burstingBubbleVE
 **/getFacet
-**/getData-elastic-scalar
+**/getData
 **/getview3D
 **/dump
 **/log

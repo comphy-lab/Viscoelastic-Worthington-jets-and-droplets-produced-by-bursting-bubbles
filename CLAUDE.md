@@ -127,4 +127,42 @@ Simulation cases in `simulationCases/` include headers via:
 - `default.params`: Default simulation parameters (edit for single runs)
 - `sweep.params`: Parameter sweep configuration (CASE_START/END, SWEEP_* variables)
 - `runSimulation.sh`: Single case executor with two-stage model
-- `runParameterSweep.sh`: Batch executor for parameter sweeps  
+- `runParameterSweep.sh`: Batch executor for parameter sweeps
+- `runPostProcess-Ncases.sh`: Post-processing batch executor
+
+## Post-Processing Workflow
+
+### Compile C Helpers
+```bash
+# Compile data extraction utilities (run once)
+qcc -O2 -Wall postProcess/getFacet.c -o postProcess/getFacet -lm
+qcc -O2 -Wall postProcess/getData.c -o postProcess/getData -lm
+```
+
+### Generate Visualization Videos
+```bash
+# Single case
+python3 postProcess/Video.py --caseToProcess simulationCases/1000
+
+# Multiple cases with batch script
+./runPostProcess-Ncases.sh 1000 1001 1002
+
+# With custom settings
+./runPostProcess-Ncases.sh --CPUs 8 --nGFS 100 1000
+
+# Skip video encoding (only generate frames)
+./runPostProcess-Ncases.sh --skip-video-encode 1000
+
+# Adjust colorbar bounds (VE-specific)
+./runPostProcess-Ncases.sh --d2-vmin -2 --d2-vmax 3 --tra-vmin -2 --tra-vmax 3 1000
+```
+
+### Post-Processing Output
+Each case generates:
+- `simulationCases/<CaseNo>/Video/`: PNG frames (zero-padded timestamps)
+- `simulationCases/<CaseNo>/<CaseNo>.mp4`: Encoded video
+
+### Visualization Fields
+- **Left colorbar**: log₁₀(D:D) - Strain-rate tensor magnitude
+- **Right colorbar**: log₁₀(tr(A)-1) - Conformation tensor trace (polymer stretching)
+- **Interface**: VOF facets (cyan lines)
