@@ -63,9 +63,11 @@ event properties (i++)
     }
 
   /**
-  The redistancing operation itself is quite expensive. */
+  The redistancing operation itself is quite expensive. We do not use
+  the second-order subcell correction because it tends to introduce
+  noise on the distance field and does not seem to improve results. */
   
-  redistance (d, imax = 3);
+  redistance (d, imax = 3, phixxmin = HUGE);
 }
 
 /**

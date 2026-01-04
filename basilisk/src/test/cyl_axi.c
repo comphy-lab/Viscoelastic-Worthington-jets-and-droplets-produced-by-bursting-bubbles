@@ -199,5 +199,5 @@ plot 'log' u (R*2**$1):4 w lp t 'Max', \
 
 * [Charge relaxation in a planar cross-section](cyl_planar.c)
 * [Same test with 
-   Gerris](http://gerris.dalembert.upmc.fr/gerris/tests/tests/cylinder.html)
+   Gerris](https://gerris.dalembert.upmc.fr/gerris/tests/tests/cylinder.html)
 */

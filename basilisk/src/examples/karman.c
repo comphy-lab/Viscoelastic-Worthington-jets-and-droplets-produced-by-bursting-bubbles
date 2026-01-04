@@ -126,5 +126,5 @@ event adapt (i++) {
 /**
 ## See also
 
-* [Same example with Gerris](http://gerris.dalembert.upmc.fr/gerris/examples/examples/cylinder.html)
+* [Same example with Gerris](https://gerris.dalembert.upmc.fr/gerris/examples/examples/cylinder.html)
 */

@@ -171,5 +171,5 @@ plot 'log' u (R*2**$1):4 w lp t 'Max', \
 
 * [Charge relaxation in an axisymmetric insulated conducting column](cyl_axi.c)
 * [Same test with 
-   Gerris](http://gerris.dalembert.upmc.fr/gerris/tests/tests/cylinder.html#planar)
+   Gerris](https://gerris.dalembert.upmc.fr/gerris/tests/tests/cylinder.html#planar)
 */

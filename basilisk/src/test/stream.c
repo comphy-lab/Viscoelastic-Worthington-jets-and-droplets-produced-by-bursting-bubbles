@@ -122,4 +122,4 @@ unset multiplot
 ## See also
 
 * [Merging of two vortices (centered Euler solver)](vortex.c)
-* [Coalescence of a pair of Gaussian vortices (Gerris logo)](http://gerris.dalembert.upmc.fr/gerris/examples/examples/logo.html) */
+* [Coalescence of a pair of Gaussian vortices (Gerris logo)](https://gerris.dalembert.upmc.fr/gerris/examples/examples/logo.html) */

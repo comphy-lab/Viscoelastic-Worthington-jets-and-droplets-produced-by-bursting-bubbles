@@ -85,7 +85,7 @@ plot 'log' index 'Beta = 1.607e-11' u 1:($3 + $4) w l t 'Total',	\
   year = 	 {2007},
   number =       {16},
   pages =        {224-249},
-  url =          {http://gerris.dalembert.upmc.fr/ocean.pdf}
+  url =          {https://gerris.dalembert.upmc.fr/ocean.pdf}
 }
 
 @phdthesis{dupont2001,
@@ -94,7 +94,7 @@ plot 'log' index 'Beta = 1.607e-11' u 1:($3 + $4) w l t 'Total',	\
            circulation in basins with irregular coasts}, 
   year  = {2001},
   school = {McGill University, Montreal},
-  url = {http://basilisk.fr/dupont2001.pdf}
+  url = {https://basilisk.fr/dupont2001.pdf}
 }
 
 @article{leroux1998,
@@ -111,7 +111,7 @@ plot 'log' index 'Beta = 1.607e-11' u 1:($3 + $4) w l t 'Total',	\
 ## See also
 
 * [Same test with
-  Gerris](http://gerris.dalembert.upmc.fr/gerris/tests/tests/geo.html)
+  Gerris](https://gerris.dalembert.upmc.fr/gerris/tests/tests/geo.html)
 */
 
 #include "grid/multigrid.h"

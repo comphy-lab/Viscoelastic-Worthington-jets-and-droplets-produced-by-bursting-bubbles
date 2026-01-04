@@ -39,7 +39,7 @@ plot for [i = minlevel:maxlevel] \
 
 ## See also
 
-* [Similar test with Gerris](http://gerris.dalembert.upmc.fr/gerris/tests/tests/poisson.html#circle)
+* [Similar test with Gerris](https://gerris.dalembert.upmc.fr/gerris/tests/tests/poisson.html#circle)
 */
 
 #include "utils.h"

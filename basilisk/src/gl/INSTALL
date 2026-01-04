@@ -125,7 +125,7 @@ these libraries directly from source. Something like the following
 recipe should work on most UNIX systems:
 
 ~~~bash
-wget http://basilisk.fr/src/gl/mesa-17.2.4.tar.gz
+wget https://basilisk.fr/src/gl/mesa-17.2.4.tar.gz
 tar xzvf mesa-17.2.4.tar.gz
 cd mesa-17.2.4
 ./configure --prefix=$HOME/local --enable-osmesa \

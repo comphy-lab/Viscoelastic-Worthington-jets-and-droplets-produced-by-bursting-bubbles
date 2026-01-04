@@ -23,7 +23,7 @@ function MenubarHelp( editor ) {
 	option.setTextContent( strings.getKey( 'menubar/help/source_code' ) );
 	option.onClick( function () {
 
-		window.open( 'http://basilisk.fr/src/jview/', '_blank' );
+		window.open( 'https://basilisk.fr/src/jview/', '_blank' );
 
 	} );
 	options.add( option );
@@ -35,7 +35,7 @@ function MenubarHelp( editor ) {
 	option.setTextContent( strings.getKey( 'menubar/help/about' ) );
 	option.onClick( function () {
 
-		window.open( 'http://basilisk.fr/src/jview/README', '_blank' );
+		window.open( 'https://basilisk.fr/src/jview/README', '_blank' );
 
 	} );
 	options.add( option );

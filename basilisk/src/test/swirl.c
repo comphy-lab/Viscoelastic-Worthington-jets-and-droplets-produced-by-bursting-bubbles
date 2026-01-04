@@ -117,5 +117,5 @@ plot [0:6]'analytical' u 1:2 w l t '-F({/Symbol z})',	     \
 ## See also
 
 * [Same case with 
-   Gerris](http://gerris.dalembert.upmc.fr/gerris/tests/tests/swirl.html)
+   Gerris](https://gerris.dalembert.upmc.fr/gerris/tests/tests/swirl.html)
 */

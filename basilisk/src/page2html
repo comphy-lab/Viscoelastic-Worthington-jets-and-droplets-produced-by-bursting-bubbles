@@ -6,7 +6,7 @@ usage()
 usage: page2html -url URL -ext EXT -type TYPE FILE
 
   If -url is not specified it is set to $BASE_URL (if defined) or to
-  http://basilisk.fr
+  https://basilisk.fr
 
   The EXT extension (typically .html) is added to page links.
 
@@ -83,7 +83,7 @@ case $basename in
 esac
 
 if test -z "$BASE_URL" -a -z "$DOCUMENT_ROOT"; then
-    BASE_URL="http://basilisk.fr"
+    BASE_URL="https://basilisk.fr"
 fi
 
 cpreproc()

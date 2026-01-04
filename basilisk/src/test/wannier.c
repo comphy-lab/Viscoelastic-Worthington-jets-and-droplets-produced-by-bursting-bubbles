@@ -219,5 +219,5 @@ plot '' u 1:4 pt 6 t 'max', exp(f(log(x))) t ftitle(a,b), \
 }
 ~~~
 
-* [Same case with Gerris](http://gerris.dalembert.upmc.fr/gerris/tests/tests/wannier.html): Note that the solution is much less acurate (first-order convergence only).
+* [Same case with Gerris](https://gerris.dalembert.upmc.fr/gerris/tests/tests/wannier.html): Note that the solution is much less acurate (first-order convergence only).
 */
