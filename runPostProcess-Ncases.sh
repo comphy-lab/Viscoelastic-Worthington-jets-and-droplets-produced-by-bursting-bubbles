@@ -38,7 +38,7 @@ usage() {
 Usage: $0 [OPTIONS] CASE_NO [CASE_NO ...]
 
 Run post-processing pipeline on multiple viscoelastic bubble bursting simulation cases.
-For each case, generates video frames with strain-rate and conformation tensor fields,
+For each case, generates video frames with strain-rate and velocity fields,
 and interface facets.
 
 Options:
@@ -50,11 +50,11 @@ Options:
     --ZMAX F            Maximum Z coordinate (default: 4.0)
     --RMAX F            Maximum R coordinate (default: 2.0)
 
-    Colorbar bounds (VE-specific):
+    Colorbar bounds:
     --d2-vmin F         Min value for strain-rate colorbar (default: -3.0)
     --d2-vmax F         Max value for strain-rate colorbar (default: 2.0)
-    --tra-vmin F        Min value for tr(A) colorbar (default: -3.0)
-    --tra-vmax F        Max value for tr(A) colorbar (default: 2.0)
+    --vel-vmin F        Min value for velocity colorbar (default: 0.0)
+    --vel-vmax F        Max value for velocity colorbar (default: 1.0)
 
     --skip-video-encode Skip ffmpeg video encoding after frame generation
 
@@ -101,8 +101,8 @@ ZMAX="4.0"
 RMAX="2.0"
 D2_VMIN="-3.0"
 D2_VMAX="2.0"
-TRA_VMIN="-3.0"
-TRA_VMAX="2.0"
+VEL_VMIN="0.0"
+VEL_VMAX="1.0"
 
 SKIP_VIDEO_ENCODE=0
 DRY_RUN=0
@@ -160,12 +160,12 @@ while [[ $# -gt 0 ]]; do
             D2_VMAX="$2"
             shift 2
             ;;
-        --tra-vmin)
-            TRA_VMIN="$2"
+        --vel-vmin)
+            VEL_VMIN="$2"
             shift 2
             ;;
-        --tra-vmax)
-            TRA_VMAX="$2"
+        --vel-vmax)
+            VEL_VMAX="$2"
             shift 2
             ;;
         --skip-video-encode)
@@ -257,7 +257,7 @@ echo "  nGFS:       $NGFS"
 echo "  tsnap:      $TSNAP"
 echo "  GridsPerR:  $GRIDS_PER_R"
 echo "  Domain:     Z=[$ZMIN, $ZMAX], R=[0, $RMAX]"
-echo "  Colorbars:  D2=[$D2_VMIN, $D2_VMAX], tr(A)=[$TRA_VMIN, $TRA_VMAX]"
+echo "  Colorbars:  D2=[$D2_VMIN, $D2_VMAX], vel=[$VEL_VMIN, $VEL_VMAX]"
 echo ""
 echo "Pipeline:"
 [ $SKIP_VIDEO_ENCODE -eq 0 ] && echo "  [1] Video.py (frames + video)" || echo "  [1] Video.py (frames only, video SKIPPED)"
@@ -287,8 +287,8 @@ run_video() {
         "--RMAX" "${RMAX}"
         "--d2-vmin" "${D2_VMIN}"
         "--d2-vmax" "${D2_VMAX}"
-        "--tra-vmin" "${TRA_VMIN}"
-        "--tra-vmax" "${TRA_VMAX}"
+        "--vel-vmin" "${VEL_VMIN}"
+        "--vel-vmax" "${VEL_VMAX}"
     )
 
     # Add skip flag if needed

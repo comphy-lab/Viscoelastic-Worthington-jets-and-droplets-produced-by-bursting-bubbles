@@ -5,14 +5,14 @@
 # Last updated: Jan 2026
 
 """
-Viscoelastic post-processing pipeline for Basilisk bubble bursting simulations.
+Post-processing pipeline for Basilisk bubble bursting simulations.
 
 Overview
 --------
 The helper executables `postProcess/getFacet` and `postProcess/getData` are
 compiled as part of the Basilisk workflow. This Python wrapper shells out to
 those binaries for every snapshot, reshapes the returned grids, and renders
-axisymmetric visualisations with strain-rate and conformation tensor fields.
+axisymmetric visualisations with strain-rate and velocity fields.
 
 Usage
 -----
@@ -37,7 +37,6 @@ from typing import Sequence, Tuple, Optional
 
 import matplotlib
 import matplotlib.pyplot as plt
-import matplotlib.colors as mcolors
 import numpy as np
 from matplotlib.collections import LineCollection
 from matplotlib.ticker import StrMethodFormatter
@@ -52,10 +51,6 @@ if shutil.which("latex"):
         matplotlib.rcParams["text.usetex"] = False
 else:
     matplotlib.rcParams["text.usetex"] = False
-
-# Custom colormap for conformation tensor trace (polymer stretching)
-CUSTOM_COLORS = ["white", "#DA8A67", "#A0522D", "#400000"]
-CUSTOM_CMAP = mcolors.LinearSegmentedColormap.from_list("custom_hot", CUSTOM_COLORS)
 
 # Script directory for finding helper executables
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -99,11 +94,11 @@ class RuntimeConfig:
     skip_video_encode: bool
     framerate: int
     output_fps: int
-    # VE-specific colorbar bounds
+    # Colorbar bounds
     d2_vmin: float
     d2_vmax: float
-    tra_vmin: float
-    tra_vmax: float
+    vel_vmin: float
+    vel_vmax: float
 
     @property
     def rmin(self) -> float:
@@ -155,15 +150,13 @@ class FieldData:
     """
     Structured holder around the grids returned by getData.
 
-    For VE simulations, includes strain-rate (D2), velocity, and
-    conformation tensor trace (trA).
+    Includes strain-rate (D2) and velocity magnitude fields.
     """
 
     R: np.ndarray
     Z: np.ndarray
     strain_rate: np.ndarray
     velocity: np.ndarray
-    conf_trace: np.ndarray  # VE-specific: log10(tr(A) - 1)
     nz: int
 
     @property
@@ -191,7 +184,7 @@ def parse_arguments() -> RuntimeConfig:
         RuntimeConfig: Configuration object containing all parameters.
     """
     parser = argparse.ArgumentParser(
-        description="Generate snapshot videos for viscoelastic bubble bursting."
+        description="Generate snapshot videos for bubble bursting simulations."
     )
     parser.add_argument("--CPUs", type=int, default=4, help="Number of CPUs to use")
     parser.add_argument(
@@ -231,22 +224,22 @@ def parse_arguments() -> RuntimeConfig:
         "--output-fps", type=int, default=30,
         help="Output video framerate (default: 30)"
     )
-    # VE-specific colorbar bounds
+    # Colorbar bounds
     parser.add_argument(
-        "--d2-vmin", type=float, default=-3.0,
-        help="Min value for strain-rate colorbar (default: -3.0)"
+        "--d2-vmin", type=float, default=-2.0,
+        help="Min value for strain-rate colorbar (default: -2.0)"
     )
     parser.add_argument(
         "--d2-vmax", type=float, default=2.0,
         help="Max value for strain-rate colorbar (default: 2.0)"
     )
     parser.add_argument(
-        "--tra-vmin", type=float, default=-3.0,
-        help="Min value for conformation tensor trace colorbar (default: -3.0)"
+        "--vel-vmin", type=float, default=0.0,
+        help="Min value for velocity colorbar (default: 0.0)"
     )
     parser.add_argument(
-        "--tra-vmax", type=float, default=2.0,
-        help="Max value for conformation tensor trace colorbar (default: 2.0)"
+        "--vel-vmax", type=float, default=1.0,
+        help="Max value for velocity colorbar (default: 1.0)"
     )
     args = parser.parse_args()
 
@@ -268,8 +261,8 @@ def parse_arguments() -> RuntimeConfig:
         output_fps=args.output_fps,
         d2_vmin=args.d2_vmin,
         d2_vmax=args.d2_vmax,
-        tra_vmin=args.tra_vmin,
-        tra_vmax=args.tra_vmax,
+        vel_vmin=args.vel_vmin,
+        vel_vmax=args.vel_vmax,
     )
 
 
@@ -337,8 +330,7 @@ def get_field(filename: str, case_dir: str, zmin: float, zmax: float, rmax: floa
     """Read field arrays for a single snapshot from getData helper.
 
     Shells out to the compiled ``getData`` executable, which samples the
-    velocity, strain-rate, and conformation tensor trace fields on a
-    structured grid.
+    strain-rate and velocity fields on a structured grid.
 
     Args:
         filename: Relative path to snapshot file (e.g., 'intermediate/snapshot-0.0100')
@@ -363,7 +355,7 @@ def get_field(filename: str, case_dir: str, zmin: float, zmax: float, rmax: floa
         ],
         cwd=case_dir,
     )
-    Rtemp, Ztemp, D2temp, veltemp, trAtemp = [], [], [], [], []
+    Rtemp, Ztemp, D2temp, veltemp = [], [], [], []
 
     for n1 in range(len(temp2)):
         temp3 = temp2[n1].split(" ")
@@ -373,13 +365,11 @@ def get_field(filename: str, case_dir: str, zmin: float, zmax: float, rmax: floa
         Rtemp.append(float(temp3[1]))
         D2temp.append(float(temp3[2]))
         veltemp.append(float(temp3[3]))
-        trAtemp.append(float(temp3[4]))
 
     R = np.asarray(Rtemp)
     Z = np.asarray(Ztemp)
     D2 = np.asarray(D2temp)
     vel = np.asarray(veltemp)
-    trA = np.asarray(trAtemp)
     nz = int(len(Z) / nr)
 
     log_status(f"{os.path.basename(filename)}: nz = {nz}")
@@ -388,9 +378,8 @@ def get_field(filename: str, case_dir: str, zmin: float, zmax: float, rmax: floa
     Z.resize((nz, nr))
     D2.resize((nz, nr))
     vel.resize((nz, nr))
-    trA.resize((nz, nr))
 
-    return FieldData(R=R, Z=Z, strain_rate=D2, velocity=vel, conf_trace=trA, nz=nz)
+    return FieldData(R=R, Z=Z, strain_rate=D2, velocity=vel, nz=nz)
 
 
 def build_snapshot_info(index: int, config: RuntimeConfig) -> SnapshotInfo:
@@ -469,9 +458,9 @@ def plot_snapshot(
     """
     Render and persist a single snapshot figure.
 
-    For VE simulations:
+    Visualization:
     - Left side: log10(D:D) strain-rate field
-    - Right side: log10(tr(A) - 1) conformation tensor trace
+    - Right side: velocity magnitude
     """
     fig, ax = plt.subplots()
     fig.set_size_inches(*style.figure_size)
@@ -496,21 +485,21 @@ def plot_snapshot(
         vmin=config.d2_vmin,
     )
 
-    # Right: Conformation tensor trace (VE-specific)
+    # Right: Velocity magnitude
     cntrl2 = ax.imshow(
-        field_data.conf_trace,
+        field_data.velocity,
         interpolation="Bilinear",
-        cmap=CUSTOM_CMAP,
+        cmap="Purples",
         origin="lower",
         extent=[rminp, rmaxp, zminp, zmaxp],
-        vmax=config.tra_vmax,
-        vmin=config.tra_vmin,
+        vmax=config.vel_vmax,
+        vmin=config.vel_vmin,
     )
 
     ax.set_aspect("equal")
     ax.set_xlim(bounds.rmin, bounds.rmax)
     ax.set_ylim(bounds.zmin, bounds.zmax)
-    ax.set_title(f"$t/\\tau_\\gamma$ = {snapshot.time:4.3f}", fontsize=style.tick_label_size)
+    ax.set_title(f"$t/\\tau_0$ = {snapshot.time:4.3f}", fontsize=style.tick_label_size)
     ax.axis("off")
 
     add_colorbar(
@@ -518,7 +507,7 @@ def plot_snapshot(
         ax,
         cntrl1,
         align="left",
-        label=r"$\log_{10}\left(\|\mathcal{D}\|\right)$",
+        label=r"$\log_{10}\left(\boldsymbol{\mathcal{D}:\mathcal{D}}\right)$",
         style=style,
     )
     add_colorbar(
@@ -526,7 +515,7 @@ def plot_snapshot(
         ax,
         cntrl2,
         align="right",
-        label=r"$\log_{10}\left(\text{tr}(\mathcal{A})-1\right)$",
+        label=r"$\|\boldsymbol{u}\|$",
         style=style,
     )
 

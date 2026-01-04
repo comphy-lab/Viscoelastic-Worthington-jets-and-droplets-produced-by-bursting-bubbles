@@ -153,8 +153,8 @@ python3 postProcess/Video.py --caseToProcess simulationCases/1000
 # Skip video encoding (only generate frames)
 ./runPostProcess-Ncases.sh --skip-video-encode 1000
 
-# Adjust colorbar bounds (VE-specific)
-./runPostProcess-Ncases.sh --d2-vmin -2 --d2-vmax 3 --tra-vmin -2 --tra-vmax 3 1000
+# Adjust colorbar bounds
+./runPostProcess-Ncases.sh --d2-vmin -2 --d2-vmax 3 --vel-vmin 0 --vel-vmax 2 1000
 ```
 
 ### Post-Processing Output
@@ -164,5 +164,5 @@ Each case generates:
 
 ### Visualization Fields
 - **Left colorbar**: log₁₀(D:D) - Strain-rate tensor magnitude
-- **Right colorbar**: log₁₀(tr(A)-1) - Conformation tensor trace (polymer stretching)
+- **Right colorbar**: |u| - Velocity magnitude
 - **Interface**: VOF facets (cyan lines)
