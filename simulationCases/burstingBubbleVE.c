@@ -39,7 +39,7 @@ Where:
 #include "navier-stokes/centered.h"
 
 // Uncomment to use the scalar version of the viscoelastic code
-// #define _SCALAR
+#define _SCALAR 1
 
 #if !_SCALAR
 #include "log-conform-viscoelastic.h" 
@@ -58,7 +58,7 @@ Where:
 - `AErr`: Error tolerance for conformation tensor (1e-3)
 - `Ldomain`: Domain size in characteristic lengths (8)
 */
-#define FILTERED // Smear density and viscosity jumps
+#define FILTERED 1// Smear density and viscosity jumps
 #include "two-phaseVE.h"
 #include "navier-stokes/conserving.h"
 #include "tension.h"
@@ -71,7 +71,6 @@ Where:
 
 // Error tolerances
 #define fErr (1e-3)  // Error tolerance in f1 VOF
-#define KErr (1e-6)  // Error tolerance in VoF curvature calculated using height function method
 #define VelErr (1e-3) // Error tolerances in velocity - Use 1e-2 for low Oh and 1e-3 to 5e-3 for high Oh/moderate to high J
 #define AErr (1e-3)   // Error tolerances in conformation inside the liquid
 
@@ -231,15 +230,19 @@ event adapt(i++) {
   scalar KAPPA[];
   curvature(f, KAPPA);
 
-#if !_SCALAR
-  adapt_wavelet((scalar *){f, u.x, u.y, conform_p.x.x, conform_p.y.y, conform_p.y.x, conform_qq, KAPPA},
-    (double[]){fErr, VelErr, VelErr, AErr, AErr, AErr, AErr, KErr},
+  adapt_wavelet((scalar *){f, u.x, u.y},
+    (double[]){fErr, VelErr, VelErr},
     MAXlevel, MAXlevel-6);
-#else
-  adapt_wavelet((scalar *){f, u.x, u.y, A11, A22, A12, AThTh, KAPPA},
-    (double[]){fErr, VelErr, VelErr, AErr, AErr, AErr, AErr, KErr},
-    MAXlevel, MAXlevel-6);
-#endif
+
+// #if !_SCALAR
+//   adapt_wavelet((scalar *){f, u.x, u.y, conform_p.x.x, conform_p.y.y, conform_p.y.x, conform_qq, KAPPA},
+//     (double[]){fErr, VelErr, VelErr, AErr, AErr, AErr, AErr, KErr},
+//     MAXlevel, MAXlevel-6);
+// #else
+//   adapt_wavelet((scalar *){f, u.x, u.y, A11, A22, A12, AThTh, KAPPA},
+//     (double[]){fErr, VelErr, VelErr, AErr, AErr, AErr, AErr, KErr},
+//     MAXlevel, MAXlevel-6);
+// #endif
 }
 
 /**
