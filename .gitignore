@@ -1,4 +1,4 @@
-# basililsk specific files
+# Basilisk specific files
 **/*.DS_Store
 **/intermediate*
 **/log*.dat
@@ -14,19 +14,33 @@
 **/.project_config
 **/*.tst
 **/*.s.d
+
 # Custom executables (add your specific executable names here)
 **/burstingBubbleVE
 **/getFacet
-**/getData-elastic-scalar
+**/getData
 **/getview3D
 **/dump
 **/log
+**/display.html
+# Case folders (4-digit numbered directories - simulation outputs)
+simulationCases/[0-9][0-9][0-9][0-9]/
 
-# never exclude these files
-!*.c
-!*.h
-!*.sbatch
-!*.sh
+# Sweep temporary files
+.sweep_tmp_*
+
+# SLURM outputs
+slurm-*.out
+slurm-*.err
+
+# Never exclude these files (root level only, does not affect gitignored directories)
+!/*.c
+!/*.h
+!/*.sbatch
+!/*.sh
+!/*.params
+!/default.params
+!/sweep.params
 
 # Object files
 *.o

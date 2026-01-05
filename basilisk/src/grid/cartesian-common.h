@@ -3,74 +3,86 @@
 void (* debug)    (Point);
 
 @define _val_constant(a,k,l,m) ((const double) _constant[a.i -_NVARMAX])
-@define diagonalize(a)
 @define val_diagonal(a,k,l,m) ((k) == 0 && (l) == 0 && (m) == 0)
 
-@undef VARIABLES
-@def VARIABLES
-  double Delta = L0*_DELTA; /* cell size */
-  double Delta_x = Delta; /* cell size (with mapping) */
-#if dimension > 1
-  double Delta_y = Delta; /* cell size (with mapping) */
-#endif
-#if dimension > 2
-  double Delta_z = Delta; /* cell size (with mapping) */
-#endif
-  /* cell/face center coordinates */
-  double x = (ig/2. + _I + 0.5)*Delta + X0; NOT_UNUSED(x);
-#if dimension > 1
-  double y = (jg/2. + _J + 0.5)*Delta + Y0;
-#else
-  double y = 0.;
-#endif
- NOT_UNUSED(y);
-#if dimension > 2
-  double z = (kg/2. + _K + 0.5)*Delta + Z0;
-#else
-  double z = 0.;
-#endif
-  NOT_UNUSED(z);
-  /* we need this to avoid compiler warnings */
-  NOT_UNUSED(Delta);
-  NOT_UNUSED(Delta_x);
-#if dimension > 1
-  NOT_UNUSED(Delta_y);
-#endif
-#if dimension > 2
-  NOT_UNUSED(Delta_z);
-#endif
-  /* and this when catching FPEs */
-  _CATCH;
-@
-
 #include "fpe.h"
+#include "stencils.h"
 
-@define end_foreach_face()
-
-@def foreach_point(...)
+macro2 foreach_point (double _x = 0., double _y = 0., double _z = 0.,
+		      char flags = 0, Reduce reductions = None)
 {
-  int ig = 0, jg = 0, kg = 0; NOT_UNUSED(ig); NOT_UNUSED(jg); NOT_UNUSED(kg);
-  coord _p = { S__VA_ARGS__ };
-  Point point = locate (_p.x, _p.y, _p.z); // fixme
-  if (point.level >= 0) {
-    POINT_VARIABLES
-@
-@define end_foreach_point() }}
+  {
+    int ig = 0, jg = 0, kg = 0; NOT_UNUSED(ig); NOT_UNUSED(jg); NOT_UNUSED(kg);
+    coord _p = { _x, _y, _z };
+    Point point = locate (_p.x, _p.y, _p.z); // fixme
+    if (point.level >= 0)
+      {...}
+  }
+}
 
-@def foreach_region(p, box, n)
- OMP_PARALLEL() { NOT_UNUSED (p);
-    coord p = {0, 0, box[0].z};
-    OMP(omp for schedule(static))
-      for (int _i = 0; _i < (int) n.x; _i++) {
-	p.x = box[0].x + (box[1].x - box[0].x)/n.x*(_i + 0.5);
-	for (int _j = 0; _j < (int) n.y; _j++) {
-	  p.y = box[0].y + (box[1].y - box[0].y)/n.y*(_j + 0.5);
-	  Point point = locate (p.x, p.y, p.z); // fixme
+macro2 foreach_region (coord p, coord box[2], coord n,
+		       char flags = 0, Reduce reductions = None)
+{
+  {
+    if (n.x < 1) n.x = 1;
+    if (n.y < 1) n.y = 1;
+    if (n.z < 1) n.z = 1;
+    //  OMP(omp for schedule(static))
+    for (int _i = 0; _i < (int) n.x; _i++) {
+      p.x = box[0].x + (box[1].x - box[0].x)/n.x*(_i + 0.5);
+      for (int _j = 0; _j < (int) n.y; _j++) {
+	p.y = box[0].y + (box[1].y - box[0].y)/n.y*(_j + 0.5);
+	for (int _k = 0; _k < (int) n.z; _k++) {
+	  p.z = box[0].z + (box[1].z - box[0].z)/n.z*(_k + 0.5);
+	  Point point = locate (p.x, p.y, p.z);
 	  if (point.level >= 0) {
 	    int ig = 0, jg = 0, kg = 0; NOT_UNUSED(ig); NOT_UNUSED(jg); NOT_UNUSED(kg);
-	    POINT_VARIABLES
-@
-@define end_foreach_region() }}}}
+	    {...}
+	  }
+	}
+      }
+    }
+  }
+}
+
+/**
+Dirichlet and Neumann boundary conditions */
+
+static inline
+double dirichlet (double expr, Point point = point, scalar s = _s)
+{
+  return 2.*expr - s[];
+}
+
+static inline
+double dirichlet_homogeneous (double expr, Point point = point, scalar s = _s)
+{
+  return - s[];
+}
+
+static inline
+double dirichlet_face (double expr)
+{
+  return expr;
+}
+
+static inline
+double dirichlet_face_homogeneous (double expr)
+{
+  return 0.;
+}
+
+static inline
+double neumann (double expr, Point point = point, scalar s = _s)
+{
+  return Delta*expr + s[];
+}
+
+static inline
+double neumann_homogeneous (double expr, Point point = point, scalar s = _s)
+{
+  return s[];
+}
 
 /**
 Register functions on GPUs */
@@ -521,6 +533,17 @@ void boundary_internal (scalar * list, const char * fname, int line)
 #endif
     }
   if (flux) {
+#if PRINTBOUNDARY
+    int i = 0;
+    foreach_dimension()
+      if (listf.x) {
+	fprintf (stderr, "boundary_internal: flux %c:", 'x' + i);
+	for (scalar s in listf.x)
+	  fprintf (stderr, " %d:%s", s.i, s.name);
+	fputc ('\n', stderr);
+      }
+    i++;
+#endif
     boundary_face (listf);
     foreach_dimension()
       free (listf.x);
@@ -544,11 +567,16 @@ void cartesian_boundary_level (scalar * list, int l)
   boundary_iterate (level, list, l);
 }
 
-void cartesian_boundary_face (vectorl list)
+void cartesian_boundary_face (vectorl vl)
 {
+  scalar * listc = NULL;
   foreach_dimension()
-    for (scalar s in list.x)
+    for (scalar s in vl.x) {
       s.dirty = 2;
+      listc = list_add_depends (listc, s);
+    }
+  boundary_level (listc, -1);
+  free (listc);
 }
 
 static double symmetry (Point point, Point neighbor, scalar s, bool * data)
@@ -1010,8 +1038,15 @@ double getvalue (Point point, scalar s, int i, int j, int k)
 
 void default_stencil (Point p, scalar * list)
 {
-  for (scalar s in list)
-    s.input = true, s.width = 2;
+  for (scalar s in list) {
+    if (s.v.x.i != -1) {
+      vector v = s.v;
+      for (scalar c in {v})
+	c.input = c.output = c.nowarning = true, c.width = 2;
+    }
+    else
+      s.input = s.output = s.nowarning = true, s.width = 2;
+  }
 }
 
 /**
@@ -1030,9 +1065,20 @@ void stencil_val (Point p, scalar s, int i, int j, int k,
 {
   if (is_constant(s) || s.i < 0)
     return;
+  if (s.block < 0)
+    s.i += s.block;
+  if (!s.name) {
+    fprintf (stderr, "%s:%d: error: trying to access a deleted field\n",
+	     file, line);
+    exit (1);
+  }
   int index[] = {i, j, k};
-  for (int d = 0; d < dimension; d++)
-    index[d] += (&p.i)[d];      
+  for (int d = 0; d < dimension; d++) {
+    if (index[d] == o_stencil)
+      index[d] = 2;
+    else
+      index[d] += (&p.i)[d];
+  }
   bool central = true;
   for (int d = 0; d < dimension; d++) {
     if (!overflow && (index[d] > 2 || index[d] < - 2)) {
@@ -1064,8 +1110,18 @@ void stencil_val (Point p, scalar s, int i, int j, int k,
 void stencil_val_a (Point p, scalar s, int i, int j, int k, bool input,
 		    const char * file, int line)
 {
-  if (is_constant(s) || s.i < 0)
-    abort();
+  if (is_constant(s) || s.i < 0) {
+    fprintf (stderr, "%s:%d: error: trying to modify a%s field\n",
+	     file, line, s.i < 0 ? "n undefined" : " constant");
+    exit (1);
+  }
+  if (s.block < 0)
+    s.i += s.block;
+  if (!s.name) {
+    fprintf (stderr, "%s:%d: error: trying to access a deleted field\n",
+	     file, line);
+    exit (1);
+  }
   int index[] = {i, j, k};
   for (int d = 0; d < dimension; d++)
     index[d] += (&p.i)[d];    
@@ -1082,12 +1138,3 @@ void stencil_val_a (Point p, scalar s, int i, int j, int k, bool input,
     s.input = true;
   s.output = true;
 }
-
-/**
-Macros overloaded by the interpreter. */
-
-@define dimensional(...)
-#define show_dimension(...) show_dimension_internal (__VA_ARGS__ + 10293847566574839201.)
-@define show_dimension_internal(...)
-@define display_value(...)
-@define interpreter_verbosity(...)

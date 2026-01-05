@@ -39,7 +39,7 @@ Where:
 #include "navier-stokes/centered.h"
 
 // Uncomment to use the scalar version of the viscoelastic code
-// #define _SCALAR
+#define _SCALAR 1
 
 #if !_SCALAR
 #include "log-conform-viscoelastic.h" 
@@ -58,7 +58,7 @@ Where:
 - `AErr`: Error tolerance for conformation tensor (1e-3)
 - `Ldomain`: Domain size in characteristic lengths (8)
 */
-#define FILTERED // Smear density and viscosity jumps
+#define FILTERED 1// Smear density and viscosity jumps
 #include "two-phaseVE.h"
 #include "navier-stokes/conserving.h"
 #include "tension.h"
@@ -71,7 +71,6 @@ Where:
 
 // Error tolerances
 #define fErr (1e-3)  // Error tolerance in f1 VOF
-#define KErr (1e-6)  // Error tolerance in VoF curvature calculated using height function method
 #define VelErr (1e-3) // Error tolerances in velocity - Use 1e-2 for low Oh and 1e-3 to 5e-3 for high Oh/moderate to high J
 #define AErr (1e-3)   // Error tolerances in conformation inside the liquid
 
@@ -107,20 +106,20 @@ int main(int argc, char const *argv[]) {
   L0 = Ldomain;
   origin(-L0/2., 0.);
   
-  // Values taken from the terminal. Here we use some representative values.
-  // In production run, you can pass it from the command line.
-  MAXlevel = 10; // atoi(argv[1]);
-  De = 0.1;      // atof(argv[2]); // Use 1e30 to simulate the De → ∞ limit
-  Ec = 0.01;     // atof(argv[3]);
-  Oh = 1e-2;     // atof(argv[4]);
-  Bond = 1e-3;   // atof(argv[5]);
-  tmax = 1e0;    // atof(argv[6]);
-
   // Ensure that all the variables were transferred properly from the terminal or job script.
-  // if (argc < 7){
-  //   fprintf(ferr, "Lack of command line arguments. Check! Need %d more arguments\n", 7-argc);
-  //   return 1;
-  // }
+  if (argc < 7){
+    fprintf(ferr, "Usage: %s MAXlevel De Ec Oh Bond tmax\n", argv[0]);
+    fprintf(ferr, "Lack of command line arguments. Need %d more arguments\n", 7-argc);
+    return 1;
+  }
+
+  // Values taken from the terminal
+  MAXlevel = atoi(argv[1]);
+  De = atof(argv[2]); // Use 1e30 to simulate the De → ∞ limit
+  Ec = atof(argv[3]);
+  Oh = atof(argv[4]);
+  Bond = atof(argv[5]);
+  tmax = atof(argv[6]);
   
   init_grid(1 << 5);
   
@@ -231,15 +230,19 @@ event adapt(i++) {
   scalar KAPPA[];
   curvature(f, KAPPA);
 
-#if !_SCALAR
-  adapt_wavelet((scalar *){f, u.x, u.y, conform_p.x.x, conform_p.y.y, conform_p.y.x, conform_qq, KAPPA},
-    (double[]){fErr, VelErr, VelErr, AErr, AErr, AErr, AErr, KErr},
+  adapt_wavelet((scalar *){f, u.x, u.y},
+    (double[]){fErr, VelErr, VelErr},
     MAXlevel, MAXlevel-6);
-#else
-  adapt_wavelet((scalar *){f, u.x, u.y, A11, A22, A12, AThTh, KAPPA},
-    (double[]){fErr, VelErr, VelErr, AErr, AErr, AErr, AErr, KErr},
-    MAXlevel, MAXlevel-6);
-#endif
+
+// #if !_SCALAR
+//   adapt_wavelet((scalar *){f, u.x, u.y, conform_p.x.x, conform_p.y.y, conform_p.y.x, conform_qq, KAPPA},
+//     (double[]){fErr, VelErr, VelErr, AErr, AErr, AErr, AErr, KErr},
+//     MAXlevel, MAXlevel-6);
+// #else
+//   adapt_wavelet((scalar *){f, u.x, u.y, A11, A22, A12, AThTh, KAPPA},
+//     (double[]){fErr, VelErr, VelErr, AErr, AErr, AErr, AErr, KErr},
+//     MAXlevel, MAXlevel-6);
+// #endif
 }
 
 /**

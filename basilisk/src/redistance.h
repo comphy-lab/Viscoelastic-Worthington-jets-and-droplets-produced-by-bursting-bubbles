@@ -76,7 +76,7 @@ static inline double minmod3 (double a, double b)
 This function fills *dphi* with $\partial_t\phi$ .*/
 
 static
-void dphidt (scalar phi, scalar dphi, scalar phi0, double cfl)
+void dphidt (scalar phi, scalar dphi, scalar phi0, const double cfl, const double phixxmin)
 {
   foreach() {
     double dt = cfl*Delta;
@@ -142,21 +142,21 @@ void dphidt (scalar phi, scalar dphi, scalar phi0, double cfl)
 	  if (phi0[]*phi0[j] < 0.) {
 
 	    /**
-	    We compute the subcell fix near the interface.
+	    We compute the subcell fix near the interface (see section 2.2 in [Min, 2010](#min2010)).
 
 	    $$
 	    \Delta x^+ = \left\{ \begin{array}{ll}
-	    \Delta x \cdot \left( \dfrac{\phi^0_{i,j}-\phi^0_{i+1,j} -
+	    \Delta x \cdot \left( \frac{1}{2} + \dfrac{\phi^0_{i,j}-\phi^0_{i+1,j} -
 	    \text{sgn}(\phi^0_{i,j}-\phi^0_{i+1,j})\sqrt{D}}{}\right) 
-	    \text{ if } \left| \phi^0_{xx}\right| >\epsilon \		\
-	    \Delta x \cdot \dfrac{\phi^0_{ij}}{\phi^0_{i,j}-\phi^0_{i+1,j}} \text{ else.}\ \
+	    \text{ if } \left| \phi^0_{xx}\right| >\epsilon \\
+	    \Delta x \cdot \dfrac{\phi^0_{ij}}{\phi^0_{i,j}-\phi^0_{i+1,j}} \text{ else.} \\
 	    \end{array}
 	    \right.
 	    $$
 	    with
 	    $$
 	    \phi_{xx}^0 = \text{minmod}(\phi^0_{i-1,j}-2\phi^0_{ij}+\phi^0_{i+1,j}, 
-	    \phi^0_{i,j}-2\phi^0_{i+1j}+\phi^0_{i+2,j}) \		\
+	    \phi^0_{i,j}-2\phi^0_{i+1j}+\phi^0_{i+2,j}) \\
 	    D = \left( \phi^0_{xx}/2  - \phi_{ij}^0 - \phi_{i+1,j} \right)^2 
                 - 4\phi_{ij}^0\phi_{i+1,j}^0
 	    $$
@@ -166,7 +166,7 @@ void dphidt (scalar phi, scalar dphi, scalar phi0, double cfl)
 	    double dx = Delta;
 	    double phixx = minmod3 (phi0[2*j] + phi0[] - 2.*phi0[j],
 				    phi0[1] + phi0[-1] - 2.*phi0[]);
-	    if (fabs(phixx) > 1./HUGE) {
+	    if (fabs(phixx) > phixxmin) {
 	      double D = sq(phixx/2. - phi0[] - phi0[j]) - 4.*phi0[]*phi0[j];
 	      dx *= 1/2. + (phi0[] - phi0[j] - sign2(phi0[] - phi0[j])*sqrt(D))/phixx;
 	    }
@@ -225,7 +225,8 @@ int redistance (scalar phi,
 		int order = 3,      // The order of time integration
 		double eps = 1e-6,  // The maximum error on $|\nabla\phi| - 1$
 		double band = HUGE, // The width of the band in which to compute the error
-		scalar resf = {-1}) // The residual $|\nabla\phi| - 1$
+		scalar resf = {-1}, // The residual $|\nabla\phi| - 1$
+		const double phixxmin = 1./HUGE) // The threshold for second-order subcell correction
 {
 
   /**
@@ -247,11 +248,11 @@ int redistance (scalar phi,
 
     if (order == 2) {
       scalar tmp1[];
-      dphidt (phi, tmp1, phi0, cfl/2.);
+      dphidt (phi, tmp1, phi0, cfl/2., phixxmin);
       foreach()
 	tmp1[] = phi[] + Delta*cfl/2.*tmp1[];
       scalar tmp2[];
-      dphidt (tmp1, tmp2, phi0, cfl);
+      dphidt (tmp1, tmp2, phi0, cfl, phixxmin);
       foreach (reduction(max:maxres)) {
 	double res = tmp2[];
 	if (resf.i >= 0) resf[] = res;
@@ -266,14 +267,14 @@ int redistance (scalar phi,
     
     else {
       scalar tmp1[];
-      dphidt (phi, tmp1, phi0, cfl);
+      dphidt (phi, tmp1, phi0, cfl, phixxmin);
       foreach()
 	tmp1[] = phi[] + Delta*cfl*tmp1[];
       scalar tmp2[];
-      dphidt (tmp1, tmp2, phi0, cfl);
+      dphidt (tmp1, tmp2, phi0, cfl, phixxmin);
       foreach()
 	tmp1[] = (3.*phi[] + tmp1[] + Delta*cfl*tmp2[])/4.;
-      dphidt (tmp1, tmp2, phi0, cfl);
+      dphidt (tmp1, tmp2, phi0, cfl, phixxmin);
       foreach (reduction(max:maxres)) {
 	double res = 2./3.*((phi[] - tmp1[])/(Delta*cfl) - tmp2[]);
 	if (resf.i >= 0) resf[] = res;

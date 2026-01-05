@@ -48,12 +48,11 @@ The implementation follows the standard log-conformation approach:
 1. Uses tensor mathematics for clean formulation
 2. Handles both planar and axisymmetric geometries
 3. Provides natural extension to various constitutive models
+*/
 
+// In this code, conform_p, conform_qq are in fact the Conformation tensor.  
 
-# Note: 
-In this code, conform_p, conform_qq are in fact the Conformation tensor.  
-
-
+/**
 # The log-conformation method for viscoelastic constitutive models
 
 ## Introduction
@@ -176,8 +175,9 @@ where $Tr$ denotes the trace of the tensor and $L$ is an additional
 property of the viscoelastic fluid.
 
 We will use the Bell--Collela--Glaz scheme to advect the log-conformation 
-tensor $\Psi$. 
+tensor $\Psi$. */
 
+/*
 TODO: 
 - Perhaps, instead of the Bell--Collela--Glaz scheme, we can use the conservative form of the advection equation and transport the log-conformation tensor with the VoF color function, similar to [http://basilisk.fr/src/navier-stokes/conserving.h](http://basilisk.fr/src/navier-stokes/conserving.h)
 */

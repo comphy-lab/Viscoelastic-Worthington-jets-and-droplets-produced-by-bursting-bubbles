@@ -133,5 +133,5 @@ event adapt (i++) {
 ## See also
 
 * [Same test with 
-   Gerris](http://gerris.dalembert.upmc.fr/gerris/tests/tests/lonlat.html)
+   Gerris](https://gerris.dalembert.upmc.fr/gerris/tests/tests/lonlat.html)
 */

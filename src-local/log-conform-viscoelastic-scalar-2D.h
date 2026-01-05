@@ -58,7 +58,9 @@
 ### Code Improvements
 - [ ] Enforce tensor usage throughout codebase
 - [ ] Implement foreach_dimension compatibility
+*/
 
+/**
 # The log-conformation method for viscoelastic constitutive models
 
 ## Introduction
@@ -181,11 +183,11 @@ where $Tr$ denotes the trace of the tensor and $L$ is an additional
 property of the viscoelastic fluid.
 
 We will use the Bell--Collela--Glaz scheme to advect the log-conformation 
-tensor $\Psi$. 
+tensor $\Psi$. */
 
+/*
 TODO: 
 - Perhaps, instead of the Bell--Collela--Glaz scheme, we can use the conservative form of the advection equation and transport the log-conformation tensor with the VoF color function, similar to [http://basilisk.fr/src/navier-stokes/conserving.h](http://basilisk.fr/src/navier-stokes/conserving.h)
-
 */
 
 #include "bcg.h"

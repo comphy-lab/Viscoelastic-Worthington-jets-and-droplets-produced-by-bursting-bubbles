@@ -20,7 +20,7 @@ sudo apt install darcs make gawk
 To get the latest Basilisk source code do
 
 ~~~bash
-darcs clone http://basilisk.fr/basilisk
+darcs clone https://basilisk.fr/basilisk
 ~~~
 
 If later you want to update the source code, you just need to do
@@ -44,7 +44,7 @@ will get exactly the same version as with darcs, but the code will not
 be version-controlled.
 
 ~~~bash
-wget http://basilisk.fr/basilisk/basilisk.tar.gz
+wget https://basilisk.fr/basilisk/basilisk.tar.gz
 tar xzf basilisk.tar.gz
 ~~~
 

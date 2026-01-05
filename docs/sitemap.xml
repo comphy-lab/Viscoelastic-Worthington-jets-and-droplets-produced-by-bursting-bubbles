@@ -21,6 +21,16 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://comphy-lab.org/reset_install_requirements-no-darcs-no-git.sh.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://comphy-lab.org/reset_install_requirements-no-darcs.sh.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://comphy-lab.org/reset_install_requirements.sh.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -64,5 +74,10 @@
     <loc>https://comphy-lab.org/src-local/two-phaseVE.h.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://comphy-lab.org/test-workflow-locally.sh.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
 </urlset>

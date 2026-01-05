@@ -250,5 +250,5 @@ plot [-5:5][0:1]'out' u 1:2:($3*scale):($4*scale) w vectors
 
 ## See also
 
-* [Similar test with Gerris](http://gerris.dalembert.upmc.fr/gerris/tests/tests/lake.html#river)
+* [Similar test with Gerris](https://gerris.dalembert.upmc.fr/gerris/tests/tests/lake.html#river)
 */

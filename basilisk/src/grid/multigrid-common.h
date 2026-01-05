@@ -1,16 +1,19 @@
 #define MULTIGRID 1
 
+#include "variables.h"
 #include "cartesian-common.h"
 
-@ifndef foreach_level_or_leaf
-@ define foreach_level_or_leaf     foreach_level
-@ define end_foreach_level_or_leaf end_foreach_level
-@endif
+auto macro2 foreach_level_or_leaf (int l, char flags = 0, Reduce reductions = None)
+{
+  foreach_level (l, flags, reductions)
+    {...}
+}
 
-@ifndef foreach_coarse_level
-@ define foreach_coarse_level      foreach_level
-@ define end_foreach_coarse_level  end_foreach_level
-@endif
+auto macro2 foreach_coarse_level (int l, char flags = 0, Reduce reductions = None)
+{
+  foreach_level (l, flags, reductions)
+    {...}
+}
 
 // scalar attributes
 
@@ -25,23 +28,28 @@ void (* restriction) (scalar *);
 
 static inline void restriction_average (Point point, scalar s)
 {
-  double sum = 0.;
-  foreach_child()
-    sum += s[];
-  s[] = sum/(1 << dimension);
+  foreach_blockf (s) {
+    double sum = 0.;
+    foreach_child()
+      sum += s[];
+    s[] = sum/(1 << dimension);
+  }
 }
 
 static inline void restriction_volume_average (Point point, scalar s)
 {
-  double sum = 0.;
-  foreach_child()
-    sum += cm[]*s[];
-  s[] = sum/(1 << dimension)/(cm[] + 1e-30);
+  foreach_blockf (s) {
+    double sum = 0.;
+    foreach_child()
+      sum += cm[]*s[];
+    s[] = sum/(1 << dimension)/(cm[] + 1e-30);
+  }
 }
 
 static inline void face_average (Point point, vector v)
 {
-  foreach_dimension() {
+  foreach_dimension()
+    foreach_blockf (v.x) {
     #if dimension == 1
       v.x[] = fine(v.x,0);
       v.x[1] = fine(v.x,2);
@@ -64,23 +72,25 @@ static inline void restriction_face (Point point, scalar s)
 
 static inline void restriction_vertex (Point point, scalar s)
 {
-  for (int i = 0; i <= 1; i++) {
-    s[i] = fine(s,2*i);
+  foreach_blockf (s)
+    for (int i = 0; i <= 1; i++) {
+      s[i] = fine(s,2*i);
 #if dimension >= 2  
-    s[i,1] = fine(s,2*i,2);
+      s[i,1] = fine(s,2*i,2);
 #endif
 #if dimension >= 3
-    for (int j = 0; j <= 1; j++)
-      s[i,j,1] = fine(s,2*i,2*j,2);
+      for (int j = 0; j <= 1; j++)
+	s[i,j,1] = fine(s,2*i,2*j,2);
 #endif
-  }
+    }
 }
 
 static inline void no_restriction (Point point, scalar s) {}
 
 static inline void no_data (Point point, scalar s) {
   foreach_child()
-    s[] = nodata;
+    foreach_blockf (s)
+      s[] = nodata;
 }
 
 void wavelet (scalar s, scalar w)
@@ -142,7 +152,8 @@ static inline double bilinear (Point point, scalar s)
 static inline void refine_bilinear (Point point, scalar s)
 {
   foreach_child()
-    s[] = bilinear (point, s);
+    foreach_blockf (s)
+      s[] = bilinear (point, s);
 }
 
 static inline double quadratic (double a, double b, double c)
@@ -187,10 +198,11 @@ static inline double biquadratic_vertex (Point point, scalar s)
 static inline void refine_biquadratic (Point point, scalar s)
 {
   foreach_child()
-    s[] = biquadratic (point, s);
+    foreach_blockf (s)
+      s[] = biquadratic (point, s);
 }
 
-static inline void refine_linear (Point point, scalar s)
+static inline void refine_linear_single (Point point, scalar s)
 {
   coord g;
   if (s.gradient)
@@ -210,17 +222,25 @@ static inline void refine_linear (Point point, scalar s)
   assert (fabs(sum) < 1e-10);
 }
 
+static inline void refine_linear (Point point, scalar s)
+{
+  foreach_blockf (s)
+    refine_linear_single (point, s);
+}
+
 static inline void refine_reset (Point point, scalar v)
 {
   foreach_child()
-    v[] = 0.;
+    foreach_blockf (v)
+      v[] = 0.;
 }
 
 static inline void refine_injection (Point point, scalar v)
 {
   double val = v[];
   foreach_child()
-    v[] = val;
+    foreach_blockf (v) 
+      v[] = val;
 }
 
 static scalar multigrid_init_scalar (scalar s, const char * name)
@@ -411,11 +431,9 @@ static void multigrid_restriction (scalar * list)
     for (int l = depth() - 1; l >= 0; l--) {
       foreach_coarse_level(l, nowarning) {
 	for (scalar s in listdef)
-	  foreach_block()
-	    restriction_average (point, s);
+	  restriction_average (point, s);
 	for (scalar s in listc) {
-	  foreach_block()
-	    s.restriction (point, s);
+	  s.restriction (point, s);
 	}
       }
       boundary_iterate (level, list2, l);      

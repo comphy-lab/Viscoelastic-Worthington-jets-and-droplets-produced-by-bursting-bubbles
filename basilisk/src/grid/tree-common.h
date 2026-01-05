@@ -234,29 +234,31 @@ astats adapt_wavelet (scalar * slist,       // list of scalars
 	  int i = 0;
 	  static const int just_fine = 1 << (user + 3);
 	  for (scalar s in slist) {
-	    double emax = max[i++], sc[1 << dimension];
-	    int c = 0;
+	    double emax = max[i++], sc[(1 << dimension)*s.block];
+	    double * b = sc;
 	    foreach_child()
-	      sc[c++] = s[];
+	      foreach_blockf(s)
+	        *b++ = s[];
 	    s.prolongation (point, s);
-	    c = 0;
-	    foreach_child() {
-	      double e = fabs(sc[c] - s[]);
-	      if (e > emax && level < maxlevel) {
-		cell.flags &= ~too_fine;
-		cell.flags |= too_coarse;
+	    b = sc;
+	    foreach_child()
+	      foreach_blockf(s) {
+	        double e = fabs(*b - s[]);
+		if (e > emax && level < maxlevel) {
+		  cell.flags &= ~too_fine;
+		  cell.flags |= too_coarse;
+		}
+		else if ((e <= emax/1.5 || level > maxlevel) &&
+			 !(cell.flags & (too_coarse|just_fine))) {
+		  if (level >= minlevel)
+		    cell.flags |= too_fine;
+		}
+		else if (!(cell.flags & too_coarse)) {
+		  cell.flags &= ~too_fine;
+		  cell.flags |= just_fine;
+		}
+		s[] = *b++;
 	      }
-	      else if ((e <= emax/1.5 || level > maxlevel) &&
-		       !(cell.flags & (too_coarse|just_fine))) {
-		if (level >= minlevel)
-		  cell.flags |= too_fine;
-	      }
-	      else if (!(cell.flags & too_coarse)) {
-		cell.flags &= ~too_fine;
-		cell.flags |= just_fine;
-	      }
-	      s[] = sc[c++];
-	    }
 	  }
 	  foreach_child() {
 	    cell.flags &= ~just_fine;
@@ -316,25 +318,28 @@ astats adapt_wavelet (scalar * slist,       // list of scalars
   return st;
 }
 
-#define refine(cond) do {			                        \
-  int refined;								\
-  do {									\
-    boundary (all);							\
-    refined = 0;							\
-    tree->refined.n = 0;						\
-    foreach_leaf()							\
-      if (cond) {							\
-	refine_cell (point, all, 0, &tree->refined);			\
-	refined++;							\
-	continue;							\
-      }									\
-    mpi_all_reduce (refined, MPI_INT, MPI_SUM);				\
-    if (refined) {							\
-      mpi_boundary_refine (all);					\
-      mpi_boundary_update (all);					\
-    }									\
-  } while (refined);							\
-} while(0)
+macro refine (bool cond)
+{
+  {
+    int refined;
+    do {
+      boundary (all);
+      refined = 0;
+      tree->refined.n = 0;
+      foreach_leaf()
+	if (cond) {
+	  refine_cell (point, all, 0, &tree->refined);
+	  refined++;
+	  continue;
+	}
+      mpi_all_reduce (refined, MPI_INT, MPI_SUM);
+      if (refined) {
+	mpi_boundary_refine (all);
+	mpi_boundary_update (all);
+      }
+    } while (refined);
+  }
+}
 
 static void refine_level (int depth)
 {
@@ -356,30 +361,33 @@ static void refine_level (int depth)
   } while (refined);
 }
 
-#define unrefine(cond) do {						\
-  static const int too_fine = 1 << user;			        \
-  foreach_cell() {							\
-    if (is_leaf(cell))							\
-      continue;								\
-    if (is_local(cell) && (cond))					\
-      cell.flags |= too_fine;						\
-  }									\
-  for (int _l = depth(); _l >= 0; _l--) {				\
-    foreach_cell() {							\
-      if (is_leaf(cell))						\
-	continue;							\
-      if (level == _l) {						\
-	if (is_local(cell) && (cell.flags & too_fine)) {		\
-	  coarsen_cell (point, all);					\
-	  cell.flags &= ~too_fine;					\
-	}								\
-	continue;							\
-      }									\
-    }									\
-    mpi_boundary_coarsen (_l, too_fine);				\
-  }									\
-  mpi_boundary_update (all);						\
-} while (0)
+macro unrefine (bool cond)
+{
+  {
+    static const int too_fine = 1 << user;
+    foreach_cell() {
+      if (is_leaf(cell))
+	continue;
+      if (is_local(cell) && (cond))
+	cell.flags |= too_fine;
+    }
+    for (int _l = depth(); _l >= 0; _l--) {
+      foreach_cell() {
+	if (is_leaf(cell))
+	  continue;
+	if (level == _l) {
+	  if (is_local(cell) && (cell.flags & too_fine)) {
+	    coarsen_cell (point, all);
+	    cell.flags &= ~too_fine;
+	  }
+	  continue;
+	}
+      }
+      mpi_boundary_coarsen (_l, too_fine);
+    }
+    mpi_boundary_update (all);
+  }
+}
 
 trace
 static void halo_face (vectorl vl)
@@ -395,26 +403,32 @@ static void halo_face (vectorl vl)
 #if dimension == 1
 	  if (is_refined (neighbor(-1)))
 	    for (scalar s in vl.x)
-	      s[] = fine(s,0);
+	      foreach_blockf (s)
+		s[] = fine(s,0);
 	  if (is_refined (neighbor(1)))
 	    for (scalar s in vl.x)
-	      s[1] = fine(s,2);
+	      foreach_blockf (s)
+		s[1] = fine(s,2);
 #elif dimension == 2
 	  if (is_refined (neighbor(-1)))
 	    for (scalar s in vl.x)
-	      s[] = (fine(s,0,0) + fine(s,0,1))/2.;
+	      foreach_blockf (s)
+		s[] = (fine(s,0,0) + fine(s,0,1))/2.;
 	  if (is_refined (neighbor(1)))
 	    for (scalar s in vl.x)
-	      s[1] = (fine(s,2,0) + fine(s,2,1))/2.;
+	      foreach_blockf (s)
+		s[1] = (fine(s,2,0) + fine(s,2,1))/2.;
 #else // dimension == 3
 	  if (is_refined (neighbor(-1)))
 	    for (scalar s in vl.x)
-	      s[] = (fine(s,0,0,0) + fine(s,0,1,0) +
-		     fine(s,0,0,1) + fine(s,0,1,1))/4.;
+	      foreach_blockf (s)
+		s[] = (fine(s,0,0,0) + fine(s,0,1,0) +
+		       fine(s,0,0,1) + fine(s,0,1,1))/4.;
 	  if (is_refined (neighbor(1)))
 	    for (scalar s in vl.x)
-	      s[1] = (fine(s,2,0,0) + fine(s,2,1,0) +
-		      fine(s,2,0,1) + fine(s,2,1,1))/4.;
+	      foreach_blockf (s)
+		s[1] = (fine(s,2,0,0) + fine(s,2,1,0) +
+			fine(s,2,0,1) + fine(s,2,1,1))/4.;
 #endif
 	}
 }
@@ -430,38 +444,40 @@ static scalar tree_init_scalar (scalar s, const char * name)
 
 static void prolongation_vertex (Point point, scalar s)
 {
+  foreach_blockf (s) {
 #if dimension == 2
-  fine(s,1,1) = (s[] + s[1] + s[0,1] + s[1,1])/4.;
+    fine(s,1,1) = (s[] + s[1] + s[0,1] + s[1,1])/4.;
 #else // dimension == 3
-  fine(s,1,1,1) = (s[] + s[1] + s[0,1] + s[1,1] +
-		   s[0,0,1] + s[1,0,1] + s[0,1,1] + s[1,1,1])/8.;
+    fine(s,1,1,1) = (s[] + s[1] + s[0,1] + s[1,1] +
+		     s[0,0,1] + s[1,0,1] + s[0,1,1] + s[1,1,1])/8.;
 #endif
   
-  for (int i = 0; i <= 1; i++) {
-    for (int j = 0; j <= 1; j++)
+    for (int i = 0; i <= 1; i++) {
+      for (int j = 0; j <= 1; j++)
 #if dimension == 3
-      for (int k = 0; k <= 1; k++)
-	if (allocated_child(2*i,2*j,2*k))
-	  fine(s,2*i,2*j,2*k) = s[i,j,k];
+	for (int k = 0; k <= 1; k++)
+	  if (allocated_child(2*i,2*j,2*k))
+	    fine(s,2*i,2*j,2*k) = s[i,j,k];
 #else // dimension != 3
       if (allocated_child(2*i,2*j))
 	fine(s,2*i,2*j) = s[i,j];
 #endif // dimension != 3
     
-    foreach_dimension()
-      if (neighbor(i).neighbors) {
+      foreach_dimension()
+	if (neighbor(i).neighbors) {
 #if dimension == 2
-	fine(s,2*i,1) = (s[i,0] + s[i,1])/2.;
+	  fine(s,2*i,1) = (s[i,0] + s[i,1])/2.;
 #elif dimension == 3
-	fine(s,2*i,1,1) = (s[i,0,0] + s[i,1,0] + s[i,0,1] + s[i,1,1])/4.;
-	fine(s,2*i,1,0) = (s[i,0,0] + s[i,1,0])/2.;
-	fine(s,2*i,0,1) = (s[i,0,0] + s[i,0,1])/2.;
-	if (allocated_child(2*i,1,2))
-	  fine(s,2*i,1,2) = (s[i,0,1] + s[i,1,1])/2.;
-	if (allocated_child(2*i,2,1))
-	  fine(s,2*i,2,1) = (s[i,1,0] + s[i,1,1])/2.;
+	  fine(s,2*i,1,1) = (s[i,0,0] + s[i,1,0] + s[i,0,1] + s[i,1,1])/4.;
+	  fine(s,2*i,1,0) = (s[i,0,0] + s[i,1,0])/2.;
+	  fine(s,2*i,0,1) = (s[i,0,0] + s[i,0,1])/2.;
+	  if (allocated_child(2*i,1,2))
+	    fine(s,2*i,1,2) = (s[i,0,1] + s[i,1,1])/2.;
+	  if (allocated_child(2*i,2,1))
+	    fine(s,2*i,2,1) = (s[i,1,0] + s[i,1,1])/2.;
 #endif // dimension == 3
-      }
+	}
+    }
   }
 }
 
@@ -492,44 +508,56 @@ static void refine_face_x (Point point, scalar s)
 #if dimension <= 2
   if (!is_refined(neighbor(-1)) &&
       (is_local(cell) || is_local(neighbor(-1)))) {
-    double g1 = (v.x[0,+1] - v.x[0,-1])/8.;
-    for (int j = 0; j <= 1; j++)
-      fine(v.x,0,j) = v.x[] + (2*j - 1)*g1;
+    foreach_blockf (v.x) {
+      double g1 = (v.x[0,+1] - v.x[0,-1])/8.;
+      for (int j = 0; j <= 1; j++)
+	fine(v.x,0,j) = v.x[] + (2*j - 1)*g1;
+    }
   }
   if (!is_refined(neighbor(1)) && neighbor(1).neighbors &&
       (is_local(cell) || is_local(neighbor(1)))) {
-    double g1 = (v.x[1,+1] - v.x[1,-1])/8.;
-    for (int j = 0; j <= 1; j++)
-      fine(v.x,2,j) = v.x[1] + (2*j - 1)*g1;
+    foreach_blockf (v.x) {
+      double g1 = (v.x[1,+1] - v.x[1,-1])/8.;
+      for (int j = 0; j <= 1; j++)
+	fine(v.x,2,j) = v.x[1] + (2*j - 1)*g1;
+    }
   }
   if (is_local(cell)) {
-    double g1 = (v.x[0,+1] - v.x[0,-1] + v.x[1,+1] - v.x[1,-1])/16.;
-    for (int j = 0; j <= 1; j++)
-      fine(v.x,1,j) = (v.x[] + v.x[1])/2. + (2*j - 1)*g1;
+    foreach_blockf (v.x) {
+      double g1 = (v.x[0,+1] - v.x[0,-1] + v.x[1,+1] - v.x[1,-1])/16.;
+      for (int j = 0; j <= 1; j++)
+	fine(v.x,1,j) = (v.x[] + v.x[1])/2. + (2*j - 1)*g1;
+    }
   }
 #else // dimension > 2
   if (!is_refined(neighbor(-1)) &&
       (is_local(cell) || is_local(neighbor(-1)))) {
-    double g1 = (v.x[0,+1] - v.x[0,-1])/8.;
-    double g2 = (v.x[0,0,+1] - v.x[0,0,-1])/8.;
-    for (int j = 0; j <= 1; j++)
-      for (int k = 0; k <= 1; k++)
-	fine(v.x,0,j,k) = v.x[] + (2*j - 1)*g1 + (2*k - 1)*g2;
+    foreach_blockf (v.x) {
+      double g1 = (v.x[0,+1] - v.x[0,-1])/8.;
+      double g2 = (v.x[0,0,+1] - v.x[0,0,-1])/8.;
+      for (int j = 0; j <= 1; j++)
+	for (int k = 0; k <= 1; k++)
+	  fine(v.x,0,j,k) = v.x[] + (2*j - 1)*g1 + (2*k - 1)*g2;
+    }
   }
   if (!is_refined(neighbor(1)) && neighbor(1).neighbors &&
       (is_local(cell) || is_local(neighbor(1)))) {
-    double g1 = (v.x[1,+1] - v.x[1,-1])/8.;
-    double g2 = (v.x[1,0,+1] - v.x[1,0,-1])/8.;
-    for (int j = 0; j <= 1; j++)
-      for (int k = 0; k <= 1; k++)
-	fine(v.x,2,j,k) = v.x[1] + (2*j - 1)*g1 + (2*k - 1)*g2;
+    foreach_blockf (v.x) {
+      double g1 = (v.x[1,+1] - v.x[1,-1])/8.;
+      double g2 = (v.x[1,0,+1] - v.x[1,0,-1])/8.;
+      for (int j = 0; j <= 1; j++)
+	for (int k = 0; k <= 1; k++)
+	  fine(v.x,2,j,k) = v.x[1] + (2*j - 1)*g1 + (2*k - 1)*g2;
+    }
   }
   if (is_local(cell)) {
-    double g1 = (v.x[0,+1] - v.x[0,-1] + v.x[1,+1] - v.x[1,-1])/16.;
-    double g2 = (v.x[0,0,+1] - v.x[0,0,-1] + v.x[1,0,+1] - v.x[1,0,-1])/16.;
-    for (int j = 0; j <= 1; j++)
-      for (int k = 0; k <= 1; k++)
-	fine(v.x,1,j,k) = (v.x[] + v.x[1])/2. + (2*j - 1)*g1 + (2*k - 1)*g2;
+    foreach_blockf (v.x) {
+      double g1 = (v.x[0,+1] - v.x[0,-1] + v.x[1,+1] - v.x[1,-1])/16.;
+      double g2 = (v.x[0,0,+1] - v.x[0,0,-1] + v.x[1,0,+1] - v.x[1,0,-1])/16.;
+      for (int j = 0; j <= 1; j++)
+	for (int k = 0; k <= 1; k++)
+	  fine(v.x,1,j,k) = (v.x[] + v.x[1])/2. + (2*j - 1)*g1 + (2*k - 1)*g2;
+    }
   }
 #endif // dimension > 2
 }
@@ -651,14 +679,16 @@ static void tree_boundary_level (scalar * list, int l)
     foreach_vertex (noauto)
       if (is_refined(cell) || is_refined(neighbor(-1)))
 	for (scalar s in vlist)
-	  s[] = is_vertex (child(0)) ? fine(s) : nodata;
+	  foreach_blockf (s)
+	    s[] = is_vertex (child(0)) ? fine(s) : nodata;
 #elif dimension == 2
     foreach_vertex (noauto) {
       if (is_refined(cell) || is_refined(neighbor(-1)) ||
 	  is_refined(neighbor(0,-1)) || is_refined(neighbor(-1,-1))) {
 	// corner
 	for (scalar s in vlist)
-	  s[] = is_vertex (child(0)) ? fine(s) : nodata;
+	  foreach_blockf (s)
+	    s[] = is_vertex (child(0)) ? fine(s) : nodata;
       }
       else
 	foreach_dimension()
@@ -666,7 +696,8 @@ static void tree_boundary_level (scalar * list, int l)
 	      (is_prolongation(cell) || is_prolongation(neighbor(-1)))) {
 	    // center of refined edge
 	    for (scalar s in vlist)
-	      s[] = is_vertex(neighbor(0,-1)) && is_vertex(neighbor(0,1)) ?
+	      foreach_blockf (s)
+		s[] = is_vertex(neighbor(0,-1)) && is_vertex(neighbor(0,1)) ?
 		(s[0,-1] + s[0,1])/2. : nodata;
 	  }
     }
@@ -678,7 +709,8 @@ static void tree_boundary_level (scalar * list, int l)
 	  is_refined(neighbor(0,-1,-1)) || is_refined(neighbor(-1,-1,-1))) {
 	// corner
 	for (scalar s in vlist)
-	  s[] = is_vertex (child(0)) ? fine(s) : nodata;
+	  foreach_blockf (s)
+	    s[] = is_vertex (child(0)) ? fine(s) : nodata;
       }
       else
 	foreach_dimension() {
@@ -686,7 +718,8 @@ static void tree_boundary_level (scalar * list, int l)
 	      (is_prolongation(cell) || is_prolongation(neighbor(-1)))) {
 	    // center of refined face
 	    for (scalar s in vlist)
-	      s[] = is_vertex(neighbor(0,-1,-1)) && is_vertex(neighbor(0,1,-1))
+	      foreach_blockf (s)
+		s[] = is_vertex(neighbor(0,-1,-1)) && is_vertex(neighbor(0,1,-1))
 		&& is_vertex(neighbor(0,-1,1)) && is_vertex(neighbor(0,1,1)) ?
 		(s[0,-1,-1] + s[0,1,-1] + s[0,-1,1] + s[0,1,1])/4. : nodata;
 	  }
@@ -696,7 +729,8 @@ static void tree_boundary_level (scalar * list, int l)
 		    is_prolongation(neighbor(-1,0,-1)))) {
 	    // center of refined edge
 	    for (scalar s in vlist)
-	      s[] = is_vertex(neighbor(0,-1)) && is_vertex(neighbor(0,1)) ?
+	      foreach_blockf (s)
+		s[] = is_vertex(neighbor(0,-1)) && is_vertex(neighbor(0,1)) ?
 		(s[0,-1] + s[0,1])/2. : nodata;
 	  }
 	}

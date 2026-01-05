@@ -84,7 +84,9 @@ Note that only the documented test cases appear in the list below
 * [Computation of volume fractions from a levelset function](fractions.c)
 * [Computation of volume fractions on a variable-resolution grid](fractions1.c)
 * [Fractions in marginal cases](fractions2.c)
+* [Convergence of the face fraction field](facefraction.c)
 * [Computation of a levelset field from a contour](basilisk.c)
+* [Rotation of a circular interface](rotate.c)
 * [Time-reversed VOF advection in a vortex](reversed.c)
 * [Preventing coalescence of VOF tracers](no-coalescence.c)
 
@@ -95,6 +97,7 @@ Note that only the documented test cases appear in the list below
 * [Capillary wave](capwave.c)
 * [Gravity wave](gravity.c)
 * [Shape oscillation of an inviscid droplet](oscillation.c)
+* [Scalings for Plateau–Rayleigh pinchoff](plateau.c)
 * [Rising bubble](rising.c)
 * [Sessile drop](sessile.c)
 * [3D Sessile drop](sessile3D.c)
@@ -195,7 +198,7 @@ Note that only the documented test cases appear in the list below
 
 ## GPU tests
 
-These tests need to be run manually using:
+These tests can be run manually using:
 
 ~~~bash
 make -k gpu-tests
@@ -208,11 +211,14 @@ make -k gpu-tests
 * [Time-reversed advection in a vortex](advection.c)
 * [Saint-Venant bump](bump2D-gpu.c)
 * [Time-reversed VOF advection in a vortex](reversed.c)
+* [Stommel gyre](stommel-ml.c)
+* [Isopycnal gyres intersecting the bathymetry](bleck.c)
 
 Tests for the multigrid solver on GPUs.
 
 * [Convergence of axisymmetric viscous terms](axi.c)
 * [Lid-driven cavity](lid.c)
+* [Rising bubble (CLSVOF version)](rising.c)
 
 See also the [GPU Benchmarks](/src/grid/gpu/Benchmarks.md).
 
@@ -224,6 +230,7 @@ See also the [GPU Benchmarks](/src/grid/gpu/Benchmarks.md).
 
 ## Basic operations
 
+* [Periodic boundary conditions on face fields](boundary_face.c)
 * [Automatic stencils / boundary conditions](stencils.c)
 * [Interpolation on halos](interp.c)
 * [Tangential interpolation on face vector fields](interpu.c)
@@ -236,6 +243,7 @@ See also the [GPU Benchmarks](/src/grid/gpu/Benchmarks.md).
 * [Segment traversal](segment.c)
 * [Redistancing of a perturbed distance field](redistance-ellipse.c)
 * [Einstein summation](einstein_sum.c)
+* [Macros](macro.c)
 
 ## Unmaintained
 

@@ -423,16 +423,6 @@ $$
 */
 
 #if dimension == 2
-/**
-Advances the log-conformation tensor and updates the corresponding conformation and stress tensors.
-
-This event function performs three primary steps within the viscoelastic fluid simulation:
-- Diagonalizes the conformation tensor and computes its logarithm (Ψ) while applying eigenvalue clamping to ensure numerical stability.
-- Advances Ψ in time by incorporating the upper convective term computed from the velocity gradient, which is used to update the log-conformation tensor.
-- Recovers the physical conformation tensor and stress tensor by exponentiating the diagonalized eigenvalues and integrating the relaxation term.
-
-Note: Although the overall simulation targets 3D viscoelastic fluids, this implementation uses a 2D diagonalization routine.
-*/
 event tracer_advection(i++)
 {
   scalar Psi11 = A11;
@@ -624,20 +614,6 @@ event tracer_advection(i++)
 
 #elif dimension == 3
 
-/**
-Advances the log-conformation tensor and computes the corresponding conformation and stress tensors for 3D viscoelastic fluid simulations.
-
-This event function performs a two-step update for the viscoelastic fluid model using the log-conformation method. In the first part, it computes the logarithm of the conformation tensor $\Psi$ from A by:
-- Diagonalizing A to obtain eigenvalues ($\Lambda$) and eigenvectors (R).
-- Clamping any negative eigenvalues to prevent numerical instabilities (using EIGENVALUE_MIN).
-- Evaluating $\Psi = \log(A)$ and incorporating the upper convective contribution via the symmetric tensor B and the skew-symmetric tensor $\Omega$.
-
-$\Psi$ is then advanced in time using central difference approximations for the velocity gradients, where degenerate eigenvalue cases are handled with simplified calculations.
-
-In the second part, the function converts the updated log-conformation tensor back to the conformation tensor A by exponentiating the eigenvalues and applies the relaxation factor derived from the relaxation time. Finally, it computes the polymeric stress tensor T from A.
-
-Warnings are printed if negative eigenvalues are detected, and a debug counter is incremented when debugging is enabled.
-*/
 event tracer_advection(i++)
 {
   /**
@@ -800,24 +776,23 @@ event tracer_advection(i++)
       double rot_z_xy_xz = (R.z.y*omega_xy + R.z.z*omega_xz);  // xy rotation plus xz rotation, z components
       double rot_z_xz_yz = (R.z.x*omega_xz + R.z.y*omega_yz);  // xz rotation plus yz rotation, z components
 
-      /** 
-      Calculate the components of the Omega tensor in the physical coordinate system
-      
-      The Omega tensor represents the rotational part of the velocity gradient tensor
-      and is computed through the following steps:
-      
-      1. We already have:
-         - R: eigenvector matrix of the conformation tensor
-         - rot_*_*_*: pre-computed rotation combinations for each direction
-      
-      2. Mathematical background:
-         Omega = R * Omega_eigen * R^T
-         where Omega_eigen is the rotation tensor in eigenvector space
-      
-      3. The components are calculated using the rotation combinations:
-         - rot_i_jk_lm represents combined rotations in the i-direction
-         - Each component Omega_ij is a linear combination of these rotations
-      */
+      /* Calculate the components of the Omega tensor in the physical coordinate system
+       * 
+       * The Omega tensor represents the rotational part of the velocity gradient tensor
+       * and is computed through the following steps:
+       * 
+       * 1. We already have:
+       *    - R: eigenvector matrix of the conformation tensor
+       *    - rot_*_*_*: pre-computed rotation combinations for each direction
+       * 
+       * 2. Mathematical background:
+       *    Omega = R * Omega_eigen * R^T
+       *    where Omega_eigen is the rotation tensor in eigenvector space
+       * 
+       * 3. The components are calculated using the rotation combinations:
+       *    - rot_i_jk_lm represents combined rotations in the i-direction
+       *    - Each component Omega_ij is a linear combination of these rotations
+       */
 
       // Compute x-row components of Omega
       Omega.x.x = R.x.y*rot_x_xy_yz  // xy-yz rotation contribution
@@ -842,17 +817,16 @@ event tracer_advection(i++)
       Omega.z.y = R.y.y*rot_z_xy_yz - R.y.x*rot_z_xy_xz + R.y.z*rot_z_xz_yz;
       Omega.z.z = R.z.y*rot_z_xy_yz - R.z.x*rot_z_xy_xz + R.z.z*rot_z_xz_yz;
 
-      /**  
-      Note: The resulting Omega tensor is skew-symmetric, meaning:
-      - Omega_ij = -Omega_ji
-      This property is automatically satisfied by the construction above
-      and is essential for preserving the physical meaning of rotation
-      */
+      /* Note: The resulting Omega tensor is skew-symmetric, meaning:
+       * Omega_ij = -Omega_ji
+       * This property is automatically satisfied by the construction above
+       * and is essential for preserving the physical meaning of rotation
+       */
 
       // Extract diagonal components of M (velocity gradient tensor in eigenvector basis)
       double M_diag_x = M.x.x, M_diag_y = M.y.y, M_diag_z = M.z.z;
 
-      /**
+      /*
       Compute B tensor: B = R * diag(M) * R^T
       - This transforms the diagonal velocity gradient tensor back to the original coordinate system
       - B is symmetric, so we only need to compute the upper triangle
@@ -945,7 +919,7 @@ event tracer_advection(i++)
     A.z.z = Lambda.x * sq(R.z.x) + Lambda.y * sq(R.z.y) + Lambda.z * sq(R.z.z);
 
     // Apply relaxation using the relaxation time lambda
-    double intFactor = lambda[] != 0. ? exp(-dt/lambda[]) : 0.;
+    double intFactor = (lambda[] != 0. ? (lambda[] == 1e30 ? 1: exp(-dt/lambda[])): 0.);
 
     A.x.y *= intFactor;
     A.y.x = A.x.y;
@@ -956,7 +930,7 @@ event tracer_advection(i++)
     foreach_dimension()
       A.x.x = 1. + (A.x.x - 1.)*intFactor;
 
-    /**
+    /*
     Get Aij from A. These commands might look repetitive. But, I do this so that in the future, generalization to tensor only form is easier.
     */
 

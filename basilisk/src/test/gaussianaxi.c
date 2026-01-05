@@ -7,7 +7,7 @@ the dissipation properties of the all-Mach solver in the acoustic
 limit by simulating the propagation of a gaussian pulse of small
 amplitude.  The results can be compared with the results obtained with
 a classical [Riemann
-solver](http://basilisk.fr/sandbox/fuster/RiemannSolverExamples/gaussian.c). */
+solver](/sandbox/fuster/RiemannSolverExamples/gaussian.c). */
 
 #include "grid/multigrid.h"
 

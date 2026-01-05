@@ -52,7 +52,7 @@ plot 'log' index 'F0 = 0.1' u 1:3 w l t 'C grid (Ro = 0.1)', \
 ## See also
 
 * [Same test with
-  Gerris](http://gerris.dalembert.upmc.fr/gerris/tests/tests/nonlinear.html)
+  Gerris](https://gerris.dalembert.upmc.fr/gerris/tests/tests/nonlinear.html)
 */
 
 #include "grid/multigrid.h"
@@ -186,7 +186,7 @@ event logfile (i += 10; t <= 5.)
   Energy E = energy();
   if (i == 0)
     E0 = E;
-  fprintf (stderr, "%g %g %.12g %.12g\n", t, error(),
+  fprintf (stderr, "%5g %5g %5g %5g\n", t, error(),
 	   E.ke/(E0.ke + E0.pe), E.pe/(E0.ke + E0.pe));
 }
 

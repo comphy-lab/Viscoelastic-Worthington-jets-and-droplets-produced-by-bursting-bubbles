@@ -181,5 +181,5 @@ splot 'out' u 1:2:3
 
 ## See also
 
-* [Same test with Gerris](http://gerris.dalembert.upmc.fr/gerris/tests/tests/shock.html#layered)
+* [Same test with Gerris](https://gerris.dalembert.upmc.fr/gerris/tests/tests/shock.html#layered)
 */
