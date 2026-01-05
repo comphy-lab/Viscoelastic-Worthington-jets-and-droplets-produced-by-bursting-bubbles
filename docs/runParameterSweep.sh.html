@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+  <!-- Eliminate FOUC (Flash of Unstyled Content) and FOUT (Flash of Incorrect Theme) -->
+  <script>
+    (function() {
+  try {
+    // Apply the theme as quickly as possible to avoid flash
+    let saved;
+    try {
+      saved = localStorage.getItem('theme');
+    } catch (storageError) {
+      // Handle localStorage access errors (private browsing, cookies disabled)
+      console.warn('Unable to access localStorage:', storageError);
+    }
+    
+    let prefersDark = false;
+    try {
+      prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    } catch (mediaError) {
+      // Handle matchMedia access errors (unsupported browsers)
+      console.warn('Unable to check media query:', mediaError);
+    }
+    
+    const theme = saved ? saved : (prefersDark ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', theme);
+    // Add theme class for CSS targeting
+    document.documentElement.classList.add(theme + '-theme');
+    // Mark when theme is set for CSS transitions
+    document.documentElement.classList.add('theme-set');
+  } catch (error) {
+    // Fallback for any other unexpected errors
+    console.warn('Theme initialization failed:', error);
+    // Apply default theme as fallback
+    try {
+      document.documentElement.setAttribute('data-theme', 'light');
+      document.documentElement.classList.add('light-theme');
+      document.documentElement.classList.add('theme-set');
+    } catch (fallbackError) {
+      // Silent catch for extreme cases
+      console.error('Critical theme fallback failed:', fallbackError);
+    }
+  }
+})();
+  </script>
+
+
+  <!-- No-JS fallback for theme and critical theming styles -->
+  <style>
+    /* Default light theme variables */
+    :root {
+      /* Base colors */
+      --color-background: #fff;
+      --color-text: #333;
+      --color-primary: #0066cc;
+      --color-secondary: #036;
+      --color-accent: #0099ff;
+      
+      /* UI elements */
+      --color-header-bg: #f5f5f5;
+      --color-footer-bg: #2d2e33;
+      --color-border: #e0e0e0;
+      --color-input-bg: #f9f9f9;
+      
+      /* Component colors */
+      --color-preloader-bg: #ffffff;
+      --color-loader: #0066cc;
+      --color-card-bg: #ffffff;
+      --color-code-bg: #f5f5f5;
+    }
+    
+    /* Dark theme variables applied via media query when JS is disabled */
+    @media (prefers-color-scheme: dark) {
+      :root:not(.theme-set) {
+        /* Base colors - dark mode */
+        --color-background: #1a1a1a;
+        --color-text: #f5f5f5;
+        --color-primary: #4d9fff;
+        --color-secondary: #88ccff;
+        --color-accent: #00bfff;
+        
+        /* UI elements - dark mode */
+        --color-header-bg: #121212;
+        --color-footer-bg: #121212;
+        --color-border: #333;
+        --color-input-bg: #2d2d2d;
+        
+        /* Component colors - dark mode */
+        --color-preloader-bg: #1a1a1a;
+        --color-loader: #4d9fff;
+        --color-card-bg: #222;
+        --color-code-bg: #2d2d2d;
+      }
+    }
+    
+    /* When JS sets the theme explicitly via data attribute */
+    [data-theme="dark"] {
+      /* Base colors - dark mode */
+      --color-background: #1a1a1a;
+      --color-text: #f5f5f5;
+      --color-primary: #4d9fff;
+      --color-secondary: #88ccff;
+      --color-accent: #00bfff;
+      
+      /* UI elements - dark mode */
+      --color-header-bg: #121212;
+      --color-footer-bg: #121212;
+      --color-border: #333;
+      --color-input-bg: #2d2d2d;
+      
+      /* Component colors - dark mode */
+      --color-preloader-bg: #1a1a1a;
+      --color-loader: #4d9fff;
+      --color-card-bg: #222;
+      --color-code-bg: #2d2d2d;
+    }
+    
+    /* Prevent transition flashes during initial load */
+    html:not(.transitions-enabled) * {
+      transition: none !important;
+    }
+    
+    /* Apply theme to preloader and early elements */
+    #preloader {
+      background-color: var(--color-preloader-bg);
+      color: var(--color-text);
+    }
+    
+    #loader {
+      border-color: var(--color-loader);
+      border-top-color: transparent;
+    }
+    
+    /* Noscript warning */
+    .noscript-warning {
+      background-color: var(--color-primary);
+      color: white;
+      text-align: center;
+      padding: 10px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+    }
+    
+    /* Theme indicator for no-JS */
+    .theme-indicator {
+      padding: 5px 10px;
+      border-radius: 4px;
+      background-color: var(--color-input-bg);
+      color: var(--color-text);
+      text-align: center;
+    }
+    
+    /* Hide JS-only elements when no JS */
+    .no-js .js-only {
+      display: none !important;
+    }
+    
+    /* Show no-JS alternatives */
+    .js .no-js-only {
+      display: none !important;
+    }
+  </style>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="base-url" content="..">
+  <title>runParameterSweep.sh | Viscoelastic Worthington Jets & Droplets Produced by Bursting Bubbles</title>
+  
+  <!-- Critical CSS for fastest paint -->
+  <style>
+      .s-intro__title {
+          visibility: visible;
+          font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      }
+      .s-header {
+          visibility: visible;
+      }
+      
+      /* Ensure theme toggle properly styled immediately */
+      .theme-toggle {
+          background-color: var(--color-background);
+          color: var(--color-text);
+      }
+      
+      /* Control SVG visibility based on theme */
+      [data-theme="dark"] .theme-toggle-icon.sun,
+      :root:not([data-theme="dark"]) .theme-toggle-icon.moon {
+          display: block;
+      }
+      
+      [data-theme="dark"] .theme-toggle-icon.moon,
+      :root:not([data-theme="dark"]) .theme-toggle-icon.sun {
+          display: none;
+      }
+  </style>
+
+  <!-- Critical Meta Tags -->
+  <meta name="description" content="set -euo pipefail Exit on error, unset variables, pipeline failures">
+  <meta name="author" content="CoMPhy Lab">
+  <meta name="robots" content="index, follow">
+  <meta name="keywords" content="runparametersweep">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="apple-mobile-web-app-title" content="CoMPhy Lab">
+
+  <!-- Preload critical resources -->
+  <link rel="preload" href="./assets/js/main.js" as="script">
+  <link rel="preload" href="./assets/css/fontello/css/fontello.css" as="style">
+  <link rel="preload" href="./assets/css/academicons-1.7.0/css/academicons.min.css" as="style">
+
+  <!-- Base stylesheets -->
+  <link rel="stylesheet" href="./assets/css/styles.css">
+  <link rel="stylesheet" href="./assets/css/custom_styles.css">
+  <link rel="stylesheet" href="./assets/css/command-palette.css">
+  <link rel="stylesheet" href="./assets/css/fontello/css/fontello.css">
+  <link rel="stylesheet" href="./assets/css/academicons-1.7.0/css/academicons.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+
+  <!-- Font optimization -->
+  <style>
+      @font-face {
+          font-display: swap;
+          font-family: 'System Font';
+          src: local('system-ui');
+      }
+  </style>
+
+  <!-- Favicon -->
+  <link rel="apple-touch-icon" sizes="180x180" href="./assets/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="./assets/favicon/favicon-96x96.png">
+  <link rel="icon" type="image/svg+xml" href="./assets/favicon/favicon.svg">
+  <link rel="shortcut icon" href="./assets/favicon/favicon.ico">
+  <link rel="manifest" href="./assets/favicon/site.webmanifest">
+
+  <!-- Scripts with proper loading attributes -->
+  <script src="./assets/js/jquery.min.js"></script>
+  <script src="./assets/js/jquery-ui.packed.js"></script>
+  <script src="./assets/js/plots.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2/dist/fuse.min.js"></script>
+  <!-- Config script must load before other scripts -->
+  <script src="./assets/js/config.js"></script>
+  <script defer src="./assets/js/search-helper.js"></script>
+  <script defer src="./assets/js/command-palette.js"></script>
+  <script defer src="./assets/js/command-data.js"></script>
+  <script defer src="./assets/js/main.js"></script>
+  <script defer src="./assets/js/theme-toggle.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script"></script>
+  
+  <!-- Optimize page load performance -->
+  <script>
+    // Preconnect to critical domains
+    const preconnectDomains = [
+      'https://cdnjs.cloudflare.com',
+      'https://cdn.jsdelivr.net'
+    ];
+    
+    preconnectDomains.forEach(domain => {
+      const link = document.createElement('link');
+      link.rel = 'preconnect';
+      link.href = domain;
+      link.crossOrigin = 'anonymous';
+      document.head.appendChild(link);
+      
+      // Also add DNS prefetch as fallback
+      const dnsLink = document.createElement('link');
+      dnsLink.rel = 'dns-prefetch';
+      dnsLink.href = domain;
+      document.head.appendChild(dnsLink);
+    });
+    
+    // Detect when document is fully loaded to remove preloader
+    window.addEventListener('load', function() {
+      const preloader = document.getElementById('preloader');
+      if (preloader) {
+        preloader.style.opacity = '0';
+        setTimeout(() => {
+          preloader.style.display = 'none';
+        }, 300); // Match transition duration
+      }
+    });
+  </script>
+
+  <script>
+      // Load Font Awesome with proper environment detection and fallbacks
+      function loadStylesheet(href) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = href;
+        link.crossOrigin = 'anonymous';
+        link.onerror = (e) => {
+          console.error(`Failed to load stylesheet: `, e);
+          console.log('Trying alternative Font Awesome source...');
+        };
+        document.head.appendChild(link);
+        return link;
+      }
+      
+      // Check if we're on localhost
+      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        // Use hardcoded version numbers for reliable loading
+        
+        // Load Font Awesome using multiple CDNs to maximize reliability for local development
+        loadStylesheet('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css');
+        // Backup CDN if the first one fails
+        loadStylesheet('https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.2/css/all.min.css');
+        // Final local fallback - ensures it will work on any localhost environment
+        loadStylesheet('https://use.fontawesome.com/releases/v6.7.2/css/all.css');
+      } else {
+        // Use Kit for production with defer
+        var script = document.createElement('script');
+        script.src = 'https://kit.fontawesome.com/b1cfd9ca75.js';
+        script.crossOrigin = 'anonymous';
+        script.defer = true;
+        document.head.appendChild(script);
+      }
+    </script>
+
+  <script>
+      // Mark page as JS-enabled and manage transitions
+      document.documentElement.classList.remove('no-js');
+      document.documentElement.classList.add('js');
+      
+      // Allow CSS transitions after initial load to prevent transition flashes
+      window.addEventListener('DOMContentLoaded', () => {
+          setTimeout(() => {
+              document.documentElement.classList.add('transitions-enabled');
+          }, 100); // Short delay to ensure DOM is ready
+      });
+  </script>
+</head>
+<body id="top">
+<script>window.repoName = "Viscoelastic-Worthington-jets-and-droplets-produced-by-bursting-bubbles";</script>
+
+
+    <!-- Preloader with theme variables applied -->
+    <div id="preloader">
+        <div id="loader"></div>
+    </div>
+
+    <noscript>
+        <div class="noscript-warning">
+            <p>This site works best with JavaScript enabled. Some features may be limited.</p>
+        </div>
+    </noscript>
+
+    <div id="page" class="s-pagewrap">
+        <header class="s-header">
+            <div class="s-header__logo">
+                <a class="logo" href="/">
+                    <img src="./assets/logos/CoMPhy-Lab-no-name.png" alt="CoMPhy Lab">
+                </a>
+                <a class="documentation-button" href="/Viscoelastic-Worthington-jets-and-droplets-produced-by-bursting-bubbles">
+                    <i class="fa-solid fa-book-open"></i>
+                    <span>Viscoelastic-Worthington-jets-and-droplets-produced-by-bursting-bubbles</span>
+                </a>
+            </div>
+            <a class="s-header__menu-toggle" href="#0">
+                <span class="s-header__menu-text">Menu</span>
+                <span class="s-header__menu-icon"></span>
+            </a>
+            <nav class="s-header__nav">
+                <a href="#0" class="s-header__nav-close-btn"><span>Close</span></a>
+                <ul class="s-header__nav-list">
+                    <li style="background: none;">
+                        <!-- JS theme toggle -->
+                        <div class="theme-toggle js-only" id="theme-toggle" aria-label="Toggle dark/light theme">
+                            <svg class="theme-toggle-icon moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                            </svg>
+                            <svg class="theme-toggle-icon sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="5"></circle>
+                                <line x1="12" y1="1" x2="12" y2="3"></line>
+                                <line x1="12" y1="21" x2="12" y2="23"></line>
+                                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                                <line x1="1" y1="12" x2="3" y2="12"></line>
+                                <line x1="21" y1="12" x2="23" y2="12"></line>
+                                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                            </svg>
+                        </div>
+                    </li>
+                    <li style="background: none;"><a href="https://scholar.google.com/citations?user=tHb_qZoAAAAJ&hl=en" style="background: none; padding: 0;" aria-label="Google Scholar Profile"><i class="ai ai-google-scholar" style="font-size: 1.75em;"></i></a></li>
+                    <li style="background: none;"><a href="https://github.com/comphy-lab" style="background: none; padding: 0;" aria-label="GitHub Organization"><i class="fa-brands fa-github" style="font-size: 1.75em"></i></a></li>
+                    <li><a href="https://comphy-lab.org/#about" class="smoothscroll">About</a></li>
+                    <li><a href="https://comphy-lab.org/team/">Team</a></li>
+                    <li><a href="https://comphy-lab.org/research">Research</a></li>
+                    <li><a href="https://comphy-lab.org/teaching">Teaching</a></li>
+                    <li><a href="https://comphy-lab.org/join">Join Us</a></li>
+                    <li><a href="https://blogs.comphy-lab.org/">Blog</a></li>
+                    <li style="background: none;"><a href="https://bsky.app/profile/comphy-lab.org" style="background: none; padding: 0;" aria-label="Bluesky Profile"><i class="fa-brands fa-bluesky" style="font-size: 1.75em; color: #0085ff;"></i></a></li>
+                    <!-- Command Palette Button (Styled like search) -->
+                    <li class="command-palette-button">
+                        <div class="command-wrapper">
+                            <button class="command-k-style-btn" id="command-palette-btn" aria-label="Open command palette">
+                                <span class="default-theme-text">ctrl K</span>
+                                <span class="mac-theme-text">⌘ K</span>
+                                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                            </button>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        </header>
+
+        <!-- Main content -->
+        <main class="content">
+            
+            <div class="page-content">
+                
+                                <h1 class="page-title">runParameterSweep.sh</h1>
+                
+                                
+                                <div class="raw-file-button-container">
+                    <a href="https://github.com/comphy-lab/Viscoelastic-Worthington-jets-and-droplets-produced-by-bursting-bubbles/raw/main/runParameterSweep.sh" class="raw-file-button" target="_blank">
+                        <i class="fa-brands fa-github"></i> See raw file
+                    </a>
+                </div>
+                
+                <h1 id="runparametersweep.sh">runParameterSweep.sh</h1>
+                <div class="code-block-container"><div class="code-block-container"><pre
+                class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><span class="co">#!/bin/bash</span></span>
+<span id="cb1-2"><span class="co"># runParameterSweep.sh - Run parameter sweep with auto-incrementing CaseNo</span></span>
+<span id="cb1-3"><span class="co"># Generates parameter combinations and runs simulations in simulationCases/&lt;CaseNo&gt;/</span></span>
+<span id="cb1-4"></span>
+<span id="cb1-5"><span class="bu">set</span> <span class="at">-euo</span> pipefail  <span class="co"># Exit on error, unset variables, pipeline failures</span></span>
+<span id="cb1-6"></span>
+<span id="cb1-7"><span class="co"># ============================================================</span></span>
+<span id="cb1-8"><span class="co"># Configuration</span></span>
+<span id="cb1-9"><span class="co"># ============================================================</span></span>
+<span id="cb1-10"><span class="va">SCRIPT_DIR</span><span class="op">=</span><span class="st">&quot;</span><span class="dt">\$</span><span class="st">(cd &quot;</span><span class="dt">\$</span><span class="kw">(</span><span class="fu">dirname</span> <span class="st">&quot;</span><span class="dt">\$</span><span class="st">{BASH_SOURCE[0]}&quot;</span><span class="kw">)</span><span class="st">&quot; &amp;&amp; pwd)&quot;</span></span>
+<span id="cb1-11"></span>
+<span id="cb1-12"><span class="co"># Source parameter parsing library</span></span>
+<span id="cb1-13"><span class="cf">if</span> <span class="bu">[</span> <span class="ot">-f</span> <span class="st">&quot;</span><span class="dt">\$</span><span class="st">{SCRIPT_DIR}/src-local/parse_params.sh&quot;</span> <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb1-14">    <span class="bu">source</span> <span class="st">&quot;</span><span class="dt">\$</span><span class="st">{SCRIPT_DIR}/src-local/parse_params.sh&quot;</span></span>
+<span id="cb1-15"><span class="cf">else</span></span>
+<span id="cb1-16">    <span class="bu">echo</span> <span class="st">&quot;ERROR: src-local/parse_params.sh not found&quot;</span> <span class="op">&gt;&amp;</span><span class="dv">2</span></span>
+<span id="cb1-17">    <span class="bu">exit</span> 1</span>
+<span id="cb1-18"><span class="cf">fi</span></span>
+<span id="cb1-19"></span>
+<span id="cb1-20"><span class="co"># ============================================================</span></span>
+<span id="cb1-21"><span class="co"># Usage Information</span></span>
+<span id="cb1-22"><span class="co"># ============================================================</span></span>
+<span id="cb1-23"><span class="fu">usage()</span> <span class="kw">{</span></span>
+<span id="cb1-24">    <span class="fu">cat</span> <span class="op">&lt;&lt;EOF</span></span>
+<span id="cb1-25"><span class="st">Usage: </span><span class="dt">\$</span><span class="st">0 [OPTIONS] [sweep_file]</span></span>
+<span id="cb1-26"></span>
+<span id="cb1-27"><span class="st">Run parameter sweep with auto-incrementing CaseNo.</span></span>
+<span id="cb1-28"><span class="st">Creates case folders in simulationCases/&lt;CaseNo&gt;/ for each parameter combination.</span></span>
+<span id="cb1-29"><span class="st">Cases run sequentially (one at a time).</span></span>
+<span id="cb1-30"></span>
+<span id="cb1-31"><span class="st">By default, runs Stage 1 (generate restart) then Stage 2 (full simulation) for each case.</span></span>
+<span id="cb1-32"></span>
+<span id="cb1-33"><span class="st">Stage Selection:</span></span>
+<span id="cb1-34"><span class="st">    --stage1-only        Run Stage 1 only for all cases (generate restart files)</span></span>
+<span id="cb1-35"><span class="st">    --stage2-only        Run Stage 2 only for all cases (requires existing restart files)</span></span>
+<span id="cb1-36"><span class="st">    (default)            Run Stage 1 then Stage 2 for each case</span></span>
+<span id="cb1-37"></span>
+<span id="cb1-38"><span class="st">Parallelization (for Stage 2, or Stage 1 on Linux):</span></span>
+<span id="cb1-39"><span class="st">    --fopenmp [N]        Enable OpenMP with N threads (default: 8, Linux only)</span></span>
+<span id="cb1-40"><span class="st">    --mpi [N]            Enable MPI with N cores (default: 2, Stage 2 only)</span></span>
+<span id="cb1-41"></span>
+<span id="cb1-42"><span class="st">Other Options:</span></span>
+<span id="cb1-43"><span class="st">    -n, --dry-run        Show parameter combinations without running</span></span>
+<span id="cb1-44"><span class="st">    -v, --verbose        Verbose output</span></span>
+<span id="cb1-45"><span class="st">    -c, --compile-only   Compile only, don&#39;t run simulations</span></span>
+<span id="cb1-46"><span class="st">    -h, --help           Show this help message</span></span>
+<span id="cb1-47"></span>
+<span id="cb1-48"><span class="st">Parameter sweep file (default):</span></span>
+<span id="cb1-49"><span class="st">    </span><span class="dt">\$</span><span class="st">0 sweep.params</span></span>
+<span id="cb1-50"></span>
+<span id="cb1-51"><span class="st">If no sweep file specified, uses sweep.params from current directory.</span></span>
+<span id="cb1-52"></span>
+<span id="cb1-53"><span class="st">Sweep file format:</span></span>
+<span id="cb1-54"><span class="st">    BASE_CONFIG=default.params</span></span>
+<span id="cb1-55"><span class="st">    CASE_START=1000</span></span>
+<span id="cb1-56"><span class="st">    CASE_END=1005</span></span>
+<span id="cb1-57"><span class="st">    SWEEP_De=0.1,0.5,1.0</span></span>
+<span id="cb1-58"><span class="st">    SWEEP_Oh=0.01,0.02</span></span>
+<span id="cb1-59"></span>
+<span id="cb1-60"><span class="st">CaseNo auto-increments from CASE_START for each parameter combination.</span></span>
+<span id="cb1-61"></span>
+<span id="cb1-62"><span class="st">Examples:</span></span>
+<span id="cb1-63"><span class="st">    # Run sweep (Stage 1 + Stage 2 per case, serial)</span></span>
+<span id="cb1-64"><span class="st">    </span><span class="dt">\$</span><span class="st">0</span></span>
+<span id="cb1-65"></span>
+<span id="cb1-66"><span class="st">    # Dry run to see parameter combinations</span></span>
+<span id="cb1-67"><span class="st">    </span><span class="dt">\$</span><span class="st">0 --dry-run</span></span>
+<span id="cb1-68"></span>
+<span id="cb1-69"><span class="st">    # Run only Stage 1 for all cases (generate restart files)</span></span>
+<span id="cb1-70"><span class="st">    </span><span class="dt">\$</span><span class="st">0 --stage1-only</span></span>
+<span id="cb1-71"></span>
+<span id="cb1-72"><span class="st">    # Run only Stage 2 with MPI (assumes restart files exist)</span></span>
+<span id="cb1-73"><span class="st">    </span><span class="dt">\$</span><span class="st">0 --stage2-only --mpi 8</span></span>
+<span id="cb1-74"></span>
+<span id="cb1-75"><span class="st">    # Run full sweep with OpenMP (Linux)</span></span>
+<span id="cb1-76"><span class="st">    </span><span class="dt">\$</span><span class="st">0 --fopenmp 4</span></span>
+<span id="cb1-77"></span>
+<span id="cb1-78"><span class="st">    # Run custom sweep file</span></span>
+<span id="cb1-79"><span class="st">    </span><span class="dt">\$</span><span class="st">0 custom_sweep.params</span></span>
+<span id="cb1-80"></span>
+<span id="cb1-81"><span class="st">For more information, see README.md</span></span>
+<span id="cb1-82"><span class="op">EOF</span></span>
+<span id="cb1-83"><span class="kw">}</span></span>
+<span id="cb1-84"></span>
+<span id="cb1-85"><span class="co"># ============================================================</span></span>
+<span id="cb1-86"><span class="co"># Parse Command Line Options</span></span>
+<span id="cb1-87"><span class="co"># ============================================================</span></span>
+<span id="cb1-88"><span class="va">DRY_RUN</span><span class="op">=</span>0</span>
+<span id="cb1-89"><span class="va">VERBOSE</span><span class="op">=</span>0</span>
+<span id="cb1-90"><span class="va">COMPILE_ONLY</span><span class="op">=</span>0</span>
+<span id="cb1-91"><span class="va">STAGE1_ONLY</span><span class="op">=</span>0</span>
+<span id="cb1-92"><span class="va">STAGE2_ONLY</span><span class="op">=</span>0</span>
+<span id="cb1-93"><span class="va">FOPENMP_ENABLED</span><span class="op">=</span>0</span>
+<span id="cb1-94"><span class="va">FOPENMP_THREADS</span><span class="op">=</span>8</span>
+<span id="cb1-95"><span class="va">MPI_ENABLED</span><span class="op">=</span>0</span>
+<span id="cb1-96"><span class="va">MPI_CORES</span><span class="op">=</span>2</span>
+<span id="cb1-97"></span>
+<span id="cb1-98"><span class="cf">while</span> <span class="kw">[[</span> <span class="dt">\$</span># <span class="ot">-gt</span> 0 <span class="kw">]];</span> <span class="cf">do</span></span>
+<span id="cb1-99">    <span class="cf">case</span> <span class="dt">\$</span>1 <span class="kw">in</span></span>
+<span id="cb1-100">        <span class="ss">-n</span><span class="kw">|</span><span class="ss">--dry-run</span><span class="kw">)</span></span>
+<span id="cb1-101">            <span class="va">DRY_RUN</span><span class="op">=</span>1</span>
+<span id="cb1-102">            <span class="bu">shift</span></span>
+<span id="cb1-103">            <span class="cf">;;</span></span>
+<span id="cb1-104">        <span class="ss">-v</span><span class="kw">|</span><span class="ss">--verbose</span><span class="kw">)</span></span>
+<span id="cb1-105">            <span class="va">VERBOSE</span><span class="op">=</span>1</span>
+<span id="cb1-106">            <span class="bu">shift</span></span>
+<span id="cb1-107">            <span class="cf">;;</span></span>
+<span id="cb1-108">        <span class="ss">-c</span><span class="kw">|</span><span class="ss">--compile-only</span><span class="kw">)</span></span>
+<span id="cb1-109">            <span class="va">COMPILE_ONLY</span><span class="op">=</span>1</span>
+<span id="cb1-110">            <span class="bu">shift</span></span>
+<span id="cb1-111">            <span class="cf">;;</span></span>
+<span id="cb1-112">        <span class="ss">--stage1-only</span><span class="kw">)</span></span>
+<span id="cb1-113">            <span class="va">STAGE1_ONLY</span><span class="op">=</span>1</span>
+<span id="cb1-114">            <span class="bu">shift</span></span>
+<span id="cb1-115">            <span class="cf">;;</span></span>
+<span id="cb1-116">        <span class="ss">--stage2-only</span><span class="kw">)</span></span>
+<span id="cb1-117">            <span class="va">STAGE2_ONLY</span><span class="op">=</span>1</span>
+<span id="cb1-118">            <span class="bu">shift</span></span>
+<span id="cb1-119">            <span class="cf">;;</span></span>
+<span id="cb1-120">        <span class="ss">--fopenmp</span><span class="kw">)</span></span>
+<span id="cb1-121">            <span class="va">FOPENMP_ENABLED</span><span class="op">=</span>1</span>
+<span id="cb1-122">            <span class="co"># Check if next arg is a number (optional thread count)</span></span>
+<span id="cb1-123">            <span class="cf">if</span> <span class="kw">[[</span> <span class="st">&quot;</span><span class="dt">\$</span><span class="st">{2:-}&quot;</span> <span class="ot">=~</span> <span class="pp">^</span><span class="op">[</span><span class="ss">0</span><span class="op">-</span><span class="ss">9</span><span class="op">]</span><span class="pp">+</span><span class="dt">\$</span> <span class="kw">]];</span> <span class="cf">then</span></span>
+<span id="cb1-124">                <span class="va">FOPENMP_THREADS</span><span class="op">=</span><span class="st">&quot;</span><span class="dt">\$</span><span class="st">2&quot;</span></span>
+<span id="cb1-125">                <span class="bu">shift</span></span>
+<span id="cb1-126">            <span class="cf">fi</span></span>
+<span id="cb1-127">            <span class="bu">shift</span></span>
+<span id="cb1-128">            <span class="cf">;;</span></span>
+<span id="cb1-129">        <span class="ss">--mpi</span><span class="kw">)</span></span>
+<span id="cb1-130">            <span class="va">MPI_ENABLED</span><span class="op">=</span>1</span>
+<span id="cb1-131">            <span class="co"># Check if next arg is a number (optional core count)</span></span>
+<span id="cb1-132">            <span class="cf">if</span> <span class="kw">[[</span> <span class="st">&quot;</span><span class="dt">\$</span><span class="st">{2:-}&quot;</span> <span class="ot">=~</span> <span class="pp">^</span><span class="op">[</span><span class="ss">0</span><span class="op">-</span><span class="ss">9</span><span class="op">]</span><span class="pp">+</span><span class="dt">\$</span> <span class="kw">]];</span> <span class="cf">then</span></span>
+<span id="cb1-133">                <span class="va">MPI_CORES</span><span class="op">=</span><span class="st">&quot;</span><span class="dt">\$</span><span class="st">2&quot;</span></span>
+<span id="cb1-134">                <span class="bu">shift</span></span>
+<span id="cb1-135">            <span class="cf">fi</span></span>
+<span id="cb1-136">            <span class="bu">shift</span></span>
+<span id="cb1-137">            <span class="cf">;;</span></span>
+<span id="cb1-138">        <span class="ss">-h</span><span class="kw">|</span><span class="ss">--help</span><span class="kw">)</span></span>
+<span id="cb1-139">            <span class="ex">usage</span></span>
+<span id="cb1-140">            <span class="bu">exit</span> 0</span>
+<span id="cb1-141">            <span class="cf">;;</span></span>
+<span id="cb1-142">        <span class="ss">-</span><span class="pp">*</span><span class="kw">)</span></span>
+<span id="cb1-143">            <span class="bu">echo</span> <span class="st">&quot;ERROR: Unknown option: </span><span class="dt">\$</span><span class="st">1&quot;</span> <span class="op">&gt;&amp;</span><span class="dv">2</span></span>
+<span id="cb1-144">            <span class="ex">usage</span></span>
+<span id="cb1-145">            <span class="bu">exit</span> 1</span>
+<span id="cb1-146">            <span class="cf">;;</span></span>
+<span id="cb1-147">        <span class="pp">*</span><span class="kw">)</span></span>
+<span id="cb1-148">            <span class="cf">break</span></span>
+<span id="cb1-149">            <span class="cf">;;</span></span>
+<span id="cb1-150">    <span class="cf">esac</span></span>
+<span id="cb1-151"><span class="cf">done</span></span>
+<span id="cb1-152"></span>
+<span id="cb1-153"><span class="co"># ============================================================</span></span>
+<span id="cb1-154"><span class="co"># Validation</span></span>
+<span id="cb1-155"><span class="co"># ============================================================</span></span>
+<span id="cb1-156"></span>
+<span id="cb1-157"><span class="co"># Check mutually exclusive stage flags</span></span>
+<span id="cb1-158"><span class="cf">if</span> <span class="bu">[</span> <span class="dt">\$</span>STAGE1_ONLY <span class="ot">-eq</span> 1 <span class="bu">]</span> <span class="kw">&amp;&amp;</span> <span class="bu">[</span> <span class="dt">\$</span>STAGE2_ONLY <span class="ot">-eq</span> 1 <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb1-159">    <span class="bu">echo</span> <span class="st">&quot;ERROR: Cannot use both --stage1-only and --stage2-only&quot;</span> <span class="op">&gt;&amp;</span><span class="dv">2</span></span>
+<span id="cb1-160">    <span class="bu">exit</span> 1</span>
+<span id="cb1-161"><span class="cf">fi</span></span>
+<span id="cb1-162"></span>
+<span id="cb1-163"><span class="co"># Check --mpi only with stage2</span></span>
+<span id="cb1-164"><span class="cf">if</span> <span class="bu">[</span> <span class="dt">\$</span>MPI_ENABLED <span class="ot">-eq</span> 1 <span class="bu">]</span> <span class="kw">&amp;&amp;</span> <span class="bu">[</span> <span class="dt">\$</span>STAGE1_ONLY <span class="ot">-eq</span> 1 <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb1-165">    <span class="bu">echo</span> <span class="st">&quot;ERROR: --mpi is only valid for Stage 2 (use --stage2-only or default both-stages mode)&quot;</span> <span class="op">&gt;&amp;</span><span class="dv">2</span></span>
+<span id="cb1-166">    <span class="bu">exit</span> 1</span>
+<span id="cb1-167"><span class="cf">fi</span></span>
+<span id="cb1-168"></span>
+<span id="cb1-169"><span class="co"># Check --mpi and --fopenmp are mutually exclusive</span></span>
+<span id="cb1-170"><span class="cf">if</span> <span class="bu">[</span> <span class="dt">\$</span>MPI_ENABLED <span class="ot">-eq</span> 1 <span class="bu">]</span> <span class="kw">&amp;&amp;</span> <span class="bu">[</span> <span class="dt">\$</span>FOPENMP_ENABLED <span class="ot">-eq</span> 1 <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb1-171">    <span class="bu">echo</span> <span class="st">&quot;ERROR: --mpi and --fopenmp are mutually exclusive&quot;</span> <span class="op">&gt;&amp;</span><span class="dv">2</span></span>
+<span id="cb1-172">    <span class="bu">exit</span> 1</span>
+<span id="cb1-173"><span class="cf">fi</span></span>
+<span id="cb1-174"></span>
+<span id="cb1-175"><span class="co"># ============================================================</span></span>
+<span id="cb1-176"><span class="co"># Determine Sweep File</span></span>
+<span id="cb1-177"><span class="co"># ============================================================</span></span>
+<span id="cb1-178"><span class="va">SWEEP_FILE</span><span class="op">=</span><span class="st">&quot;</span><span class="dt">\$</span><span class="st">{1:-sweep.params}&quot;</span></span>
+<span id="cb1-179"></span>
+<span id="cb1-180"><span class="cf">if</span> <span class="bu">[</span> <span class="ot">!</span> <span class="ot">-f</span> <span class="st">&quot;</span><span class="dt">\$</span><span class="st">SWEEP_FILE&quot;</span> <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb1-181">    <span class="bu">echo</span> <span class="st">&quot;ERROR: Sweep file not found: </span><span class="dt">\$</span><span class="st">SWEEP_FILE&quot;</span> <span class="op">&gt;&amp;</span><span class="dv">2</span></span>
+<span id="cb1-182">    <span class="bu">exit</span> 1</span>
+<span id="cb1-183"><span class="cf">fi</span></span>
+<span id="cb1-184"></span>
+<span id="cb1-185"><span class="bu">echo</span> <span class="st">&quot;=========================================&quot;</span></span>
+<span id="cb1-186"><span class="bu">echo</span> <span class="st">&quot;Viscoelastic Bubble Bursting - Parameter Sweep&quot;</span></span>
+<span id="cb1-187"><span class="bu">echo</span> <span class="st">&quot;=========================================&quot;</span></span>
+<span id="cb1-188"><span class="bu">echo</span> <span class="st">&quot;Sweep file: </span><span class="dt">\$</span><span class="st">SWEEP_FILE&quot;</span></span>
+<span id="cb1-189"><span class="bu">[</span> <span class="dt">\$</span>DRY_RUN <span class="ot">-eq</span> 1 <span class="bu">]</span> <span class="kw">&amp;&amp;</span> <span class="bu">echo</span> <span class="st">&quot;Mode: Dry run (no execution)&quot;</span></span>
+<span id="cb1-190"><span class="cf">if</span> <span class="bu">[</span> <span class="dt">\$</span>STAGE1_ONLY <span class="ot">-eq</span> 1 <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb1-191">    <span class="bu">echo</span> <span class="st">&quot;Stages: Stage 1 only (generate restart files)&quot;</span></span>
+<span id="cb1-192"><span class="cf">elif</span> <span class="bu">[</span> <span class="dt">\$</span>STAGE2_ONLY <span class="ot">-eq</span> 1 <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb1-193">    <span class="bu">echo</span> <span class="st">&quot;Stages: Stage 2 only (full simulation)&quot;</span></span>
+<span id="cb1-194"><span class="cf">else</span></span>
+<span id="cb1-195">    <span class="bu">echo</span> <span class="st">&quot;Stages: Stage 1 + Stage 2 per case&quot;</span></span>
+<span id="cb1-196"><span class="cf">fi</span></span>
+<span id="cb1-197"><span class="cf">if</span> <span class="bu">[</span> <span class="dt">\$</span>MPI_ENABLED <span class="ot">-eq</span> 1 <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb1-198">    <span class="bu">echo</span> <span class="st">&quot;Parallelization: MPI (</span><span class="dt">\$</span><span class="st">MPI_CORES cores)&quot;</span></span>
+<span id="cb1-199"><span class="cf">elif</span> <span class="bu">[</span> <span class="dt">\$</span>FOPENMP_ENABLED <span class="ot">-eq</span> 1 <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb1-200">    <span class="bu">echo</span> <span class="st">&quot;Parallelization: OpenMP (</span><span class="dt">\$</span><span class="st">FOPENMP_THREADS threads)&quot;</span></span>
+<span id="cb1-201"><span class="cf">else</span></span>
+<span id="cb1-202">    <span class="bu">echo</span> <span class="st">&quot;Parallelization: Serial&quot;</span></span>
+<span id="cb1-203"><span class="cf">fi</span></span>
+<span id="cb1-204"><span class="bu">echo</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb1-205"></span>
+<span id="cb1-206"><span class="co"># ============================================================</span></span>
+<span id="cb1-207"><span class="co"># Parse Sweep Configuration</span></span>
+<span id="cb1-208"><span class="co"># ============================================================</span></span>
+<span id="cb1-209"><span class="co"># Source the sweep file to get variables</span></span>
+<span id="cb1-210"><span class="bu">source</span> <span class="st">&quot;</span><span class="dt">\$</span><span class="st">SWEEP_FILE&quot;</span></span>
+<span id="cb1-211"></span>
+<span id="cb1-212"><span class="co"># Validate required variables</span></span>
+<span id="cb1-213"><span class="cf">if</span> <span class="bu">[</span> <span class="ot">-z</span> <span class="st">&quot;</span><span class="dt">\$</span><span class="st">BASE_CONFIG&quot;</span> <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb1-214">    <span class="bu">echo</span> <span class="st">&quot;ERROR: BASE_CONFIG not defined in sweep file&quot;</span> <span class="op">&gt;&amp;</span><span class="dv">2</span></span>
+<span id="cb1-215">    <span class="bu">exit</span> 1</span>
+<span id="cb1-216"><span class="cf">fi</span></span>
+<span id="cb1-217"></span>
+<span id="cb1-218"><span class="cf">if</span> <span class="bu">[</span> <span class="ot">-z</span> <span class="st">&quot;</span><span class="dt">\$</span><span class="st">CASE_START&quot;</span> <span class="bu">]</span> <span class="kw">||</span> <span class="bu">[</span> <span class="ot">-z</span> <span class="st">&quot;</span><span class="dt">\$</span><span class="st">CASE_END&quot;</span> <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb1-219">    <span class="bu">echo</span> <span class="st">&quot;ERROR: CASE_START and CASE_END must be defined in sweep file&quot;</span> <span class="op">&gt;&amp;</span><span class="dv">2</span></span>
+<span id="cb1-220">    <span class="bu">exit</span> 1</span>
+<span id="cb1-221"><span class="cf">fi</span></span>
+<span id="cb1-222"></span>
+<span id="cb1-223"><span class="co"># Validate CaseNo range</span></span>
+<span id="cb1-224"><span class="cf">if</span> <span class="bu">[</span> <span class="st">&quot;</span><span class="dt">\$</span><span class="st">CASE_START&quot;</span> <span class="ot">-lt</span> 1000 <span class="bu">]</span> <span class="kw">||</span> <span class="bu">[</span> <span class="st">&quot;</span><span class="dt">\$</span><span class="st">CASE_START&quot;</span> <span class="ot">-gt</span> 9999 <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb1-225">    <span class="bu">echo</span> <span class="st">&quot;ERROR: CASE_START must be 4-digit (1000-9999), got: </span><span class="dt">\$</span><span class="st">CASE_START&quot;</span> <span class="op">&gt;&amp;</span><span class="dv">2</span></span>
+<span id="cb1-226">    <span class="bu">exit</span> 1</span>
+<span id="cb1-227"><span class="cf">fi</span></span>
+<span id="cb1-228"></span>
+<span id="cb1-229"><span class="cf">if</span> <span class="bu">[</span> <span class="st">&quot;</span><span class="dt">\$</span><span class="st">CASE_END&quot;</span> <span class="ot">-lt</span> <span class="st">&quot;</span><span class="dt">\$</span><span class="st">CASE_START&quot;</span> <span class="bu">]</span> <span class="kw">||</span> <span class="bu">[</span> <span class="st">&quot;</span><span class="dt">\$</span><span class="st">CASE_END&quot;</span> <span class="ot">-gt</span> 9999 <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb1-230">    <span class="bu">echo</span> <span class="st">&quot;ERROR: CASE_END must be &gt;= CASE_START and &lt;= 9999, got: </span><span class="dt">\$</span><span class="st">CASE_END&quot;</span> <span class="op">&gt;&amp;</span><span class="dv">2</span></span>
+<span id="cb1-231">    <span class="bu">exit</span> 1</span>
+<span id="cb1-232"><span class="cf">fi</span></span>
+<span id="cb1-233"></span>
+<span id="cb1-234"><span class="cf">if</span> <span class="bu">[</span> <span class="ot">!</span> <span class="ot">-f</span> <span class="st">&quot;</span><span class="dt">\$</span><span class="st">BASE_CONFIG&quot;</span> <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb1-235">    <span class="bu">echo</span> <span class="st">&quot;ERROR: Base configuration file not found: </span><span class="dt">\$</span><span class="st">BASE_CONFIG&quot;</span> <span class="op">&gt;&amp;</span><span class="dv">2</span></span>
+<span id="cb1-236">    <span class="bu">exit</span> 1</span>
+<span id="cb1-237"><span class="cf">fi</span></span>
+<span id="cb1-238"></span>
+<span id="cb1-239"><span class="bu">echo</span> <span class="st">&quot;Base configuration: </span><span class="dt">\$</span><span class="st">BASE_CONFIG&quot;</span></span>
+<span id="cb1-240"><span class="bu">echo</span> <span class="st">&quot;Case number range: </span><span class="dt">\$</span><span class="st">CASE_START to </span><span class="dt">\$</span><span class="st">CASE_END&quot;</span></span>
+<span id="cb1-241"><span class="bu">echo</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb1-242"></span>
+<span id="cb1-243"><span class="co"># ============================================================</span></span>
+<span id="cb1-244"><span class="co"># Extract Sweep Variables</span></span>
+<span id="cb1-245"><span class="co"># ============================================================</span></span>
+<span id="cb1-246"><span class="va">SWEEP_VARS</span><span class="op">=</span><span class="va">()</span></span>
+<span id="cb1-247"><span class="va">SWEEP_VALUES</span><span class="op">=</span><span class="va">()</span></span>
+<span id="cb1-248"></span>
+<span id="cb1-249"><span class="co"># Read sweep file and extract SWEEP_* variables</span></span>
+<span id="cb1-250"><span class="cf">while</span> <span class="va">IFS</span><span class="op">=</span><span class="st">&#39;=&#39;</span> <span class="bu">read</span> <span class="at">-r</span> <span class="va">key</span> <span class="va">value</span><span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb1-251">    <span class="co"># Skip comments and empty lines</span></span>
+<span id="cb1-252">    <span class="kw">[[</span> <span class="st">&quot;</span><span class="dt">\$</span><span class="st">key&quot;</span> <span class="ot">=~</span> <span class="pp">^</span><span class="op">[[:</span><span class="va">space</span><span class="op">:]]</span><span class="pp">*</span><span class="ss">#</span> <span class="kw">]]</span> <span class="kw">&amp;&amp;</span> <span class="cf">continue</span></span>
+<span id="cb1-253">    <span class="kw">[[</span> <span class="ot">-z</span> <span class="st">&quot;</span><span class="dt">\$</span><span class="st">key&quot;</span> <span class="kw">]]</span> <span class="kw">&amp;&amp;</span> <span class="cf">continue</span></span>
+<span id="cb1-254"></span>
+<span id="cb1-255">    <span class="co"># Match SWEEP_* variables</span></span>
+<span id="cb1-256">    <span class="cf">if</span> <span class="kw">[[</span> <span class="st">&quot;</span><span class="dt">\$</span><span class="st">key&quot;</span> <span class="ot">=~</span> <span class="pp">^</span><span class="op">[[:</span><span class="va">space</span><span class="op">:]]</span><span class="pp">*</span><span class="ss">SWEEP_</span><span class="op">([^</span><span class="ss">=</span><span class="op">]</span><span class="pp">+</span><span class="op">)</span> <span class="kw">]];</span> <span class="cf">then</span></span>
+<span id="cb1-257">        <span class="va">var_name</span><span class="op">=</span><span class="st">&quot;</span><span class="dt">\$</span><span class="st">{BASH_REMATCH[1]}&quot;</span></span>
+<span id="cb1-258">        <span class="co"># Remove inline comments and whitespace</span></span>
+<span id="cb1-259">        <span class="va">value</span><span class="op">=</span><span class="dt">\$</span><span class="kw">(</span><span class="bu">echo</span> <span class="st">&quot;</span><span class="dt">\$</span><span class="st">value&quot;</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="st">&#39;s/#.*//&#39;</span> <span class="kw">|</span> <span class="fu">xargs</span><span class="kw">)</span></span>
+<span id="cb1-260"></span>
+<span id="cb1-261">        <span class="va">SWEEP_VARS</span><span class="op">+=</span><span class="va">(</span><span class="st">&quot;</span><span class="dt">\$</span><span class="st">var_name&quot;</span><span class="va">)</span></span>
+<span id="cb1-262">        <span class="va">SWEEP_VALUES</span><span class="op">+=</span><span class="va">(</span><span class="st">&quot;</span><span class="dt">\$</span><span class="st">value&quot;</span><span class="va">)</span></span>
+<span id="cb1-263">    <span class="cf">fi</span></span>
+<span id="cb1-264"><span class="cf">done</span> <span class="op">&lt;</span> <span class="st">&quot;</span><span class="dt">\$</span><span class="st">SWEEP_FILE&quot;</span></span>
+<span id="cb1-265"></span>
+<span id="cb1-266"><span class="cf">if</span> <span class="bu">[</span> <span class="dt">\$</span>{#SWEEP_VARS[@]} <span class="ot">-eq</span> 0 <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb1-267">    <span class="bu">echo</span> <span class="st">&quot;ERROR: No SWEEP_* variables found in </span><span class="dt">\$</span><span class="st">SWEEP_FILE&quot;</span> <span class="op">&gt;&amp;</span><span class="dv">2</span></span>
+<span id="cb1-268">    <span class="bu">exit</span> 1</span>
+<span id="cb1-269"><span class="cf">fi</span></span>
+<span id="cb1-270"></span>
+<span id="cb1-271"><span class="bu">echo</span> <span class="st">&quot;Sweep variables:&quot;</span></span>
+<span id="cb1-272"><span class="cf">for</span> i <span class="kw">in</span> <span class="st">&quot;</span><span class="dt">\$</span><span class="st">{!SWEEP_VARS[@]}&quot;</span><span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb1-273">    <span class="bu">echo</span> <span class="st">&quot;  </span><span class="dt">\$</span><span class="st">{SWEEP_VARS[</span><span class="dt">\$</span><span class="st">i]} = </span><span class="dt">\$</span><span class="st">{SWEEP_VALUES[</span><span class="dt">\$</span><span class="st">i]}&quot;</span></span>
+<span id="cb1-274"><span class="cf">done</span></span>
+<span id="cb1-275"><span class="bu">echo</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb1-276"></span>
+<span id="cb1-277"><span class="co"># ============================================================</span></span>
+<span id="cb1-278"><span class="co"># Generate Parameter Combinations</span></span>
+<span id="cb1-279"><span class="co"># ============================================================</span></span>
+<span id="cb1-280"><span class="co"># Create temporary directory for generated parameter files</span></span>
+<span id="cb1-281"><span class="va">TEMP_DIR</span><span class="op">=</span><span class="dt">\$</span><span class="kw">(</span><span class="fu">mktemp</span> <span class="at">-d</span> <span class="st">&quot;</span><span class="dt">\$</span><span class="st">{TMPDIR:-/tmp}/sweep.XXXXXX&quot;</span><span class="kw">)</span></span>
+<span id="cb1-282"><span class="bu">trap</span> <span class="st">&quot;rm -rf </span><span class="dt">\$</span><span class="st">TEMP_DIR&quot;</span> EXIT</span>
+<span id="cb1-283"></span>
+<span id="cb1-284"><span class="va">CASE_NUM</span><span class="op">=</span><span class="dt">\$</span>CASE_START</span>
+<span id="cb1-285"><span class="va">COMBINATION_COUNT</span><span class="op">=</span>0</span>
+<span id="cb1-286"></span>
+<span id="cb1-287"><span class="co"># Recursive function to generate all combinations</span></span>
+<span id="cb1-288"><span class="fu">generate_combinations()</span> <span class="kw">{</span></span>
+<span id="cb1-289">    <span class="bu">local</span> <span class="va">depth</span><span class="op">=</span><span class="dt">\$</span>1</span>
+<span id="cb1-290">    <span class="bu">shift</span></span>
+<span id="cb1-291">    <span class="bu">local</span> <span class="va">current_values</span><span class="op">=</span><span class="va">(</span><span class="st">&quot;</span><span class="dt">\$</span><span class="st">@&quot;</span><span class="va">)</span></span>
+<span id="cb1-292"></span>
+<span id="cb1-293">    <span class="cf">if</span> <span class="bu">[</span> <span class="dt">\$</span>depth <span class="ot">-eq</span> <span class="dt">\$</span>{#SWEEP_VARS[@]} <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb1-294">        <span class="co"># Base case: all variables assigned, create parameter file</span></span>
+<span id="cb1-295">        <span class="bu">local</span> <span class="va">case_file</span><span class="op">=</span><span class="st">&quot;</span><span class="dt">\$</span><span class="st">{TEMP_DIR}/case_</span><span class="dt">\$</span><span class="st">(printf &quot;</span>%04d<span class="st">&quot; </span><span class="dt">\$</span><span class="st">CASE_NUM).params&quot;</span></span>
+<span id="cb1-296"></span>
+<span id="cb1-297">        <span class="co"># Copy base config</span></span>
+<span id="cb1-298">        <span class="fu">cp</span> <span class="st">&quot;</span><span class="dt">\$</span><span class="st">BASE_CONFIG&quot;</span> <span class="st">&quot;</span><span class="dt">\$</span><span class="st">case_file&quot;</span></span>
+<span id="cb1-299"></span>
+<span id="cb1-300">        <span class="co"># Override CaseNo</span></span>
+<span id="cb1-301">        <span class="cf">if</span> <span class="fu">grep</span> <span class="at">-q</span> <span class="st">&quot;^CaseNo=&quot;</span> <span class="st">&quot;</span><span class="dt">\$</span><span class="st">case_file&quot;</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb1-302">            <span class="fu">sed</span> <span class="at">-i.bak</span> <span class="st">&quot;s|^CaseNo=.*|CaseNo=</span><span class="dt">\$</span><span class="st">{CASE_NUM}|&quot;</span> <span class="st">&quot;</span><span class="dt">\$</span><span class="st">case_file&quot;</span></span>
+<span id="cb1-303">        <span class="cf">else</span></span>
+<span id="cb1-304">            <span class="bu">echo</span> <span class="st">&quot;CaseNo=</span><span class="dt">\$</span><span class="st">{CASE_NUM}&quot;</span> <span class="op">&gt;&gt;</span> <span class="st">&quot;</span><span class="dt">\$</span><span class="st">case_file&quot;</span></span>
+<span id="cb1-305">        <span class="cf">fi</span></span>
+<span id="cb1-306">        <span class="fu">rm</span> <span class="at">-f</span> <span class="st">&quot;</span><span class="dt">\$</span><span class="st">{case_file}.bak&quot;</span></span>
+<span id="cb1-307"></span>
+<span id="cb1-308">        <span class="co"># Override with sweep values</span></span>
+<span id="cb1-309">        <span class="cf">for</span> i <span class="kw">in</span> <span class="st">&quot;</span><span class="dt">\$</span><span class="st">{!SWEEP_VARS[@]}&quot;</span><span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb1-310">            <span class="bu">local</span> <span class="va">var</span><span class="op">=</span><span class="st">&quot;</span><span class="dt">\$</span><span class="st">{SWEEP_VARS[</span><span class="dt">\$</span><span class="st">i]}&quot;</span></span>
+<span id="cb1-311">            <span class="bu">local</span> <span class="va">val</span><span class="op">=</span><span class="st">&quot;</span><span class="dt">\$</span><span class="st">{current_values[</span><span class="dt">\$</span><span class="st">i]}&quot;</span></span>
+<span id="cb1-312"></span>
+<span id="cb1-313">            <span class="cf">if</span> <span class="fu">grep</span> <span class="at">-q</span> <span class="st">&quot;^</span><span class="dt">\$</span><span class="st">{var}=&quot;</span> <span class="st">&quot;</span><span class="dt">\$</span><span class="st">case_file&quot;</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb1-314">                <span class="fu">sed</span> <span class="at">-i.bak</span> <span class="st">&quot;s|^</span><span class="dt">\$</span><span class="st">{var}=.*|</span><span class="dt">\$</span><span class="st">{var}=</span><span class="dt">\$</span><span class="st">{val}|&quot;</span> <span class="st">&quot;</span><span class="dt">\$</span><span class="st">case_file&quot;</span></span>
+<span id="cb1-315">            <span class="cf">else</span></span>
+<span id="cb1-316">                <span class="bu">echo</span> <span class="st">&quot;</span><span class="dt">\$</span><span class="st">{var}=</span><span class="dt">\$</span><span class="st">{val}&quot;</span> <span class="op">&gt;&gt;</span> <span class="st">&quot;</span><span class="dt">\$</span><span class="st">case_file&quot;</span></span>
+<span id="cb1-317">            <span class="cf">fi</span></span>
+<span id="cb1-318">            <span class="fu">rm</span> <span class="at">-f</span> <span class="st">&quot;</span><span class="dt">\$</span><span class="st">{case_file}.bak&quot;</span></span>
+<span id="cb1-319">        <span class="cf">done</span></span>
+<span id="cb1-320"></span>
+<span id="cb1-321">        <span class="kw">((</span><span class="op">++</span><span class="va">COMBINATION_COUNT</span><span class="kw">))</span></span>
+<span id="cb1-322"></span>
+<span id="cb1-323">        <span class="co"># Print summary</span></span>
+<span id="cb1-324">        <span class="cf">if</span> <span class="bu">[</span> <span class="dt">\$</span>DRY_RUN <span class="ot">-eq</span> 1 <span class="bu">]</span> <span class="kw">||</span> <span class="bu">[</span> <span class="dt">\$</span>VERBOSE <span class="ot">-eq</span> 1 <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb1-325">            <span class="bu">echo</span> <span class="st">&quot;Case </span><span class="dt">\$</span><span class="st">CASE_NUM:&quot;</span></span>
+<span id="cb1-326">            <span class="cf">for</span> i <span class="kw">in</span> <span class="st">&quot;</span><span class="dt">\$</span><span class="st">{!SWEEP_VARS[@]}&quot;</span><span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb1-327">                <span class="bu">echo</span> <span class="st">&quot;  </span><span class="dt">\$</span><span class="st">{SWEEP_VARS[</span><span class="dt">\$</span><span class="st">i]} = </span><span class="dt">\$</span><span class="st">{current_values[</span><span class="dt">\$</span><span class="st">i]}&quot;</span></span>
+<span id="cb1-328">            <span class="cf">done</span></span>
+<span id="cb1-329">            <span class="bu">echo</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb1-330">        <span class="cf">fi</span></span>
+<span id="cb1-331"></span>
+<span id="cb1-332">        <span class="kw">((</span><span class="va">CASE_NUM</span><span class="op">++</span><span class="kw">))</span></span>
+<span id="cb1-333">        <span class="cf">return</span></span>
+<span id="cb1-334">    <span class="cf">fi</span></span>
+<span id="cb1-335"></span>
+<span id="cb1-336">    <span class="co"># Recursive case: iterate through values for current variable</span></span>
+<span id="cb1-337">    <span class="bu">local</span> <span class="va">values</span><span class="op">=</span><span class="st">&quot;</span><span class="dt">\$</span><span class="st">{SWEEP_VALUES[</span><span class="dt">\$</span><span class="st">depth]}&quot;</span></span>
+<span id="cb1-338">    <span class="va">IFS</span><span class="op">=</span><span class="st">&#39;,&#39;</span> <span class="bu">read</span> <span class="at">-ra</span> <span class="va">value_array</span> <span class="op">&lt;&lt;&lt;</span> <span class="st">&quot;</span><span class="dt">\$</span><span class="st">values&quot;</span></span>
+<span id="cb1-339"></span>
+<span id="cb1-340">    <span class="cf">for</span> val <span class="kw">in</span> <span class="st">&quot;</span><span class="dt">\$</span><span class="st">{value_array[@]}&quot;</span><span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb1-341">        <span class="va">val</span><span class="op">=</span><span class="dt">\$</span><span class="kw">(</span><span class="bu">echo</span> <span class="st">&quot;</span><span class="dt">\$</span><span class="st">val&quot;</span> <span class="kw">|</span> <span class="fu">xargs</span><span class="kw">)</span>  <span class="co"># Trim whitespace</span></span>
+<span id="cb1-342">        <span class="ex">generate_combinations</span> <span class="dt">\$</span><span class="er">(</span><span class="kw">(</span><span class="ex">depth</span> + 1<span class="kw">))</span> <span class="ex">\${current_values[@]+</span><span class="st">&quot;</span><span class="dt">\$</span><span class="st">{current_values[@]}&quot;</span><span class="ex">}</span> <span class="st">&quot;</span><span class="dt">\$</span><span class="st">val&quot;</span></span>
+<span id="cb1-343">    <span class="cf">done</span></span>
+<span id="cb1-344"><span class="kw">}</span></span>
+<span id="cb1-345"></span>
+<span id="cb1-346"><span class="co"># Start recursion</span></span>
+<span id="cb1-347"><span class="ex">generate_combinations</span> 0</span>
+<span id="cb1-348"></span>
+<span id="cb1-349"><span class="bu">echo</span> <span class="st">&quot;Generated </span><span class="dt">\$</span><span class="st">COMBINATION_COUNT parameter combinations&quot;</span></span>
+<span id="cb1-350"></span>
+<span id="cb1-351"><span class="co"># Check if number of combinations matches the range</span></span>
+<span id="cb1-352"><span class="va">EXPECTED_COUNT</span><span class="op">=</span><span class="dt">\$</span><span class="kw">((</span><span class="va">CASE_END</span> <span class="op">-</span> <span class="va">CASE_START</span> <span class="op">+</span> <span class="dv">1</span><span class="kw">))</span></span>
+<span id="cb1-353"><span class="cf">if</span> <span class="bu">[</span> <span class="dt">\$</span>COMBINATION_COUNT <span class="ot">-ne</span> <span class="dt">\$</span>EXPECTED_COUNT <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb1-354">    <span class="bu">echo</span> <span class="st">&quot;WARNING: Generated </span><span class="dt">\$</span><span class="st">COMBINATION_COUNT combinations, but CASE_END suggests </span><span class="dt">\$</span><span class="st">EXPECTED_COUNT&quot;</span> <span class="op">&gt;&amp;</span><span class="dv">2</span></span>
+<span id="cb1-355">    <span class="bu">echo</span> <span class="st">&quot;         Consider adjusting CASE_END in sweep file&quot;</span> <span class="op">&gt;&amp;</span><span class="dv">2</span></span>
+<span id="cb1-356"><span class="cf">fi</span></span>
+<span id="cb1-357"></span>
+<span id="cb1-358"><span class="cf">if</span> <span class="bu">[</span> <span class="dt">\$</span>COMBINATION_COUNT <span class="ot">-gt</span> <span class="dt">\$</span>EXPECTED_COUNT <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb1-359">    <span class="bu">echo</span> <span class="st">&quot;ERROR: Too many combinations (</span><span class="dt">\$</span><span class="st">COMBINATION_COUNT) for range </span><span class="dt">\$</span><span class="st">CASE_START-</span><span class="dt">\$</span><span class="st">CASE_END&quot;</span> <span class="op">&gt;&amp;</span><span class="dv">2</span></span>
+<span id="cb1-360">    <span class="bu">exit</span> 1</span>
+<span id="cb1-361"><span class="cf">fi</span></span>
+<span id="cb1-362"></span>
+<span id="cb1-363"><span class="bu">echo</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb1-364"></span>
+<span id="cb1-365"><span class="co"># Exit if dry run</span></span>
+<span id="cb1-366"><span class="cf">if</span> <span class="bu">[</span> <span class="dt">\$</span>DRY_RUN <span class="ot">-eq</span> 1 <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb1-367">    <span class="bu">echo</span> <span class="st">&quot;Dry run complete. No simulations executed.&quot;</span></span>
+<span id="cb1-368">    <span class="bu">exit</span> 0</span>
+<span id="cb1-369"><span class="cf">fi</span></span>
+<span id="cb1-370"></span>
+<span id="cb1-371"><span class="co"># ============================================================</span></span>
+<span id="cb1-372"><span class="co"># Run Simulations</span></span>
+<span id="cb1-373"><span class="co"># ============================================================</span></span>
+<span id="cb1-374"><span class="bu">echo</span> <span class="st">&quot;=========================================&quot;</span></span>
+<span id="cb1-375"><span class="bu">echo</span> <span class="st">&quot;Running Simulations&quot;</span></span>
+<span id="cb1-376"><span class="bu">echo</span> <span class="st">&quot;=========================================&quot;</span></span>
+<span id="cb1-377"></span>
+<span id="cb1-378"><span class="co"># Build list of parameter files</span></span>
+<span id="cb1-379"><span class="va">PARAM_FILES</span><span class="op">=</span><span class="va">()</span></span>
+<span id="cb1-380"><span class="cf">for</span> case_file <span class="kw">in</span> <span class="st">&quot;</span><span class="dt">\$</span><span class="st">TEMP_DIR&quot;</span>/case_<span class="pp">*</span>.params<span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb1-381">    <span class="va">PARAM_FILES</span><span class="op">+=</span><span class="va">(</span><span class="st">&quot;</span><span class="dt">\$</span><span class="st">case_file&quot;</span><span class="va">)</span></span>
+<span id="cb1-382"><span class="cf">done</span></span>
+<span id="cb1-383"></span>
+<span id="cb1-384"><span class="co"># Build common flags</span></span>
+<span id="cb1-385"><span class="va">COMMON_FLAGS</span><span class="op">=</span><span class="st">&quot;&quot;</span></span>
+<span id="cb1-386"><span class="cf">if</span> <span class="bu">[</span> <span class="dt">\$</span>COMPILE_ONLY <span class="ot">-eq</span> 1 <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb1-387">    <span class="va">COMMON_FLAGS</span><span class="op">=</span><span class="st">&quot;</span><span class="dt">\$</span><span class="st">COMMON_FLAGS --compile-only&quot;</span></span>
+<span id="cb1-388"><span class="cf">fi</span></span>
+<span id="cb1-389"><span class="cf">if</span> <span class="bu">[</span> <span class="dt">\$</span>VERBOSE <span class="ot">-eq</span> 1 <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb1-390">    <span class="va">COMMON_FLAGS</span><span class="op">=</span><span class="st">&quot;</span><span class="dt">\$</span><span class="st">COMMON_FLAGS --verbose&quot;</span></span>
+<span id="cb1-391"><span class="cf">fi</span></span>
+<span id="cb1-392"></span>
+<span id="cb1-393"><span class="co"># Build parallelization flags</span></span>
+<span id="cb1-394"><span class="va">PARALLEL_FLAGS</span><span class="op">=</span><span class="st">&quot;&quot;</span></span>
+<span id="cb1-395"><span class="cf">if</span> <span class="bu">[</span> <span class="dt">\$</span>MPI_ENABLED <span class="ot">-eq</span> 1 <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb1-396">    <span class="va">PARALLEL_FLAGS</span><span class="op">=</span><span class="st">&quot;--mpi </span><span class="dt">\$</span><span class="st">MPI_CORES&quot;</span></span>
+<span id="cb1-397"><span class="cf">elif</span> <span class="bu">[</span> <span class="dt">\$</span>FOPENMP_ENABLED <span class="ot">-eq</span> 1 <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb1-398">    <span class="va">PARALLEL_FLAGS</span><span class="op">=</span><span class="st">&quot;--fopenmp </span><span class="dt">\$</span><span class="st">FOPENMP_THREADS&quot;</span></span>
+<span id="cb1-399"><span class="cf">fi</span></span>
+<span id="cb1-400"></span>
+<span id="cb1-401"><span class="co"># Run simulations</span></span>
+<span id="cb1-402"><span class="bu">echo</span> <span class="st">&quot;Running </span><span class="dt">\$</span><span class="st">COMBINATION_COUNT simulations sequentially&quot;</span></span>
+<span id="cb1-403"><span class="bu">echo</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb1-404"></span>
+<span id="cb1-405"><span class="cf">for</span> param_file <span class="kw">in</span> <span class="st">&quot;</span><span class="dt">\$</span><span class="st">{PARAM_FILES[@]}&quot;</span><span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb1-406">    <span class="va">case_no</span><span class="op">=</span><span class="dt">\$</span><span class="kw">(</span><span class="fu">grep</span> <span class="st">&quot;^CaseNo=&quot;</span> <span class="st">&quot;</span><span class="dt">\$</span><span class="st">param_file&quot;</span> <span class="kw">|</span> <span class="fu">cut</span> <span class="at">-d</span><span class="st">&#39;=&#39;</span> <span class="at">-f2</span><span class="kw">)</span></span>
+<span id="cb1-407">    <span class="bu">echo</span> <span class="st">&quot;-----------------------------------------&quot;</span></span>
+<span id="cb1-408">    <span class="bu">echo</span> <span class="st">&quot;Processing Case </span><span class="dt">\$</span><span class="st">case_no&quot;</span></span>
+<span id="cb1-409">    <span class="bu">echo</span> <span class="st">&quot;-----------------------------------------&quot;</span></span>
+<span id="cb1-410"></span>
+<span id="cb1-411">    <span class="cf">if</span> <span class="bu">[</span> <span class="dt">\$</span>STAGE1_ONLY <span class="ot">-eq</span> 1 <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb1-412">        <span class="co"># Stage 1 only</span></span>
+<span id="cb1-413">        <span class="bu">echo</span> <span class="st">&quot;Running Stage 1...&quot;</span></span>
+<span id="cb1-414">        <span class="ex">./runSimulation.sh</span> <span class="at">--stage1</span> <span class="dt">\$</span>COMMON_FLAGS <span class="dt">\$</span>PARALLEL_FLAGS <span class="st">&quot;</span><span class="dt">\$</span><span class="st">param_file&quot;</span></span>
+<span id="cb1-415">    <span class="cf">elif</span> <span class="bu">[</span> <span class="dt">\$</span>STAGE2_ONLY <span class="ot">-eq</span> 1 <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb1-416">        <span class="co"># Stage 2 only</span></span>
+<span id="cb1-417">        <span class="bu">echo</span> <span class="st">&quot;Running Stage 2...&quot;</span></span>
+<span id="cb1-418">        <span class="ex">./runSimulation.sh</span> <span class="at">--stage2</span> <span class="dt">\$</span>COMMON_FLAGS <span class="dt">\$</span>PARALLEL_FLAGS <span class="st">&quot;</span><span class="dt">\$</span><span class="st">param_file&quot;</span></span>
+<span id="cb1-419">    <span class="cf">else</span></span>
+<span id="cb1-420">        <span class="co"># Both stages: Stage 1 then Stage 2</span></span>
+<span id="cb1-421">        <span class="bu">echo</span> <span class="st">&quot;Running Stage 1...&quot;</span></span>
+<span id="cb1-422">        <span class="ex">./runSimulation.sh</span> <span class="at">--stage1</span> <span class="dt">\$</span>COMMON_FLAGS <span class="st">&quot;</span><span class="dt">\$</span><span class="st">param_file&quot;</span></span>
+<span id="cb1-423"></span>
+<span id="cb1-424">        <span class="bu">echo</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb1-425">        <span class="bu">echo</span> <span class="st">&quot;Running Stage 2...&quot;</span></span>
+<span id="cb1-426">        <span class="ex">./runSimulation.sh</span> <span class="at">--stage2</span> <span class="dt">\$</span>COMMON_FLAGS <span class="dt">\$</span>PARALLEL_FLAGS <span class="st">&quot;</span><span class="dt">\$</span><span class="st">param_file&quot;</span></span>
+<span id="cb1-427">    <span class="cf">fi</span></span>
+<span id="cb1-428"></span>
+<span id="cb1-429">    <span class="bu">echo</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb1-430"><span class="cf">done</span></span>
+<span id="cb1-431"></span>
+<span id="cb1-432"><span class="bu">echo</span> <span class="st">&quot;=========================================&quot;</span></span>
+<span id="cb1-433"><span class="bu">echo</span> <span class="st">&quot;Parameter Sweep Complete&quot;</span></span>
+<span id="cb1-434"><span class="bu">echo</span> <span class="st">&quot;=========================================&quot;</span></span>
+<span id="cb1-435"><span class="bu">echo</span> <span class="st">&quot;Total cases: </span><span class="dt">\$</span><span class="st">COMBINATION_COUNT&quot;</span></span>
+<span id="cb1-436"><span class="bu">echo</span> <span class="st">&quot;Case range: </span><span class="dt">\$</span><span class="st">CASE_START to </span><span class="dt">\$</span><span class="st">((CASE_START + COMBINATION_COUNT - 1))&quot;</span></span>
+<span id="cb1-437"><span class="bu">echo</span> <span class="st">&quot;Output location: simulationCases/&quot;</span></span>
+<span id="cb1-438"><span class="bu">echo</span> <span class="st">&quot;&quot;</span></span></code></pre></div></div>
+            </div>
+        </main>
+
+        <footer class="site-footer">
+            <div class="footer-left">
+              <a href="http://basilisk.fr/sandbox/vatsal/" target="_blank">
+                <img src="./assets/logos/logoBasilisk_TransparentBackground.png" alt="Basilisk C" class="footer-logo">
+              </a>
+              <a href="https://pof.tnw.utwente.nl/" target="_blank">
+                <img src="./assets/logos/LogoPof_transparent_white.png" alt="Physics of Fluids" class="footer-logo pof-logo">
+              </a>
+              <a href="https://www.utwente.nl/" target="_blank">
+                <img src="./assets/logos/UT_Logo_2400_Sta_White_EN.png" alt="University of Twente" class="footer-logo">
+              </a>
+              <a href="https://www.vatsalsanjay.com/" target="_blank">
+                <img src="./assets/logos/Logo_Vatsal_v3_OutLine.png" alt="Vatsal Sanjay" class="footer-logo">
+              </a>
+            </div>
+            <div class="footer-center">
+              <p class="copyright-text">
+                &copy; Copyright<br>
+                CoMPhy Lab 2025
+              </p>
+            </div>
+            <div class="footer-right">
+              <a href="https://scholar.google.com/citations?user=tHb_qZoAAAAJ&hl=en" target="_blank" aria-label="Google Scholar Profile">
+                <i class="ai ai-google-scholar" style="font-size: 2.5em; color: white;"></i>
+              </a>
+              <a href="https://github.com/comphy-lab" target="_blank" aria-label="GitHub Organization">
+                <i class="fa-brands fa-github" style="font-size: 2.5em; color: white;"></i>
+              </a>
+              <a href="https://www.youtube.com/@CoMPhyLab" target="_blank" aria-label="YouTube Channel">
+                <i class="fa-brands fa-youtube" style="font-size: 2.5em; color: white;"></i>
+              </a>
+              <a href="https://x.com/VatsalSanjay" target="_blank" aria-label="X (Twitter) Profile">
+                <i class="fa-brands fa-x-twitter" style="font-size: 2.5em; color: white;"></i>
+              </a>
+              <a href="https://bsky.app/profile/comphy-lab.org" target="_blank" aria-label="Bluesky Profile">
+                <i class="fa-brands fa-bluesky" style="font-size: 2.5em; color: white;"></i>
+              </a>
+              <a href="https://github.com/comphy-lab/Viscoelastic-Worthington-jets-and-droplets-produced-by-bursting-bubbles" class="edit-link" aria-label="Edit this page on GitHub">
+                <i class="fa-brands fa-github"></i> Edit this page
+              </a>
+            </div>
+          </footer>
+    </div>  
+
+    <!-- Command Palette -->
+    <div id="simple-command-palette" class="simple-command-palette" style="display: none;">
+        <div class="simple-command-palette-backdrop"></div>
+        <div class="simple-command-palette-modal">
+            <input type="text" id="command-palette-input" placeholder="Type a command..." autocomplete="off">
+            <div id="command-palette-results" class="command-palette-results"></div>
+            <div class="command-palette-footer">
+                <span class="command-palette-footer-item"><kbd>↑</kbd> <kbd>↓</kbd> to navigate</span>
+                <span class="command-palette-footer-item"><kbd>enter</kbd> to select</span>
+                <span class="command-palette-footer-item"><kbd>esc</kbd> to close</span>
+            </div>
+        </div>
+    </div>
+
+
+<script type="text/javascript">
+document.addEventListener('DOMContentLoaded', function() {
+    // Add copy button to each code block container
+    const codeBlocks = document.querySelectorAll('.code-block-container pre');
+    codeBlocks.forEach(function(codeBlock, index) {
+        // Create button element
+        const button = document.createElement('button');
+        button.className = 'copy-button';
+        button.textContent = 'Copy';
+        button.setAttribute('aria-label', 'Copy code to clipboard');
+        button.setAttribute('data-copy-state', 'copy');
+        
+        // Get the code block container (parent of the pre)
+        const container = codeBlock.parentNode;
+        
+        // Add the button to the container
+        container.appendChild(button);
+        
+        // Set up click event
+        button.addEventListener('click', async function() {
+            const codeText = codeBlock.textContent;
+            
+            try {
+                // Try to use the modern clipboard API first
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    await navigator.clipboard.writeText(codeText);
+                    updateButtonState(button, 'success');
+                } else {
+                    // Fall back to the deprecated execCommand method
+                    const textarea = document.createElement('textarea');
+                    textarea.value = codeText;
+                    textarea.style.position = 'fixed';  // Prevent scrolling to the bottom
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    
+                    const successful = document.execCommand('copy');
+                    document.body.removeChild(textarea);
+                    
+                    if (successful) {
+                        updateButtonState(button, 'success');
+                    } else {
+                        updateButtonState(button, 'error');
+                    }
+                }
+            } catch (err) {
+                console.error('Copy failed:', err);
+                updateButtonState(button, 'error');
+            }
+        });
+    });
+    
+    // Function to update button state
+    function updateButtonState(button, state) {
+        if (state === 'success') {
+            button.textContent = 'Copied!';
+            button.classList.add('copied');
+        } else if (state === 'error') {
+            button.textContent = 'Error!';
+            button.classList.add('error');
+        }
+        
+        // Reset button state after 2 seconds
+        setTimeout(function() {
+            button.textContent = 'Copy';
+            button.classList.remove('copied', 'error');
+        }, 2000);
+    }
+});
+</script>
+        </body>
+</html>

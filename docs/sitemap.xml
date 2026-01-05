@@ -6,17 +6,17 @@
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://comphy-lab.org/postProcess/VideoAxi.py.html</loc>
+    <loc>https://comphy-lab.org/postProcess/Video.py.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://comphy-lab.org/postProcess/getData-elastic-scalar2D.c.html</loc>
+    <loc>https://comphy-lab.org/postProcess/getData.c.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://comphy-lab.org/postProcess/getFacet2D.c.html</loc>
+    <loc>https://comphy-lab.org/postProcess/getFacet.c.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -32,6 +32,31 @@
   </url>
   <url>
     <loc>https://comphy-lab.org/reset_install_requirements.sh.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://comphy-lab.org/runCodesInParallel.sh.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://comphy-lab.org/runParameterSweep.sh.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://comphy-lab.org/runPostProcess-Ncases.sh.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://comphy-lab.org/runSimulation.sh.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://comphy-lab.org/simulationCases/1000/burstingBubbleVE.c.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -56,6 +81,21 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://comphy-lab.org/src-local/log-conform-elastoviscoplastic-scalar-2D.h.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://comphy-lab.org/src-local/log-conform-elastoviscoplastic-scalar-3D.h.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://comphy-lab.org/src-local/log-conform-elastoviscoplastic.h.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://comphy-lab.org/src-local/log-conform-viscoelastic-scalar-2D.h.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -71,13 +111,18 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://comphy-lab.org/src-local/two-phaseVE.h.html</loc>
+    <loc>https://comphy-lab.org/src-local/parse_params.sh.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://comphy-lab.org/test-workflow-locally.sh.html</loc>
+    <loc>https://comphy-lab.org/src-local/two-phaseEVP.h.html</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://comphy-lab.org/src-local/two-phaseVE.h.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
 </urlset>

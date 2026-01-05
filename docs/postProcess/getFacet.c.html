@@ -13,7 +13,7 @@
       // Handle localStorage access errors (private browsing, cookies disabled)
       console.warn('Unable to access localStorage:', storageError);
     }
-    
+
     let prefersDark = false;
     try {
       prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -21,7 +21,7 @@
       // Handle matchMedia access errors (unsupported browsers)
       console.warn('Unable to check media query:', mediaError);
     }
-    
+
     const theme = saved ? saved : (prefersDark ? 'dark' : 'light');
     document.documentElement.setAttribute('data-theme', theme);
     // Add theme class for CSS targeting
@@ -55,20 +55,20 @@
       --color-primary: #0066cc;
       --color-secondary: #036;
       --color-accent: #0099ff;
-      
+
       /* UI elements */
       --color-header-bg: #f5f5f5;
       --color-footer-bg: #2d2e33;
       --color-border: #e0e0e0;
       --color-input-bg: #f9f9f9;
-      
+
       /* Component colors */
       --color-preloader-bg: #ffffff;
       --color-loader: #0066cc;
       --color-card-bg: #ffffff;
       --color-code-bg: #f5f5f5;
     }
-    
+
     /* Dark theme variables applied via media query when JS is disabled */
     @media (prefers-color-scheme: dark) {
       :root:not(.theme-set) {
@@ -78,13 +78,13 @@
         --color-primary: #4d9fff;
         --color-secondary: #88ccff;
         --color-accent: #00bfff;
-        
+
         /* UI elements - dark mode */
         --color-header-bg: #121212;
         --color-footer-bg: #121212;
         --color-border: #333;
         --color-input-bg: #2d2d2d;
-        
+
         /* Component colors - dark mode */
         --color-preloader-bg: #1a1a1a;
         --color-loader: #4d9fff;
@@ -92,7 +92,7 @@
         --color-code-bg: #2d2d2d;
       }
     }
-    
+
     /* When JS sets the theme explicitly via data attribute */
     [data-theme="dark"] {
       /* Base colors - dark mode */
@@ -101,36 +101,36 @@
       --color-primary: #4d9fff;
       --color-secondary: #88ccff;
       --color-accent: #00bfff;
-      
+
       /* UI elements - dark mode */
       --color-header-bg: #121212;
       --color-footer-bg: #121212;
       --color-border: #333;
       --color-input-bg: #2d2d2d;
-      
+
       /* Component colors - dark mode */
       --color-preloader-bg: #1a1a1a;
       --color-loader: #4d9fff;
       --color-card-bg: #222;
       --color-code-bg: #2d2d2d;
     }
-    
+
     /* Prevent transition flashes during initial load */
     html:not(.transitions-enabled) * {
       transition: none !important;
     }
-    
+
     /* Apply theme to preloader and early elements */
     #preloader {
       background-color: var(--color-preloader-bg);
       color: var(--color-text);
     }
-    
+
     #loader {
       border-color: var(--color-loader);
       border-top-color: transparent;
     }
-    
+
     /* Noscript warning */
     .noscript-warning {
       background-color: var(--color-primary);
@@ -143,7 +143,7 @@
       right: 0;
       z-index: 1000;
     }
-    
+
     /* Theme indicator for no-JS */
     .theme-indicator {
       padding: 5px 10px;
@@ -152,12 +152,12 @@
       color: var(--color-text);
       text-align: center;
     }
-    
+
     /* Hide JS-only elements when no JS */
     .no-js .js-only {
       display: none !important;
     }
-    
+
     /* Show no-JS alternatives */
     .js .no-js-only {
       display: none !important;
@@ -167,8 +167,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="base-url" content="..">
-  <title>Local Source Files | Documentation</title>
-  
+  <title>postProcess/getFacet.c | Viscoelastic Worthington Jets & Droplets Produced by Bursting Bubbles</title>
+
   <!-- Critical CSS for fastest paint -->
   <style>
       .s-intro__title {
@@ -178,19 +178,19 @@
       .s-header {
           visibility: visible;
       }
-      
+
       /* Ensure theme toggle properly styled immediately */
       .theme-toggle {
           background-color: var(--color-background);
           color: var(--color-text);
       }
-      
+
       /* Control SVG visibility based on theme */
       [data-theme="dark"] .theme-toggle-icon.sun,
       :root:not([data-theme="dark"]) .theme-toggle-icon.moon {
           display: block;
       }
-      
+
       [data-theme="dark"] .theme-toggle-icon.moon,
       :root:not([data-theme="dark"]) .theme-toggle-icon.sun {
           display: none;
@@ -198,10 +198,10 @@
   </style>
 
   <!-- Critical Meta Tags -->
-  <meta name="description" content="Documentation for the CoMPhy-Lab computational fluid dynamics framework.">
+  <meta name="description" content="A utility for extracting interface facets from fluid simulation data.">
   <meta name="author" content="CoMPhy Lab">
   <meta name="robots" content="index, follow">
-  <meta name="keywords" content="fluid dynamics, CFD, Basilisk, src-local, documentation">
+  <meta name="keywords" content="fractions.h, getfacet, output.h, utils.h">
   <meta name="msapplication-TileColor" content="#da532c">
   <meta name="theme-color" content="#ffffff">
   <meta name="apple-mobile-web-app-title" content="CoMPhy Lab">
@@ -248,7 +248,7 @@
   <script defer src="../assets/js/main.js"></script>
   <script defer src="../assets/js/theme-toggle.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script"></script>
-  
+
   <!-- Optimize page load performance -->
   <script>
     // Preconnect to critical domains
@@ -256,21 +256,21 @@
       'https://cdnjs.cloudflare.com',
       'https://cdn.jsdelivr.net'
     ];
-    
+
     preconnectDomains.forEach(domain => {
       const link = document.createElement('link');
       link.rel = 'preconnect';
       link.href = domain;
       link.crossOrigin = 'anonymous';
       document.head.appendChild(link);
-      
+
       // Also add DNS prefetch as fallback
       const dnsLink = document.createElement('link');
       dnsLink.rel = 'dns-prefetch';
       dnsLink.href = domain;
       document.head.appendChild(dnsLink);
     });
-    
+
     // Detect when document is fully loaded to remove preloader
     window.addEventListener('load', function() {
       const preloader = document.getElementById('preloader');
@@ -291,17 +291,17 @@
         link.href = href;
         link.crossOrigin = 'anonymous';
         link.onerror = (e) => {
-          console.error(`Failed to load stylesheet: ${href}`, e);
+          console.error(`Failed to load stylesheet: `, e);
           console.log('Trying alternative Font Awesome source...');
         };
         document.head.appendChild(link);
         return link;
       }
-      
+
       // Check if we're on localhost
       if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
         // Use hardcoded version numbers for reliable loading
-        
+
         // Load Font Awesome using multiple CDNs to maximize reliability for local development
         loadStylesheet('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css');
         // Backup CDN if the first one fails
@@ -322,7 +322,7 @@
       // Mark page as JS-enabled and manage transitions
       document.documentElement.classList.remove('no-js');
       document.documentElement.classList.add('js');
-      
+
       // Allow CSS transitions after initial load to prevent transition flashes
       window.addEventListener('DOMContentLoaded', () => {
           setTimeout(() => {
@@ -332,6 +332,8 @@
   </script>
 </head>
 <body id="top">
+<script>window.repoName = "Viscoelastic-Worthington-jets-and-droplets-produced-by-bursting-bubbles";</script>
+
 
     <!-- Preloader with theme variables applied -->
     <div id="preloader">
@@ -406,67 +408,89 @@
 
         <!-- Main content -->
         <main class="content">
-            
 
             <div class="page-content">
-<h1>Local Source Files</h1>
 
-<div class="documentation-section">
-<table class="documentation-files">
-<tr>
-  <td class="file-icon"><span class="file-c"></span></td>
-  <td class="file-link" style="padding-right: 2em;"><a href="eigen_decomposition.h.html" class="doc-link-button">eigen_decomposition.h</a></td>
-  <td class="file-desc">This module provides algorithms for computing eigenvalues and eigenvectors of 3x3 symmetric matrices, which are commo...</td>
-</tr>
-<tr>
-  <td class="file-icon"><span class="file-c"></span></td>
-  <td class="file-link" style="padding-right: 2em;"><a href="log-conform-elastoviscoplastic-scalar-2D.h.html" class="doc-link-button">log-conform-elastoviscoplastic-scalar-2D.h</a></td>
-  <td class="file-desc">Elasto-viscoplastic fluids exhibit viscous, elastic and plastic behaviour when subjected to deformation. Therefore th...</td>
-</tr>
-<tr>
-  <td class="file-icon"><span class="file-c"></span></td>
-  <td class="file-link" style="padding-right: 2em;"><a href="log-conform-elastoviscoplastic-scalar-3D.h.html" class="doc-link-button">log-conform-elastoviscoplastic-scalar-3D.h</a></td>
-  <td class="file-desc">Elasto-viscoplastic fluids exhibit viscous, elastic and plastic behaviour when subjected to deformation. Therefore th...</td>
-</tr>
-<tr>
-  <td class="file-icon"><span class="file-c"></span></td>
-  <td class="file-link" style="padding-right: 2em;"><a href="log-conform-elastoviscoplastic.h.html" class="doc-link-button">log-conform-elastoviscoplastic.h</a></td>
-  <td class="file-desc">The implementation follows the standard log-conformation approach: 1. Uses tensor mathematics for clean formulation 2...</td>
-</tr>
-<tr>
-  <td class="file-icon"><span class="file-c"></span></td>
-  <td class="file-link" style="padding-right: 2em;"><a href="log-conform-viscoelastic-scalar-2D.h.html" class="doc-link-button">log-conform-viscoelastic-scalar-2D.h</a></td>
-  <td class="file-desc">Viscoelastic fluids exhibit both viscous and elastic behaviour when subjected to deformation. Therefore these materia...</td>
-</tr>
-<tr>
-  <td class="file-icon"><span class="file-c"></span></td>
-  <td class="file-link" style="padding-right: 2em;"><a href="log-conform-viscoelastic-scalar-3D.h.html" class="doc-link-button">log-conform-viscoelastic-scalar-3D.h</a></td>
-  <td class="file-desc">Viscoelastic fluids exhibit both viscous and elastic behaviour when subjected to deformation. Therefore these materia...</td>
-</tr>
-<tr>
-  <td class="file-icon"><span class="file-c"></span></td>
-  <td class="file-link" style="padding-right: 2em;"><a href="log-conform-viscoelastic.h.html" class="doc-link-button">log-conform-viscoelastic.h</a></td>
-  <td class="file-desc">The implementation follows the standard log-conformation approach: 1. Uses tensor mathematics for clean formulation 2...</td>
-</tr>
-<tr>
-  <td class="file-icon"><span class="file-other"></span></td>
-  <td class="file-link" style="padding-right: 2em;"><a href="parse_params.sh.html" class="doc-link-button">parse_params.sh</a></td>
-  <td class="file-desc">parseparamfile() { local paramfile=\$1 if [ ! -f '\$paramfile' ]; then echo 'ERROR: Parameter file \$paramfile not fo...</td>
-</tr>
-<tr>
-  <td class="file-icon"><span class="file-c"></span></td>
-  <td class="file-link" style="padding-right: 2em;"><a href="two-phaseEVP.h.html" class="doc-link-button">two-phaseEVP.h</a></td>
-  <td class="file-desc">This is a modified version of [two-phase.h](http://basilisk.fr/src/two-phase.h). It contains the implementation of Vi...</td>
-</tr>
-<tr>
-  <td class="file-icon"><span class="file-c"></span></td>
-  <td class="file-link" style="padding-right: 2em;"><a href="two-phaseVE.h.html" class="doc-link-button">two-phaseVE.h</a></td>
-  <td class="file-desc">This is a modified version of [two-phase.h](http://basilisk.fr/src/two-phase.h). It contains the implementation of Vi...</td>
-</tr>
-</table>
-</div>
+                                <h1 class="page-title">postProcess/getFacet.c</h1>
 
-</div>
+
+                                <div class="raw-file-button-container">
+                    <a href="https://github.com/comphy-lab/Viscoelastic-Worthington-jets-and-droplets-produced-by-bursting-bubbles/raw/main/postProcess/getFacet.c" class="raw-file-button" target="_blank">
+                        <i class="fa-brands fa-github"></i> See raw file
+                    </a>
+                </div>
+
+                <h1 id="getting-facets">Getting Facets</h1>
+                <p>A utility for extracting interface facets from fluid
+                simulation data.</p>
+                <h2 id="description">Description</h2>
+                <p>This program extracts and outputs the facets
+                representing the interface between different phases in a
+                multiphase flow simulation. The facets define the
+                boundary between fluid phases, useful for geometric
+                analysis and visualization of the interface
+                morphology.</p>
+                <h2 id="physics-background">Physics Background</h2>
+                <p>In multiphase fluid simulations, interfaces between
+                different fluids are critical features that determine
+                many physical phenomena like surface tension effects,
+                droplet formation, and coalescence events. This utility
+                identifies these interfaces by extracting facets from
+                volume fraction data, allowing for quantitative analysis
+                of interfacial dynamics.</p>
+                <h2 id="usage">Usage</h2>
+                <div class="code-block-container"><pre><code>./getFacets input_file</code></pre></div>
+                <ul>
+                <li>Author: Vatsal Sanjay<br />
+                vatsalsanjay@gmail.com<br />
+                Physics of Fluids Department<br />
+                University of Twente</li>
+                </ul>
+                <div class="code-block-container"><div class="code-block-container"><pre
+                class="sourceCode c"><code class="sourceCode c"><span id="cb2-1"><span class="pp">#include </span><a href="http://basilisk.fr/src/utils.h" title="Link to Basilisk source for utils.h"><span class="im">"utils.h"</span></a></span>
+<span id="cb2-2"><span class="pp">#include </span><a href="http://basilisk.fr/src/output.h" title="Link to Basilisk source for output.h"><span class="im">"output.h"</span></a></span>
+<span id="cb2-3"><span class="pp">#include </span><a href="http://basilisk.fr/src/fractions.h" title="Link to Basilisk source for fractions.h"><span class="im">"fractions.h"</span></a></span>
+<span id="cb2-4"></span>
+<span id="cb2-5">scalar f<span class="op">[];</span>  <span class="co">// Volume fraction field</span></span>
+<span id="cb2-6"><span class="dt">char</span> filename<span class="op">[</span><span class="dv">80</span><span class="op">];</span></span></code></pre></div></div>
+                <h3 id="main-function">Main Function</h3>
+                <p>Loads a simulation snapshot and extracts the
+                interface facets.</p>
+                <ul>
+                <li>Input parameters:
+                <ul>
+                <li><code>arguments[1]</code>: Filename of the
+                simulation snapshot to process</li>
+                </ul></li>
+                <li>Process:
+                <ol type="1">
+                <li>Restores the simulation state from the specified
+                file</li>
+                <li>Extracts interface facets from the volume fraction
+                field</li>
+                <li>Outputs facet data to standard error</li>
+                </ol></li>
+                <li>Return value:
+                <ul>
+                <li>Returns 0 on successful completion</li>
+                </ul></li>
+                <li>Note: The facet extraction algorithm identifies
+                where the volume fraction field crosses a threshold
+                value (typically 0.5) between adjacent cells.</li>
+                </ul>
+                <div class="code-block-container"><div class="code-block-container"><pre
+                class="sourceCode c"><code class="sourceCode c"><span id="cb3-1"><span class="dt">int</span> main<span class="op">(</span><span class="dt">int</span> a<span class="op">,</span> <span class="dt">char</span> <span class="dt">const</span> <span class="op">*</span>arguments<span class="op">[])</span> <span class="op">{</span></span>
+<span id="cb3-2">  sprintf<span class="op">(</span>filename<span class="op">,</span> <span class="st">&quot;%s&quot;</span><span class="op">,</span> arguments<span class="op">[</span><span class="dv">1</span><span class="op">]);</span></span>
+<span id="cb3-3">  restore<span class="op">(</span>file <span class="op">=</span> filename<span class="op">);</span></span>
+<span id="cb3-4"></span>
+<span id="cb3-5">  <span class="dt">FILE</span> <span class="op">*</span>fp <span class="op">=</span> ferr<span class="op">;</span></span>
+<span id="cb3-6">  output_facets<span class="op">(</span>f<span class="op">,</span> fp<span class="op">);</span></span>
+<span id="cb3-7">  fflush<span class="op">(</span>fp<span class="op">);</span></span>
+<span id="cb3-8">  fclose<span class="op">(</span>fp<span class="op">);</span></span>
+<span id="cb3-9"></span>
+<span id="cb3-10">  <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb3-11"><span class="op">}</span></span></code></pre></div></div>
+            </div>
         </main>
 
         <footer class="site-footer">
@@ -527,5 +551,75 @@
         </div>
     </div>
 
-</body>
+
+<script type="text/javascript">
+document.addEventListener('DOMContentLoaded', function() {
+    // Add copy button to each code block container
+    const codeBlocks = document.querySelectorAll('.code-block-container pre');
+    codeBlocks.forEach(function(codeBlock, index) {
+        // Create button element
+        const button = document.createElement('button');
+        button.className = 'copy-button';
+        button.textContent = 'Copy';
+        button.setAttribute('aria-label', 'Copy code to clipboard');
+        button.setAttribute('data-copy-state', 'copy');
+        
+        // Get the code block container (parent of the pre)
+        const container = codeBlock.parentNode;
+        
+        // Add the button to the container
+        container.appendChild(button);
+        
+        // Set up click event
+        button.addEventListener('click', async function() {
+            const codeText = codeBlock.textContent;
+            
+            try {
+                // Try to use the modern clipboard API first
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    await navigator.clipboard.writeText(codeText);
+                    updateButtonState(button, 'success');
+                } else {
+                    // Fall back to the deprecated execCommand method
+                    const textarea = document.createElement('textarea');
+                    textarea.value = codeText;
+                    textarea.style.position = 'fixed';  // Prevent scrolling to the bottom
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    
+                    const successful = document.execCommand('copy');
+                    document.body.removeChild(textarea);
+                    
+                    if (successful) {
+                        updateButtonState(button, 'success');
+                    } else {
+                        updateButtonState(button, 'error');
+                    }
+                }
+            } catch (err) {
+                console.error('Copy failed:', err);
+                updateButtonState(button, 'error');
+            }
+        });
+    });
+    
+    // Function to update button state
+    function updateButtonState(button, state) {
+        if (state === 'success') {
+            button.textContent = 'Copied!';
+            button.classList.add('copied');
+        } else if (state === 'error') {
+            button.textContent = 'Error!';
+            button.classList.add('error');
+        }
+        
+        // Reset button state after 2 seconds
+        setTimeout(function() {
+            button.textContent = 'Copy';
+            button.classList.remove('copied', 'error');
+        }, 2000);
+    }
+});
+</script>
+        </body>
 </html>
