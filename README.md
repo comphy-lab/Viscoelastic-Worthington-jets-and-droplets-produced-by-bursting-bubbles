@@ -38,26 +38,26 @@ The project investigates how viscoelasticity influences bubble bursting dynamics
 
 ## Installation and Setup
 
-To ensure you have the necessary tools and a fresh Basilisk installation, use the provided script:
+To build the Basilisk source committed in `basilisk/`, use the provided script:
 
 ```bash
 ./reset_install_requirements.sh
 ```
 
 ### Function
-This script checks for Basilisk installation and compiles it if not present.
+This script compiles the committed Basilisk source. It downloads nothing.
 
 ### OS Compatibility
 Designed for macOS. If you encounter issues on Linux, consider opening a GitHub issue.
 
 ### Dependencies
-- Basilisk C is fetched and built automatically.
+- Basilisk C is committed in `basilisk/` and built by the script.
 - Xcode Command Line Tools (macOS) or equivalent compiler toolchain (Linux) are required.
 
 ### Environment Setup
 After running the script, a `.project_config` file is created, setting `BASILISK` and `PATH` automatically.
 
-If you have previously installed Basilisk or changed dependencies, re-run the script with `--hard`:
+To rebuild Basilisk from scratch, for example after changing compilers, re-run the script with `--hard`. The source itself is not replaced:
 
 ```bash
 ./reset_install_requirements.sh --hard
@@ -170,11 +170,11 @@ The `z_extras/running` directory contains supplementary materials and post-proce
 
 ## Reset Install Requirements Script
 
-The `reset_install_requirements.sh` script is designed to reset the installation requirements for the project. This can be useful when you want to ensure that all dependencies are fresh and up-to-date.
+The `reset_install_requirements.sh` script builds the Basilisk source committed in `basilisk/` and writes `.project_config`.
 
 ### Purpose
 
-The script re-installs all required packages as specified in the requirements file, ensuring that the project's dependencies are up-to-date and consistent.
+The script compiles the committed Basilisk tree for the current platform and checks that `qcc` runs. It downloads nothing, so local fixes in the committed tree are kept.
 
 ### Usage
 

@@ -10,8 +10,8 @@ Basilisk CFD simulations of viscoelastic bubble bursting dynamics using the log-
 
 ### Initial Setup
 ```bash
-./reset_install_requirements.sh          # Install Basilisk and create .project_config
-./reset_install_requirements.sh --hard   # Force reinstall
+./reset_install_requirements.sh          # Build the committed Basilisk and create .project_config
+./reset_install_requirements.sh --hard   # Rebuild from scratch (source is not replaced)
 source .project_config                   # Load environment (BASILISK, PATH)
 ```
 
