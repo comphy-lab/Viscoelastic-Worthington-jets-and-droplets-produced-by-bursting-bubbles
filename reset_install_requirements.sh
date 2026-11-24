@@ -2,7 +2,7 @@
 # Build the Basilisk source committed alongside this project.
 set -eu
 
-if [[ "${1:-}" == "--hard" ]]; then
+if [[ $# == 1 && "$1" == "--hard" ]]; then
     hard=true
 elif [[ $# == 0 ]]; then
     hard=false
