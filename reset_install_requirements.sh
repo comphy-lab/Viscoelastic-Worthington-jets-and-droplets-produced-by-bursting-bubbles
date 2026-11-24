@@ -45,7 +45,8 @@ fi
     make
 )
 
-"$basilisk/qcc" --version
+# qcc makes a temporary directory where it runs, so check it from the source tree.
+(cd -- "$basilisk" && ./qcc --version)
 # Paths must remain literal even when the project directory contains spaces.
 {
     printf 'export BASILISK=%q\n' "$basilisk"
